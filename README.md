@@ -2,7 +2,7 @@
 m68k
 ====
 
-This is my Motorola 680x0 emulator written in Java. This is the designed to be a modular cpu component for my Java based Amiga emulator project *Miggy*.  This project was originally hosted on Google code but I'm now moving it to GitHub.
+This is my Motorola 680x0 emulator written in C#. This is the designed to be a modular cpu component for my C# based Megadrove emulator project *YAME*.  This project is forked from https://github.com/fedex81/m68k.
 
 Emulation
 ---------
@@ -12,15 +12,18 @@ Currently m68k emulates the 68000 cpu found in the Amiga and other 16-bit era ma
 Building
 --------
 
-There is an Apache Ant build file included.  Just run ant from the project directory.
+```
+dotnet build
+```
 
+You need a .NET Standard 2.0 compliant implementation in order to use this library.
 
 Running
 -------
 
 There is a simple cpu monitor shell to enable testing/debugging. This can be invoked by running the following at the command prompt:
 
-	$ java -cp m68k.jar m68k.Monitor
+	$ dotnet run m68k.Monitor
 
 
 Feedback, Comments, Bugs etc.
