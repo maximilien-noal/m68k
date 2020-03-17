@@ -50,7 +50,7 @@ namespace M68k.CPU.Instructions
             private readonly MOVEA parent;
             public uint Execute(uint opcode)
             {
-                return parent.Movea_word(opcode);
+                return parent.MoveaWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -69,7 +69,7 @@ namespace M68k.CPU.Instructions
             private readonly MOVEA parent;
             public uint Execute(uint opcode)
             {
-                return parent.Movea_long(opcode);
+                return parent.MoveaLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -78,14 +78,14 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Movea_word(uint opcode)
+        protected uint MoveaWord(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
             cpu.SetAddrRegisterLong((opcode >> 9) & 0x07, src.GetWordSigned());
             return MOVE.ShortExecutionTime[src.Index()][1];
         }
 
-        protected uint Movea_long(uint opcode)
+        protected uint MoveaLong(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
             cpu.SetAddrRegisterLong((opcode >> 9) & 0x07, src.GetLong());

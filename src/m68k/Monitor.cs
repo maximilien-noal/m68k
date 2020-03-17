@@ -22,8 +22,6 @@ namespace M68k
 
         private bool autoRegs;
 
-        private TextReader reader;
-
         private bool running;
 
         private bool showBytes;
@@ -76,7 +74,6 @@ namespace M68k
         public void Run()
         {
             writer = System.Console.Out;
-            reader = System.Console.In;
 
             running = true;
             while (running)
@@ -85,7 +82,7 @@ namespace M68k
                 {
                     writer.Write("> ");
                     writer.Flush();
-                    HandleCommand(reader.ReadLine());
+                    HandleCommand(Console.ReadLine());
                     if (autoRegs)
                     {
                         DumpInfo();

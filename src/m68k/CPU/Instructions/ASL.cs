@@ -89,7 +89,7 @@ namespace M68k.CPU.Instructions
             private readonly ASL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asl_byte_imm(opcode);
+                return parent.AslByteImm(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -108,7 +108,7 @@ namespace M68k.CPU.Instructions
             private readonly ASL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asl_word_imm(opcode);
+                return parent.AslWordImm(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -127,7 +127,7 @@ namespace M68k.CPU.Instructions
             private readonly ASL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asl_long_imm(opcode);
+                return parent.AslLongImm(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -146,7 +146,7 @@ namespace M68k.CPU.Instructions
             private readonly ASL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asl_byte_reg(opcode);
+                return parent.AslByteReg(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -165,7 +165,7 @@ namespace M68k.CPU.Instructions
             private readonly ASL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asl_word_reg(opcode);
+                return parent.AslWordReg(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -184,7 +184,7 @@ namespace M68k.CPU.Instructions
             private readonly ASL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asl_long_reg(opcode);
+                return parent.AslLongReg(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -203,7 +203,7 @@ namespace M68k.CPU.Instructions
             private readonly ASL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asl_word_mem(opcode);
+                return parent.AslWordMem(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -212,7 +212,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual uint Asl_byte_imm(uint opcode)
+        protected virtual uint AslByteImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -237,7 +237,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Asl_word_imm(uint opcode)
+        protected virtual uint AslWordImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -262,7 +262,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Asl_long_imm(uint opcode)
+        protected virtual uint AslLongImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -286,7 +286,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Asl_byte_reg(uint opcode)
+        protected virtual uint AslByteReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -309,7 +309,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Asl_word_reg(uint opcode)
+        protected virtual uint AslWordReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -332,7 +332,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Asl_long_reg(uint opcode)
+        protected virtual uint AslLongReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -354,7 +354,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Asl_word_mem(uint opcode)
+        protected virtual uint AslWordMem(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint v = op.GetWord();

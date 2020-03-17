@@ -84,7 +84,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, $"movep{sz.Ext}", src, dst);
         }
 
-        protected uint M2r_long(uint opcode)
+        protected uint M2rLong(uint opcode)
         {
             uint dis = cpu.FetchPCWordSigned();
             uint address = cpu.GetAddrRegisterLong(opcode & 0x07) + dis;
@@ -96,7 +96,7 @@ namespace M68k.CPU.Instructions
             return 24;
         }
 
-        protected uint M2r_word(uint opcode)
+        protected uint M2rWord(uint opcode)
         {
             uint dis = cpu.FetchPCWordSigned();
             uint address = cpu.GetAddrRegisterLong(opcode & 0x07) + dis;
@@ -106,7 +106,7 @@ namespace M68k.CPU.Instructions
             return 16;
         }
 
-        protected uint R2m_long(uint opcode)
+        protected uint R2mLong(uint opcode)
         {
             uint dis = cpu.FetchPCWordSigned();
             uint address = cpu.GetAddrRegisterLong(opcode & 0x07) + dis;
@@ -118,7 +118,7 @@ namespace M68k.CPU.Instructions
             return 24;
         }
 
-        protected uint R2m_word(uint opcode)
+        protected uint R2mWord(uint opcode)
         {
             uint dis = cpu.FetchPCWordSigned();
             uint address = cpu.GetAddrRegisterLong(opcode & 0x07) + dis;
@@ -144,7 +144,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.R2m_word(opcode);
+                return parent.R2mWord(opcode);
             }
         }
 
@@ -164,7 +164,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.R2m_long(opcode);
+                return parent.R2mLong(opcode);
             }
         }
 
@@ -184,7 +184,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.M2r_word(opcode);
+                return parent.M2rWord(opcode);
             }
         }
 
@@ -204,7 +204,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.M2r_long(opcode);
+                return parent.M2rLong(opcode);
             }
         }
     }

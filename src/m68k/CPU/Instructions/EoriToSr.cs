@@ -2,11 +2,11 @@ using System.Globalization;
 
 namespace M68k.CPU.Instructions
 {
-    public class EORI_TO_SR : IInstructionHandler
+    public class EoriToSr : IInstructionHandler
     {
         private readonly ICPU cpu;
 
-        public EORI_TO_SR(ICPU cpu)
+        public EoriToSr(ICPU cpu)
         {
             this.cpu = cpu;
         }
@@ -40,9 +40,9 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            private readonly EORI_TO_SR parent;
+            private readonly EoriToSr parent;
 
-            public AnonymousInstruction(EORI_TO_SR parent)
+            public AnonymousInstruction(EoriToSr parent)
             {
                 this.parent = parent;
             }

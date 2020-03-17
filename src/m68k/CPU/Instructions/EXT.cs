@@ -42,7 +42,7 @@ namespace M68k.CPU.Instructions
             private readonly EXT parent;
             public uint Execute(uint opcode)
             {
-                return parent.Ext_byte_to_word(opcode);
+                return parent.ExtByteToWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -61,7 +61,7 @@ namespace M68k.CPU.Instructions
             private readonly EXT parent;
             public uint Execute(uint opcode)
             {
-                return parent.Ext_word_to_long(opcode);
+                return parent.ExtWordToLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -70,7 +70,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Ext_byte_to_word(uint opcode)
+        protected uint ExtByteToWord(uint opcode)
         {
             uint s = cpu.GetDataRegisterByte(opcode & 0x07);
             if ((s & 0x80) == 0x80)
@@ -97,7 +97,7 @@ namespace M68k.CPU.Instructions
             return 4;
         }
 
-        protected uint Ext_word_to_long(uint opcode)
+        protected uint ExtWordToLong(uint opcode)
         {
             uint s = cpu.GetDataRegisterWord(opcode & 0x07);
             if ((s & 0x8000) == 0x8000)

@@ -53,7 +53,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual uint Andi_byte(uint opcode)
+        protected virtual uint AndiByte(uint opcode)
         {
             uint s = CpuUtils.SignExtendByte(cpu.FetchPCWord());
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
@@ -65,7 +65,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 8 : 12 + dst.GetTiming());
         }
 
-        protected virtual uint Andi_long(uint opcode)
+        protected virtual uint AndiLong(uint opcode)
         {
             uint s = cpu.FetchPCLong();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
@@ -76,7 +76,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 14 : 20 + dst.GetTiming());
         }
 
-        protected virtual uint Andi_word(uint opcode)
+        protected virtual uint AndiWord(uint opcode)
         {
             uint s = cpu.FetchPCWordSigned();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
@@ -161,7 +161,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Andi_byte(opcode);
+                return parent.AndiByte(opcode);
             }
         }
 
@@ -181,7 +181,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Andi_word(opcode);
+                return parent.AndiWord(opcode);
             }
         }
 
@@ -201,7 +201,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Andi_long(opcode);
+                return parent.AndiLong(opcode);
             }
         }
     }

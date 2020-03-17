@@ -55,10 +55,10 @@ namespace M68k.CPU.Instructions
         protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
         {
             DisassembledOperand op = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-            return new DisassembledInstruction(address, opcode, "tst" + sz.Ext, op);
+            return new DisassembledInstruction(address, opcode, $"tst{sz.Ext}", op);
         }
 
-        protected uint Tst_byte(uint opcode)
+        protected uint TstByte(uint opcode)
         {
             uint mode = (opcode >> 3) & 0x07;
             uint reg = (opcode & 0x07);
@@ -86,7 +86,7 @@ namespace M68k.CPU.Instructions
             return 4 + op.GetTiming();
         }
 
-        protected uint Tst_long(uint opcode)
+        protected uint TstLong(uint opcode)
         {
             uint mode = (opcode >> 3) & 0x07;
             uint reg = (opcode & 0x07);
@@ -114,7 +114,7 @@ namespace M68k.CPU.Instructions
             return 4 + op.GetTiming();
         }
 
-        protected uint Tst_word(uint opcode)
+        protected uint TstWord(uint opcode)
         {
             uint mode = (opcode >> 3) & 0x07;
             uint reg = (opcode & 0x07);
@@ -158,7 +158,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Tst_byte(opcode);
+                return parent.TstByte(opcode);
             }
         }
 
@@ -178,7 +178,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Tst_word(opcode);
+                return parent.TstWord(opcode);
             }
         }
 
@@ -198,7 +198,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Tst_long(opcode);
+                return parent.TstLong(opcode);
             }
         }
     }

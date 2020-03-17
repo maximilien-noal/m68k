@@ -71,7 +71,7 @@ namespace M68k.CPU.Instructions
             private readonly BSET parent;
             public uint Execute(uint opcode)
             {
-                return parent.Bset_dyn_long(opcode);
+                return parent.BsetDynLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -90,7 +90,7 @@ namespace M68k.CPU.Instructions
             private readonly BSET parent;
             public uint Execute(uint opcode)
             {
-                return parent.Bset_dyn_byte(opcode);
+                return parent.BsetDynByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -109,7 +109,7 @@ namespace M68k.CPU.Instructions
             private readonly BSET parent;
             public uint Execute(uint opcode)
             {
-                return parent.Bset_static_long(opcode);
+                return parent.BsetStaticLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -128,7 +128,7 @@ namespace M68k.CPU.Instructions
             private readonly BSET parent;
             public uint Execute(uint opcode)
             {
-                return parent.Bset_static_byte(opcode);
+                return parent.BsetStaticByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -137,7 +137,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Bset_dyn_byte(uint opcode)
+        protected uint BsetDynByte(uint opcode)
         {
             var bit = (int)cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 7;
             bit = 1 << bit;
@@ -157,7 +157,7 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected uint Bset_dyn_long(uint opcode)
+        protected uint BsetDynLong(uint opcode)
         {
             var bit = (int)cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 31;
             bit = 1 << bit;
@@ -177,7 +177,7 @@ namespace M68k.CPU.Instructions
             return 10;
         }
 
-        protected uint Bset_static_byte(uint opcode)
+        protected uint BsetStaticByte(uint opcode)
         {
             var bit = (int)cpu.FetchPCWord() & 7;
             bit = 1 << bit;
@@ -197,7 +197,7 @@ namespace M68k.CPU.Instructions
             return 12 + op.GetTiming();
         }
 
-        protected uint Bset_static_long(uint opcode)
+        protected uint BsetStaticLong(uint opcode)
         {
             var bit = (int)cpu.FetchPCWord() & 31;
             bit = 1 << bit;

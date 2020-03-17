@@ -2,13 +2,13 @@ using System.Globalization;
 
 namespace M68k.CPU.Instructions
 {
-    public class DBcc : IInstructionHandler
+    public class DBCC : IInstructionHandler
     {
         protected static readonly string[] names = new[] { "dbt", "dbra", "dbhi", "dbls", "dbcc", "dbcs", "dbne", "dbeq", "dbvc", "dbvs", "dbpl", "dbmi", "dbge", "dblt", "dbgt", "dble" };
 
         private readonly ICPU cpu;
 
-        public DBcc(ICPU cpu)
+        public DBCC(ICPU cpu)
         {
             this.cpu = cpu;
         }
@@ -70,9 +70,9 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            private readonly DBcc parent;
+            private readonly DBCC parent;
 
-            public AnonymousInstruction(DBcc parent)
+            public AnonymousInstruction(DBCC parent)
             {
                 this.parent = parent;
             }

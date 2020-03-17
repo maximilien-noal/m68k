@@ -46,7 +46,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Cmpa_long(uint opcode)
+        protected uint CmpaLong(uint opcode)
         {
             IOperand op = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
             uint d = cpu.GetAddrRegisterLong((opcode >> 9) & 0x07);
@@ -56,7 +56,7 @@ namespace M68k.CPU.Instructions
             return 6 + op.GetTiming();
         }
 
-        protected uint Cmpa_word(uint opcode)
+        protected uint CmpaWord(uint opcode)
         {
             IOperand op = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint d = cpu.GetAddrRegisterLong((opcode >> 9) & 0x07);
@@ -89,7 +89,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Cmpa_word(opcode);
+                return parent.CmpaWord(opcode);
             }
         }
 
@@ -109,7 +109,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Cmpa_long(opcode);
+                return parent.CmpaLong(opcode);
             }
         }
     }

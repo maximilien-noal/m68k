@@ -57,7 +57,7 @@ namespace M68k.CPU.Instructions
             private readonly CMP parent;
             public uint Execute(uint opcode)
             {
-                return parent.Cmp_byte(opcode);
+                return parent.CmpByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -76,7 +76,7 @@ namespace M68k.CPU.Instructions
             private readonly CMP parent;
             public uint Execute(uint opcode)
             {
-                return parent.Cmp_word(opcode);
+                return parent.CmpWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -95,7 +95,7 @@ namespace M68k.CPU.Instructions
             private readonly CMP parent;
             public uint Execute(uint opcode)
             {
-                return parent.Cmp_long(opcode);
+                return parent.CmpLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -104,7 +104,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Cmp_byte(uint opcode)
+        protected uint CmpByte(uint opcode)
         {
             IOperand op = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Byte);
             uint s = op.GetByte();
@@ -114,7 +114,7 @@ namespace M68k.CPU.Instructions
             return 4 + op.GetTiming();
         }
 
-        protected uint Cmp_word(uint opcode)
+        protected uint CmpWord(uint opcode)
         {
             IOperand op = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint s = op.GetWord();
@@ -124,7 +124,7 @@ namespace M68k.CPU.Instructions
             return 4 + op.GetTiming();
         }
 
-        protected uint Cmp_long(uint opcode)
+        protected uint CmpLong(uint opcode)
         {
             IOperand op = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
             uint s = op.GetLong();

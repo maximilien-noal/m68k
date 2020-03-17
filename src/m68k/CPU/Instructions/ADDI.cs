@@ -187,7 +187,7 @@ namespace M68k.CPU.Instructions
 
             DisassembledOperand src = new DisassembledOperand(instructionSet, immBytes, imm);
             DisassembledOperand dst = cpu.DisassembleDstEA(address + 2 + immBytes, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-            return new DisassembledInstruction(address, opcode, "addi" + sz.Ext, src, dst);
+            return new DisassembledInstruction(address, opcode, $"addi{sz.Ext}", src, dst);
         }
     }
 }

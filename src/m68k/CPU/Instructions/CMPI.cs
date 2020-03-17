@@ -57,7 +57,7 @@ namespace M68k.CPU.Instructions
             private readonly CMPI parent;
             public uint Execute(uint opcode)
             {
-                return parent.Cmpi_byte(opcode);
+                return parent.CmpiByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -76,7 +76,7 @@ namespace M68k.CPU.Instructions
             private readonly CMPI parent;
             public uint Execute(uint opcode)
             {
-                return parent.Cmpi_word(opcode);
+                return parent.CmpiWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -95,7 +95,7 @@ namespace M68k.CPU.Instructions
             private readonly CMPI parent;
             public uint Execute(uint opcode)
             {
-                return parent.Cmpi_long(opcode);
+                return parent.CmpiLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -104,7 +104,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Cmpi_byte(uint opcode)
+        protected uint CmpiByte(uint opcode)
         {
             uint s = CpuUtils.SignExtendByte(cpu.FetchPCWord());
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Byte);
@@ -114,7 +114,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 8 : 8 + op.GetTiming());
         }
 
-        protected uint Cmpi_word(uint opcode)
+        protected uint CmpiWord(uint opcode)
         {
             uint s = cpu.FetchPCWordSigned();
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
@@ -124,7 +124,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 8 : 8 + op.GetTiming());
         }
 
-        protected uint Cmpi_long(uint opcode)
+        protected uint CmpiLong(uint opcode)
         {
             uint s = cpu.FetchPCLong();
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);

@@ -62,7 +62,7 @@ namespace M68k.CPU.Instructions
             private readonly ADDQ parent;
             public uint Execute(uint opcode)
             {
-                return parent.Addq_byte(opcode);
+                return parent.AddqByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -81,7 +81,7 @@ namespace M68k.CPU.Instructions
             private readonly ADDQ parent;
             public uint Execute(uint opcode)
             {
-                return parent.Addq_word(opcode);
+                return parent.AddqWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -100,7 +100,7 @@ namespace M68k.CPU.Instructions
             private readonly ADDQ parent;
             public uint Execute(uint opcode)
             {
-                return parent.Addq_long(opcode);
+                return parent.AddqLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -109,7 +109,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Addq_byte(uint opcode)
+        protected uint AddqByte(uint opcode)
         {
             uint s = (opcode >> 9 & 0x07);
             if (s == 0)
@@ -122,7 +122,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 4 : 8 + dst.GetTiming());
         }
 
-        protected uint Addq_word(uint opcode)
+        protected uint AddqWord(uint opcode)
         {
             uint s = (opcode >> 9 & 0x07);
             if (s == 0)
@@ -145,7 +145,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Addq_long(uint opcode)
+        protected uint AddqLong(uint opcode)
         {
             uint s = (opcode >> 9 & 0x07);
             if (s == 0)

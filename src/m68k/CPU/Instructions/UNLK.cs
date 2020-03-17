@@ -13,7 +13,7 @@ namespace M68k.CPU.Instructions
 
         public DisassembledInstruction DisassembleOp(uint address, uint opcode)
         {
-            DisassembledOperand src = new DisassembledOperand("a" + (opcode & 0x07));
+            DisassembledOperand src = new DisassembledOperand($"a{opcode & 0x07}");
             return new DisassembledInstruction(address, opcode, "unlk", src);
         }
 

@@ -3,10 +3,10 @@ using System.Globalization;
 
 namespace M68k.CPU.Instructions
 {
-    public class ANDI_TO_CCR : IInstructionHandler
+    public class AndiToCcr : IInstructionHandler
     {
         private readonly ICPU cpu;
-        public ANDI_TO_CCR(ICPU cpu)
+        public AndiToCcr(ICPU cpu)
         {
             this.cpu = cpu;
         }
@@ -27,15 +27,15 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            public AnonymousInstruction(ANDI_TO_CCR parent)
+            public AnonymousInstruction(AndiToCcr parent)
             {
                 this.parent = parent;
             }
 
-            private readonly ANDI_TO_CCR parent;
+            private readonly AndiToCcr parent;
             public uint Execute(uint opcode)
             {
-                return parent.Andi_word(opcode);
+                return parent.AndiWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -44,7 +44,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual uint Andi_word(uint opcode)
+        protected virtual uint AndiWord(uint opcode)
         {
             uint s = cpu.FetchPCWord() & 0x0031;
             cpu.SetSR(cpu.GetSR() & (s | 0xff00));

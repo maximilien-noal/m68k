@@ -54,7 +54,7 @@ namespace M68k.CPU.Instructions
             private readonly CLR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Clr_byte(opcode);
+                return parent.ClrByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -73,7 +73,7 @@ namespace M68k.CPU.Instructions
             private readonly CLR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Clr_word(opcode);
+                return parent.ClrWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -92,7 +92,7 @@ namespace M68k.CPU.Instructions
             private readonly CLR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Clr_long(opcode);
+                return parent.ClrLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -101,7 +101,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Clr_byte(uint opcode)
+        protected uint ClrByte(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Byte);
             op.GetByte();
@@ -113,7 +113,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
         }
 
-        protected uint Clr_word(uint opcode)
+        protected uint ClrWord(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             op.GetWord();
@@ -125,7 +125,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
         }
 
-        protected uint Clr_long(uint opcode)
+        protected uint ClrLong(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
             op.GetLong();

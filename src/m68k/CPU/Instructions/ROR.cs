@@ -106,7 +106,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "ror" + sz.Ext, src, dst);
         }
 
-        protected virtual uint Ror_byte_imm(uint opcode)
+        protected virtual uint RorByteImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -128,7 +128,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Ror_byte_reg(uint opcode)
+        protected virtual uint RorByteReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -148,7 +148,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Ror_long_imm(uint opcode)
+        protected virtual uint RorLongImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -169,7 +169,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Ror_long_reg(uint opcode)
+        protected virtual uint RorLongReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -188,7 +188,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Ror_word_imm(uint opcode)
+        protected virtual uint RorWordImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -210,7 +210,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Ror_word_mem(uint opcode)
+        protected virtual uint RorWordMem(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint v = op.GetWord();
@@ -223,7 +223,7 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected virtual uint Ror_word_reg(uint opcode)
+        protected virtual uint RorWordReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -259,7 +259,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Ror_byte_imm(opcode);
+                return parent.RorByteImm(opcode);
             }
         }
 
@@ -279,7 +279,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Ror_word_imm(opcode);
+                return parent.RorWordImm(opcode);
             }
         }
 
@@ -299,7 +299,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Ror_long_imm(opcode);
+                return parent.RorLongImm(opcode);
             }
         }
 
@@ -319,7 +319,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Ror_byte_reg(opcode);
+                return parent.RorByteReg(opcode);
             }
         }
 
@@ -339,7 +339,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Ror_word_reg(opcode);
+                return parent.RorWordReg(opcode);
             }
         }
 
@@ -359,7 +359,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Ror_long_reg(opcode);
+                return parent.RorLongReg(opcode);
             }
         }
 
@@ -379,7 +379,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Ror_word_mem(opcode);
+                return parent.RorWordMem(opcode);
             }
         }
     }

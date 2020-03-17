@@ -55,7 +55,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "subq" + sz.Ext, src, dst);
         }
 
-        protected uint Subq_byte(uint opcode)
+        protected uint SubqByte(uint opcode)
         {
             uint s = (opcode >> 9 & 0x07);
             if (s == 0)
@@ -68,7 +68,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 4 : 8 + dst.GetTiming());
         }
 
-        protected uint Subq_long(uint opcode)
+        protected uint SubqLong(uint opcode)
         {
             uint s = (opcode >> 9 & 0x07);
             if (s == 0)
@@ -83,7 +83,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 8 : 12 + dst.GetTiming());
         }
 
-        protected uint Subq_word(uint opcode)
+        protected uint SubqWord(uint opcode)
         {
             uint s = (opcode >> 9 & 0x07);
             if (s == 0)
@@ -122,7 +122,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Subq_byte(opcode);
+                return parent.SubqByte(opcode);
             }
         }
 
@@ -142,7 +142,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Subq_word(opcode);
+                return parent.SubqWord(opcode);
             }
         }
 
@@ -162,7 +162,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Subq_long(opcode);
+                return parent.SubqLong(opcode);
             }
         }
     }

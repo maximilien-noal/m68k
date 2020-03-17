@@ -36,11 +36,11 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, bool data_reg_mode)
+        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, bool dataRegMode)
         {
             DisassembledOperand src;
             DisassembledOperand dst;
-            if (data_reg_mode)
+            if (dataRegMode)
             {
                 src = new DisassembledOperand("d" + (opcode & 0x07));
                 dst = new DisassembledOperand("d" + ((opcode >> 9) & 0x07));
@@ -98,7 +98,7 @@ namespace M68k.CPU.Instructions
             return result;
         }
 
-        protected uint Sbcd_ar(uint opcode)
+        protected uint SbcdAr(uint opcode)
         {
             uint sreg = (opcode & 0x07);
             uint dreg = (opcode >> 9) & 0x07;
@@ -111,7 +111,7 @@ namespace M68k.CPU.Instructions
             return 18;
         }
 
-        protected uint Sbcd_dr(uint opcode)
+        protected uint SbcdDr(uint opcode)
         {
             uint sreg = (opcode & 0x07);
             uint dreg = (opcode >> 9) & 0x07;
@@ -138,7 +138,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Sbcd_dr(opcode);
+                return parent.SbcdDr(opcode);
             }
         }
 
@@ -158,7 +158,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Sbcd_ar(opcode);
+                return parent.SbcdAr(opcode);
             }
         }
     }

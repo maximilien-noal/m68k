@@ -95,7 +95,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, $"eori{sz.Ext}", src, dst);
         }
 
-        protected uint Eori_byte(uint opcode)
+        protected uint EoriByte(uint opcode)
         {
             uint s = cpu.FetchPCWord() & 0x00ff;
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
@@ -107,7 +107,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 8 : 12 + dst.GetTiming());
         }
 
-        protected uint Eori_long(uint opcode)
+        protected uint EoriLong(uint opcode)
         {
             uint s = cpu.FetchPCLong();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
@@ -118,7 +118,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 16 : 20 + dst.GetTiming());
         }
 
-        protected uint Eori_word(uint opcode)
+        protected uint EoriWord(uint opcode)
         {
             uint s = cpu.FetchPCWord();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
@@ -161,7 +161,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Eori_byte(opcode);
+                return parent.EoriByte(opcode);
             }
         }
 
@@ -181,7 +181,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Eori_word(opcode);
+                return parent.EoriWord(opcode);
             }
         }
 
@@ -201,7 +201,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Eori_long(opcode);
+                return parent.EoriLong(opcode);
             }
         }
     }

@@ -64,7 +64,7 @@ namespace M68k.CPU.Instructions
             private readonly MOVE parent;
             public uint Execute(uint opcode)
             {
-                return parent.Move_byte(opcode);
+                return parent.MoveByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -83,7 +83,7 @@ namespace M68k.CPU.Instructions
             private readonly MOVE parent;
             public uint Execute(uint opcode)
             {
-                return parent.Move_word(opcode);
+                return parent.MoveWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -102,7 +102,7 @@ namespace M68k.CPU.Instructions
             private readonly MOVE parent;
             public uint Execute(uint opcode)
             {
-                return parent.Move_long(opcode);
+                return parent.MoveLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -111,7 +111,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Move_byte(uint opcode)
+        protected uint MoveByte(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
             IOperand dst = cpu.ResolveDstEA((opcode >> 6) & 0x07, (opcode >> 9) & 0x07, Size.Byte);
@@ -121,7 +121,7 @@ namespace M68k.CPU.Instructions
             return ShortExecutionTime[src.Index()][dst.Index()];
         }
 
-        protected uint Move_word(uint opcode)
+        protected uint MoveWord(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
             IOperand dst = cpu.ResolveDstEA((opcode >> 6) & 0x07, (opcode >> 9) & 0x07, Size.Word);
@@ -131,7 +131,7 @@ namespace M68k.CPU.Instructions
             return ShortExecutionTime[src.Index()][dst.Index()];
         }
 
-        protected uint Move_long(uint opcode)
+        protected uint MoveLong(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
             IOperand dst = cpu.ResolveDstEA((opcode >> 6) & 0x07, (opcode >> 9) & 0x07, Size.SizeLong);

@@ -2,20 +2,25 @@ using System.Globalization;
 
 namespace M68k.CPU.Instructions
 {
-    public class ORI_TO_SR : IInstructionHandler
+    public class EoriToCcr : IInstructionHandler
     {
         private readonly ICPU cpu;
 
-        public ORI_TO_SR(ICPU cpu)
+        public EoriToCcr(ICPU cpu)
         {
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
+            if (instructionSet is null)
+            {
+                throw new System.ArgumentNullException(nameof(instructionSet));
+            }
+
             uint baseAddress;
             IInstruction i;
-            baseAddress = 0x007c;
+            baseAddress = 0x0a3c;
             i = new AnonymousInstruction(this);
             instructionSet.AddInstruction(baseAddress, i);
         }
@@ -26,34 +31,27 @@ namespace M68k.CPU.Instructions
             uint imm;
             string instructionSet;
             imm = cpu.ReadMemoryWord(address + 2);
-            instructionSet = imm.ToString("#$%04x", CultureInfo.InvariantCulture);
+            instructionSet = $"#${imm.ToString("x4", CultureInfo.InvariantCulture)}";
             imm_bytes = 2;
             DisassembledOperand src = new DisassembledOperand(instructionSet, imm_bytes, imm);
             DisassembledOperand dst = cpu.DisassembleDstEA(address + 2 + imm_bytes, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-            return new DisassembledInstruction(address, opcode, "ori" + sz.Ext, src, dst);
+            return new DisassembledInstruction(address, opcode, $"ori{sz.Ext}", src, dst);
         }
 
-        protected virtual uint Ori_word(uint opcode)
+        protected uint EoriWord()
         {
-            uint s = cpu.FetchPCWordSigned() & 0xf71f;
-            if (cpu.IsSupervisorMode())
-            {
-                cpu.SetSR(cpu.GetSR() | s);
-            }
-            else
-            {
-                cpu.RaiseSRException();
-                return 34;
-            }
-
+            uint s = cpu.FetchPCWordSigned() & 31;
+            uint sr = cpu.GetCCRegister();
+            s ^= (sr & 0x00ff);
+            cpu.SetCCRegister(s);
             return 8;
         }
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            private readonly ORI_TO_SR parent;
+            private readonly EoriToCcr parent;
 
-            public AnonymousInstruction(ORI_TO_SR parent)
+            public AnonymousInstruction(EoriToCcr parent)
             {
                 this.parent = parent;
             }
@@ -65,7 +63,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Ori_word(opcode);
+                return parent.EoriWord();
             }
         }
     }

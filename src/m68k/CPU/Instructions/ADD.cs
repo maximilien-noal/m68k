@@ -166,11 +166,11 @@ namespace M68k.CPU.Instructions
             if ((opcode & 0x0100) == 0)
             {
                 src = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-                dst = new DisassembledOperand("d" + ((opcode >> 9) & 0x07));
+                dst = new DisassembledOperand($"d{(opcode >> 9) & 0x07}");
             }
             else
             {
-                src = new DisassembledOperand("d" + ((opcode >> 9) & 0x07));
+                src = new DisassembledOperand($"d{(opcode >> 9) & 0x07}");
                 dst = cpu.DisassembleDstEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
             }
 

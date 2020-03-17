@@ -106,7 +106,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "roxr" + sz.Ext, src, dst);
         }
 
-        protected virtual uint Roxr_byte_imm(uint opcode)
+        protected virtual uint RoxrByteImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -142,7 +142,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Roxr_byte_reg(uint opcode)
+        protected virtual uint RoxrByteReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -185,7 +185,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Roxr_long_imm(uint opcode)
+        protected virtual uint RoxrLongImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -219,7 +219,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Roxr_long_reg(uint opcode)
+        protected virtual uint RoxrLongReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -261,7 +261,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Roxr_word_imm(uint opcode)
+        protected virtual uint RoxrWordImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -297,7 +297,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Roxr_word_mem(uint opcode)
+        protected virtual uint RoxrWordMem(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint v = op.GetWord();
@@ -319,7 +319,7 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected virtual uint Roxr_word_reg(uint opcode)
+        protected virtual uint RoxrWordReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -378,7 +378,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Roxr_byte_imm(opcode);
+                return parent.RoxrByteImm(opcode);
             }
         }
 
@@ -398,7 +398,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Roxr_word_imm(opcode);
+                return parent.RoxrWordImm(opcode);
             }
         }
 
@@ -418,7 +418,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Roxr_long_imm(opcode);
+                return parent.RoxrLongImm(opcode);
             }
         }
 
@@ -438,7 +438,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Roxr_byte_reg(opcode);
+                return parent.RoxrByteReg(opcode);
             }
         }
 
@@ -458,7 +458,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Roxr_word_reg(opcode);
+                return parent.RoxrWordReg(opcode);
             }
         }
 
@@ -478,7 +478,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Roxr_long_reg(opcode);
+                return parent.RoxrLongReg(opcode);
             }
         }
 
@@ -498,7 +498,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Roxr_word_mem(opcode);
+                return parent.RoxrWordMem(opcode);
             }
         }
     }

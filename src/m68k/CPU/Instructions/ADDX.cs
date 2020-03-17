@@ -73,7 +73,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual uint Addx_byte_mem(uint opcode)
+        protected virtual uint AddxByteMem(uint opcode)
         {
             uint rx = (opcode >> 9) & 0x07;
             uint ry = (opcode & 0x07);
@@ -87,7 +87,7 @@ namespace M68k.CPU.Instructions
             return 18;
         }
 
-        protected virtual uint Addx_byte_reg(uint opcode)
+        protected virtual uint AddxByteReg(uint opcode)
         {
             uint s = cpu.GetDataRegisterByteSigned((opcode & 0x07));
             uint d = cpu.GetDataRegisterByteSigned((opcode >> 9) & 0x07);
@@ -97,7 +97,7 @@ namespace M68k.CPU.Instructions
             return 4;
         }
 
-        protected virtual uint Addx_long_mem(uint opcode)
+        protected virtual uint AddxLongMem(uint opcode)
         {
             uint rx = (opcode >> 9) & 0x07;
             uint ry = (opcode & 0x07);
@@ -111,7 +111,7 @@ namespace M68k.CPU.Instructions
             return 30;
         }
 
-        protected virtual uint Addx_long_reg(uint opcode)
+        protected virtual uint AddxLongReg(uint opcode)
         {
             uint s = cpu.GetDataRegisterLong((opcode & 0x07));
             uint d = cpu.GetDataRegisterLong((opcode >> 9) & 0x07);
@@ -121,7 +121,7 @@ namespace M68k.CPU.Instructions
             return 8;
         }
 
-        protected virtual uint Addx_word_mem(uint opcode)
+        protected virtual uint AddxWordMem(uint opcode)
         {
             uint rx = (opcode >> 9) & 0x07;
             uint ry = (opcode & 0x07);
@@ -135,7 +135,7 @@ namespace M68k.CPU.Instructions
             return 18;
         }
 
-        protected virtual uint Addx_word_reg(uint opcode)
+        protected virtual uint AddxWordReg(uint opcode)
         {
             uint s = cpu.GetDataRegisterWordSigned((opcode & 0x07));
             uint d = cpu.GetDataRegisterWordSigned((opcode >> 9) & 0x07);
@@ -179,7 +179,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Addx_byte_reg(opcode);
+                return parent.AddxByteReg(opcode);
             }
         }
 
@@ -199,7 +199,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Addx_word_reg(opcode);
+                return parent.AddxWordReg(opcode);
             }
         }
 
@@ -219,7 +219,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Addx_long_reg(opcode);
+                return parent.AddxLongReg(opcode);
             }
         }
 
@@ -239,7 +239,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Addx_byte_mem(opcode);
+                return parent.AddxByteMem(opcode);
             }
         }
 
@@ -259,7 +259,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Addx_word_mem(opcode);
+                return parent.AddxWordMem(opcode);
             }
         }
 
@@ -279,7 +279,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Addx_long_mem(opcode);
+                return parent.AddxLongMem(opcode);
             }
         }
     }

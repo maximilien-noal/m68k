@@ -48,7 +48,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "suba" + sz.Ext, src, dst);
         }
 
-        protected uint Suba_long(uint opcode)
+        protected uint SubaLong(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
             uint s = src.GetLong();
@@ -59,7 +59,7 @@ namespace M68k.CPU.Instructions
             return 6 + src.GetTiming();
         }
 
-        protected uint Suba_word(uint opcode)
+        protected uint SubaWord(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint s = src.GetWordSigned();
@@ -86,7 +86,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Suba_word(opcode);
+                return parent.SubaWord(opcode);
             }
         }
 
@@ -106,7 +106,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Suba_long(opcode);
+                return parent.SubaLong(opcode);
             }
         }
     }

@@ -33,7 +33,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Bxx_byte(uint opcode)
+        protected uint BxxByte(uint opcode)
         {
             uint dis = CpuUtils.SignExtendByte(opcode & 0xff);
             uint cc = (opcode >> 8) & 0x0f;
@@ -61,7 +61,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint Bxx_word(uint opcode)
+        protected uint BxxWord(uint opcode)
         {
             uint pc = cpu.GetPC();
             uint dis = cpu.ReadMemoryWordSigned(pc);
@@ -127,7 +127,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Bxx_byte(opcode);
+                return parent.BxxByte(opcode);
             }
         }
 
@@ -147,7 +147,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Bxx_word(opcode);
+                return parent.BxxWord(opcode);
             }
         }
     }

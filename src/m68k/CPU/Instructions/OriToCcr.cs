@@ -2,17 +2,22 @@ using System.Globalization;
 
 namespace M68k.CPU.Instructions
 {
-    public class ORI_TO_CCR : IInstructionHandler
+    public class OriToCcr : IInstructionHandler
     {
         private readonly ICPU cpu;
 
-        public ORI_TO_CCR(ICPU cpu)
+        public OriToCcr(ICPU cpu)
         {
             this.cpu = cpu;
         }
 
         public virtual void Register(IInstructionSet instructionSet)
         {
+            if (instructionSet is null)
+            {
+                throw new System.ArgumentNullException(nameof(instructionSet));
+            }
+
             uint baseAddress;
             IInstruction i;
             baseAddress = 0x003c;
@@ -33,7 +38,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "ori" + sz.Ext, src, dst);
         }
 
-        protected virtual uint Ori_word(uint opcode)
+        protected virtual uint OriWord(uint opcode)
         {
             uint s = cpu.FetchPCWordSigned() & 31;
             cpu.SetSR(cpu.GetSR() | s);
@@ -42,9 +47,9 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            private readonly ORI_TO_CCR parent;
+            private readonly OriToCcr parent;
 
-            public AnonymousInstruction(ORI_TO_CCR parent)
+            public AnonymousInstruction(OriToCcr parent)
             {
                 this.parent = parent;
             }
@@ -56,7 +61,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Ori_word(opcode);
+                return parent.OriWord(opcode);
             }
         }
     }

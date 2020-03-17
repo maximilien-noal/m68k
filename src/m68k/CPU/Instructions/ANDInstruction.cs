@@ -89,7 +89,7 @@ namespace M68k.CPU.Instructions
             private readonly ANDInstruction parent;
             public uint Execute(uint opcode)
             {
-                return parent.And_byte_dn_dest(opcode);
+                return parent.AndByteDnDest(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -108,7 +108,7 @@ namespace M68k.CPU.Instructions
             private readonly ANDInstruction parent;
             public uint Execute(uint opcode)
             {
-                return parent.And_word_dn_dest(opcode);
+                return parent.AndWordDnDest(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -127,7 +127,7 @@ namespace M68k.CPU.Instructions
             private readonly ANDInstruction parent;
             public uint Execute(uint opcode)
             {
-                return parent.And_long_dn_dest(opcode);
+                return parent.AndLongDnDest(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -146,7 +146,7 @@ namespace M68k.CPU.Instructions
             private readonly ANDInstruction parent;
             public uint Execute(uint opcode)
             {
-                return parent.And_byte_ea_dest(opcode);
+                return parent.AndByteEaDest(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -165,7 +165,7 @@ namespace M68k.CPU.Instructions
             private readonly ANDInstruction parent;
             public uint Execute(uint opcode)
             {
-                return parent.And_word_ea_dest(opcode);
+                return parent.AndWordEaDest(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -184,7 +184,7 @@ namespace M68k.CPU.Instructions
             private readonly ANDInstruction parent;
             public uint Execute(uint opcode)
             {
-                return parent.And_long_ea_dest(opcode);
+                return parent.AndLongEaDest(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -193,7 +193,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint And_byte_dn_dest(uint opcode)
+        protected uint AndByteDnDest(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
             uint s = src.GetByteSigned();
@@ -206,7 +206,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint And_byte_ea_dest(uint opcode)
+        protected uint AndByteEaDest(uint opcode)
         {
             uint s = cpu.GetDataRegisterByteSigned((opcode >> 9) & 0x07);
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
@@ -218,7 +218,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint And_word_dn_dest(uint opcode)
+        protected uint AndWordDnDest(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
             uint s = src.GetWordSigned();
@@ -231,7 +231,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint And_word_ea_dest(uint opcode)
+        protected uint AndWordEaDest(uint opcode)
         {
             uint s = cpu.GetDataRegisterWordSigned((opcode >> 9) & 0x07);
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
@@ -243,7 +243,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint And_long_dn_dest(uint opcode)
+        protected uint AndLongDnDest(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
             uint s = src.GetLong();
@@ -256,7 +256,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint And_long_ea_dest(uint opcode)
+        protected uint AndLongEaDest(uint opcode)
         {
             uint s = cpu.GetDataRegisterLong((opcode >> 9) & 0x07);
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);

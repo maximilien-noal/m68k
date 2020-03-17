@@ -90,7 +90,7 @@ namespace M68k.CPU.Instructions
             if ((opcode & 0x00c0) == 0x00c0)
             {
                 src = cpu.DisassembleDstEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-                return new DisassembledInstruction(address, opcode, "rol" + sz.Ext, src);
+                return new DisassembledInstruction(address, opcode, $"rol{sz.Ext}", src);
             }
             else if ((opcode & 0x0020) == 0x0020)
             {
@@ -106,10 +106,10 @@ namespace M68k.CPU.Instructions
                 dst = new DisassembledOperand("d" + (opcode & 0x07));
             }
 
-            return new DisassembledInstruction(address, opcode, "rol" + sz.Ext, src, dst);
+            return new DisassembledInstruction(address, opcode, $"rol{sz.Ext}", src, dst);
         }
 
-        protected virtual uint Rol_byte_imm(uint opcode)
+        protected virtual uint RolByteImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -131,7 +131,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Rol_byte_reg(uint opcode)
+        protected virtual uint RolByteReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -151,7 +151,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Rol_long_imm(uint opcode)
+        protected virtual uint RolLongImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -172,7 +172,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Rol_long_reg(uint opcode)
+        protected virtual uint RolLongReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -191,7 +191,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Rol_word_imm(uint opcode)
+        protected virtual uint RolWordImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -213,7 +213,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Rol_word_mem(uint opcode)
+        protected virtual uint RolWordMem(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint v = op.GetWord();
@@ -226,7 +226,7 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected virtual uint Rol_word_reg(uint opcode)
+        protected virtual uint RolWordReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -262,7 +262,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Rol_byte_imm(opcode);
+                return parent.RolByteImm(opcode);
             }
         }
 
@@ -282,7 +282,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Rol_word_imm(opcode);
+                return parent.RolWordImm(opcode);
             }
         }
 
@@ -302,7 +302,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Rol_long_imm(opcode);
+                return parent.RolLongImm(opcode);
             }
         }
 
@@ -322,7 +322,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Rol_byte_reg(opcode);
+                return parent.RolByteReg(opcode);
             }
         }
 
@@ -342,7 +342,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Rol_word_reg(opcode);
+                return parent.RolWordReg(opcode);
             }
         }
 
@@ -362,7 +362,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Rol_long_reg(opcode);
+                return parent.RolLongReg(opcode);
             }
         }
 
@@ -382,7 +382,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Rol_word_mem(opcode);
+                return parent.RolWordMem(opcode);
             }
         }
     }

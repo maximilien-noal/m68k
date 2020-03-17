@@ -98,7 +98,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "or" + sz.Ext, src, dst);
         }
 
-        protected uint Or_byte_dn_dest(uint opcode)
+        protected uint OrByteDnDest(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
             uint s = src.GetByteSigned();
@@ -111,7 +111,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint Or_byte_ea_dest(uint opcode)
+        protected uint OrByteEaDest(uint opcode)
         {
             uint s = cpu.GetDataRegisterByteSigned((opcode >> 9) & 0x07);
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
@@ -123,7 +123,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint Or_long_dn_dest(uint opcode)
+        protected uint OrLongDnDest(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
             uint s = src.GetLong();
@@ -136,7 +136,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint Or_long_ea_dest(uint opcode)
+        protected uint OrLongEaDest(uint opcode)
         {
             uint s = cpu.GetDataRegisterLong((opcode >> 9) & 0x07);
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
@@ -148,7 +148,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint Or_word_dn_dest(uint opcode)
+        protected uint OrWordDnDest(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
             uint s = src.GetWordSigned();
@@ -161,7 +161,7 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint Or_word_ea_dest(uint opcode)
+        protected uint OrWordEaDest(uint opcode)
         {
             uint s = cpu.GetDataRegisterWordSigned((opcode >> 9) & 0x07);
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
@@ -189,7 +189,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Or_byte_dn_dest(opcode);
+                return parent.OrByteDnDest(opcode);
             }
         }
 
@@ -209,7 +209,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Or_word_dn_dest(opcode);
+                return parent.OrWordDnDest(opcode);
             }
         }
 
@@ -229,7 +229,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Or_long_dn_dest(opcode);
+                return parent.OrLongDnDest(opcode);
             }
         }
 
@@ -249,7 +249,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Or_byte_ea_dest(opcode);
+                return parent.OrByteEaDest(opcode);
             }
         }
 
@@ -269,7 +269,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Or_word_ea_dest(opcode);
+                return parent.OrWordEaDest(opcode);
             }
         }
 
@@ -289,7 +289,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Or_long_ea_dest(opcode);
+                return parent.OrLongEaDest(opcode);
             }
         }
     }

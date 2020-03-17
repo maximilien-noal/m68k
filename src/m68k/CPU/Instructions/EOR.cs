@@ -57,7 +57,7 @@ namespace M68k.CPU.Instructions
             private readonly EOR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Eor_byte(opcode);
+                return parent.EorByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -76,7 +76,7 @@ namespace M68k.CPU.Instructions
             private readonly EOR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Eor_word(opcode);
+                return parent.EorWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -95,7 +95,7 @@ namespace M68k.CPU.Instructions
             private readonly EOR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Eor_long(opcode);
+                return parent.EorLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -104,7 +104,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Eor_byte(uint opcode)
+        protected uint EorByte(uint opcode)
         {
             uint s = cpu.GetDataRegisterByte((opcode >> 9) & 0x07);
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
@@ -115,7 +115,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 4 : 8 + dst.GetTiming());
         }
 
-        protected uint Eor_word(uint opcode)
+        protected uint EorWord(uint opcode)
         {
             uint s = cpu.GetDataRegisterWord((opcode >> 9) & 0x07);
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
@@ -126,7 +126,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 4 : 8 + dst.GetTiming());
         }
 
-        protected uint Eor_long(uint opcode)
+        protected uint EorLong(uint opcode)
         {
             uint s = cpu.GetDataRegisterLong((opcode >> 9) & 0x07);
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);

@@ -89,7 +89,7 @@ namespace M68k.CPU.Instructions
             private readonly ASR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asr_byte_imm(opcode);
+                return parent.AsrByteImm(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -108,7 +108,7 @@ namespace M68k.CPU.Instructions
             private readonly ASR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asr_word_imm(opcode);
+                return parent.AsrWordImm(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -127,7 +127,7 @@ namespace M68k.CPU.Instructions
             private readonly ASR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asr_long_imm(opcode);
+                return parent.AsrLongImm(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -146,7 +146,7 @@ namespace M68k.CPU.Instructions
             private readonly ASR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asr_byte_reg(opcode);
+                return parent.AsrByteReg(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -165,7 +165,7 @@ namespace M68k.CPU.Instructions
             private readonly ASR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asr_word_reg(opcode);
+                return parent.AsrWordReg(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -184,7 +184,7 @@ namespace M68k.CPU.Instructions
             private readonly ASR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asr_long_reg(opcode);
+                return parent.AsrLongReg(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -203,7 +203,7 @@ namespace M68k.CPU.Instructions
             private readonly ASR parent;
             public uint Execute(uint opcode)
             {
-                return parent.Asr_word_mem(opcode);
+                return parent.AsrWordMem(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -212,7 +212,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual uint Asr_byte_imm(uint opcode)
+        protected virtual uint AsrByteImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -234,7 +234,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Asr_word_imm(uint opcode)
+        protected virtual uint AsrWordImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -256,7 +256,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Asr_long_imm(uint opcode)
+        protected virtual uint AsrLongImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -277,7 +277,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Asr_byte_reg(uint opcode)
+        protected virtual uint AsrByteReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -297,7 +297,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Asr_word_reg(uint opcode)
+        protected virtual uint AsrWordReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -317,7 +317,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Asr_long_reg(uint opcode)
+        protected virtual uint AsrLongReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -336,7 +336,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Asr_word_mem(uint opcode)
+        protected virtual uint AsrWordMem(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint v = op.GetWord();

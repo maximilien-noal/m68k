@@ -1,16 +1,21 @@
 namespace M68k.CPU.Instructions
 {
-    public class MOVE_TO_SR : IInstructionHandler
+    public class MoveToCcr : IInstructionHandler
     {
         private readonly ICPU cpu;
-        public MOVE_TO_SR(ICPU cpu)
+        public MoveToCcr(ICPU cpu)
         {
             this.cpu = cpu;
         }
 
         public void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress = 0x46c0;
+            if (instructionSet is null)
+            {
+                throw new System.ArgumentNullException(nameof(instructionSet));
+            }
+
+            uint baseAddress = 0x44c0;
             IInstruction i = new AnonymousInstruction(this);
             for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
             {
@@ -27,15 +32,15 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            public AnonymousInstruction(MOVE_TO_SR parent)
+            public AnonymousInstruction(MoveToCcr parent)
             {
                 this.parent = parent;
             }
 
-            private readonly MOVE_TO_SR parent;
+            private readonly MoveToCcr parent;
             public uint Execute(uint opcode)
             {
-                return parent.Move_to_sr(opcode);
+                return parent.DoMoveToCcr(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -44,24 +49,18 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Move_to_sr(uint opcode)
+        protected uint DoMoveToCcr(uint opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
-            uint s = src.GetWord() & 0xf71f;
-            if (!cpu.IsSupervisorMode())
-            {
-                cpu.RaiseSRException();
-                return 34;
-            }
-
-            cpu.SetSR(s);
+            uint s = src.GetWord() & 31;
+            cpu.SetCCRegister(s);
             return 12 + src.GetTiming();
         }
 
         protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
         {
             DisassembledOperand src = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-            DisassembledOperand dst = new DisassembledOperand("sr");
+            DisassembledOperand dst = new DisassembledOperand("ccr");
             return new DisassembledInstruction(address, opcode, "move", src, dst);
         }
     }

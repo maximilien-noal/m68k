@@ -90,7 +90,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "subi" + sz.Ext, src, dst);
         }
 
-        protected virtual uint Subi_byte(uint opcode)
+        protected virtual uint SubiByte(uint opcode)
         {
             uint s = CpuUtils.SignExtendByte(cpu.FetchPCWord());
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
@@ -101,7 +101,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 8 : 12 + dst.GetTiming());
         }
 
-        protected virtual uint Subi_long(uint opcode)
+        protected virtual uint SubiLong(uint opcode)
         {
             uint s = cpu.FetchPCLong();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
@@ -112,7 +112,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 16 : 20 + dst.GetTiming());
         }
 
-        protected virtual uint Subi_word(uint opcode)
+        protected virtual uint SubiWord(uint opcode)
         {
             uint s = cpu.FetchPCWordSigned();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
@@ -139,7 +139,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Subi_byte(opcode);
+                return parent.SubiByte(opcode);
             }
         }
 
@@ -159,7 +159,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Subi_word(opcode);
+                return parent.SubiWord(opcode);
             }
         }
 
@@ -179,7 +179,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Subi_long(opcode);
+                return parent.SubiLong(opcode);
             }
         }
     }

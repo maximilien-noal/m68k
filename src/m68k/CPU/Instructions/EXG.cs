@@ -7,9 +7,9 @@ namespace M68k.CPU.Instructions
         private readonly ICPU cpu;
         protected enum ExgMode
         {
-            EXG_DATA,
-            EXG_ADDR,
-            EXG_DATA_ADDR
+            ExgData,
+            ExgAddr,
+            ExgDataAddr
         }
 
         public EXG(ICPU cpu)
@@ -59,12 +59,12 @@ namespace M68k.CPU.Instructions
             private readonly EXG parent;
             public uint Execute(uint opcode)
             {
-                return parent.Exg_dd(opcode);
+                return parent.ExgDd(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
             {
-                return parent.DisassembleOp(address, opcode, ExgMode.EXG_DATA);
+                return parent.DisassembleOp(address, opcode, ExgMode.ExgData);
             }
         }
 
@@ -78,12 +78,12 @@ namespace M68k.CPU.Instructions
             private readonly EXG parent;
             public uint Execute(uint opcode)
             {
-                return parent.Exg_aa(opcode);
+                return parent.ExgAa(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
             {
-                return parent.DisassembleOp(address, opcode, ExgMode.EXG_ADDR);
+                return parent.DisassembleOp(address, opcode, ExgMode.ExgAddr);
             }
         }
 
@@ -97,16 +97,16 @@ namespace M68k.CPU.Instructions
             private readonly EXG parent;
             public uint Execute(uint opcode)
             {
-                return parent.Exg_da(opcode);
+                return parent.ExgDa(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
             {
-                return parent.DisassembleOp(address, opcode, ExgMode.EXG_DATA_ADDR);
+                return parent.DisassembleOp(address, opcode, ExgMode.ExgDataAddr);
             }
         }
 
-        protected uint Exg_dd(uint opcode)
+        protected uint ExgDd(uint opcode)
         {
             uint rx = (opcode >> 9) & 0x07;
             uint ry = (opcode & 0x07);
@@ -117,7 +117,7 @@ namespace M68k.CPU.Instructions
             return 6;
         }
 
-        protected uint Exg_aa(uint opcode)
+        protected uint ExgAa(uint opcode)
         {
             uint rx = (opcode >> 9) & 0x07;
             uint ry = (opcode & 0x07);
@@ -128,7 +128,7 @@ namespace M68k.CPU.Instructions
             return 6;
         }
 
-        protected uint Exg_da(uint opcode)
+        protected uint ExgDa(uint opcode)
         {
             uint rx = (opcode >> 9) & 0x07;
             uint ry = (opcode & 0x07);
@@ -145,21 +145,21 @@ namespace M68k.CPU.Instructions
             DisassembledOperand dst;
             switch (mode)
             {
-                case ExgMode.EXG_DATA:
+                case ExgMode.ExgData:
                 {
                     src = new DisassembledOperand("d" + ((opcode >> 9) & 0x07));
                     dst = new DisassembledOperand("d" + (opcode & 0x07));
                     break;
                 }
 
-                case ExgMode.EXG_ADDR:
+                case ExgMode.ExgAddr:
                 {
                     src = new DisassembledOperand("a" + ((opcode >> 9) & 0x07));
                     dst = new DisassembledOperand("a" + (opcode & 0x07));
                     break;
                 }
 
-                case ExgMode.EXG_DATA_ADDR:
+                case ExgMode.ExgDataAddr:
                 {
                     src = new DisassembledOperand("d" + ((opcode >> 9) & 0x07));
                     dst = new DisassembledOperand("a" + (opcode & 0x07));

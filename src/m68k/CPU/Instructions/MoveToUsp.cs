@@ -1,9 +1,9 @@
 namespace M68k.CPU.Instructions
 {
-    public class MOVE_USP : IInstructionHandler
+    public class MoveToUsp : IInstructionHandler
     {
         private readonly ICPU cpu;
-        public MOVE_USP(ICPU cpu)
+        public MoveToUsp(ICPU cpu)
         {
             this.cpu = cpu;
         }
@@ -39,15 +39,15 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            public AnonymousInstruction(MOVE_USP parent)
+            public AnonymousInstruction(MoveToUsp parent)
             {
                 this.parent = parent;
             }
 
-            private readonly MOVE_USP parent;
+            private readonly MoveToUsp parent;
             public uint Execute(uint opcode)
             {
-                return parent.MoveToUsp(opcode);
+                return parent.DoMoveToUsp(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -58,12 +58,12 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction1 : IInstruction
         {
-            public AnonymousInstruction1(MOVE_USP parent)
+            public AnonymousInstruction1(MoveToUsp parent)
             {
                 this.parent = parent;
             }
 
-            private readonly MOVE_USP parent;
+            private readonly MoveToUsp parent;
             public uint Execute(uint opcode)
             {
                 return parent.MoveFromUsp(opcode);
@@ -75,7 +75,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint MoveToUsp(uint opcode)
+        protected uint DoMoveToUsp(uint opcode)
         {
             if (!cpu.IsSupervisorMode())
             {

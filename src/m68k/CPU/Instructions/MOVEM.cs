@@ -79,7 +79,7 @@ namespace M68k.CPU.Instructions
             private readonly MOVEM parent;
             public uint Execute(uint opcode)
             {
-                return parent.Movem_word_r2m(opcode);
+                return parent.MovemWordR2m(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -98,7 +98,7 @@ namespace M68k.CPU.Instructions
             private readonly MOVEM parent;
             public uint Execute(uint opcode)
             {
-                return parent.Movem_long_r2m(opcode);
+                return parent.MovemLongR2m(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -117,7 +117,7 @@ namespace M68k.CPU.Instructions
             private readonly MOVEM parent;
             public uint Execute(uint opcode)
             {
-                return parent.Movem_word_m2r(opcode);
+                return parent.MovemWordM2r(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -136,7 +136,7 @@ namespace M68k.CPU.Instructions
             private readonly MOVEM parent;
             public uint Execute(uint opcode)
             {
-                return parent.Movem_long_m2r(opcode);
+                return parent.MovemLongM2r(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -145,7 +145,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Movem_word_r2m(uint opcode)
+        protected uint MovemWordR2m(uint opcode)
         {
             uint reglist = cpu.FetchPCWord();
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
@@ -163,7 +163,7 @@ namespace M68k.CPU.Instructions
             return R2M_Timing[dst.Index()] + (count << 2);
         }
 
-        protected uint Movem_long_r2m(uint opcode)
+        protected uint MovemLongR2m(uint opcode)
         {
             uint reglist = cpu.FetchPCWord();
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
@@ -181,7 +181,7 @@ namespace M68k.CPU.Instructions
             return R2M_Timing[dst.Index()] + (count << 3);
         }
 
-        protected uint Movem_word_m2r(uint opcode)
+        protected uint MovemWordM2r(uint opcode)
         {
             uint reglist = cpu.FetchPCWord();
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
@@ -199,7 +199,7 @@ namespace M68k.CPU.Instructions
             return M2R_Timing[src.Index()] + (count << 2);
         }
 
-        protected uint Movem_long_m2r(uint opcode)
+        protected uint MovemLongM2r(uint opcode)
         {
             uint reglist = cpu.FetchPCWord();
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
@@ -217,7 +217,7 @@ namespace M68k.CPU.Instructions
             return M2R_Timing[src.Index()] + (count << 3);
         }
 
-        public DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz, bool reg_to_mem)
+        public DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz, bool regToMem)
         {
             DisassembledOperand src;
             DisassembledOperand dst;
@@ -225,7 +225,7 @@ namespace M68k.CPU.Instructions
             uint reg = (opcode & 0x07);
             uint reglist = cpu.ReadMemoryWord(address + 2);
             bool reversed = (mode == 4);
-            if (reg_to_mem)
+            if (regToMem)
             {
                 src = new DisassembledOperand(RegListToString(reglist, reversed), 2, reglist);
                 dst = cpu.DisassembleDstEA(address + 4, mode, reg, sz);

@@ -104,8 +104,8 @@ namespace M68k.CPU.Instructions
         protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
         {
             DisassembledOperand src = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-            DisassembledOperand dst = new DisassembledOperand("a" + ((opcode >> 9) & 0x07));
-            return new DisassembledInstruction(address, opcode, "adda" + sz.Ext, src, dst);
+            DisassembledOperand dst = new DisassembledOperand($"a{((opcode >> 9) & 0x07)}");
+            return new DisassembledInstruction(address, opcode, $"adda{sz.Ext}", src, dst);
         }
     }
 }

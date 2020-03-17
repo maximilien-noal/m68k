@@ -89,7 +89,7 @@ namespace M68k.CPU.Instructions
             private readonly LSL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Lsl_byte_imm(opcode);
+                return parent.LslByteImm(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -108,7 +108,7 @@ namespace M68k.CPU.Instructions
             private readonly LSL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Lsl_word_imm(opcode);
+                return parent.LslWordImm(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -127,7 +127,7 @@ namespace M68k.CPU.Instructions
             private readonly LSL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Lsl_long_imm(opcode);
+                return parent.LslLongImm(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -146,7 +146,7 @@ namespace M68k.CPU.Instructions
             private readonly LSL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Lsl_byte_reg(opcode);
+                return parent.LslByteReg(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -165,7 +165,7 @@ namespace M68k.CPU.Instructions
             private readonly LSL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Lsl_word_reg(opcode);
+                return parent.LslWordReg(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -184,7 +184,7 @@ namespace M68k.CPU.Instructions
             private readonly LSL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Lsl_long_reg(opcode);
+                return parent.LslLongReg(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -203,7 +203,7 @@ namespace M68k.CPU.Instructions
             private readonly LSL parent;
             public uint Execute(uint opcode)
             {
-                return parent.Lsl_word_mem(opcode);
+                return parent.LslWordMem(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -212,7 +212,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual uint Lsl_byte_imm(uint opcode)
+        protected virtual uint LslByteImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -232,7 +232,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Lsl_word_imm(uint opcode)
+        protected virtual uint LslWordImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -252,7 +252,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Lsl_long_imm(uint opcode)
+        protected virtual uint LslLongImm(uint opcode)
         {
             uint shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -271,7 +271,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Lsl_byte_reg(uint opcode)
+        protected virtual uint LslByteReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -289,7 +289,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Lsl_word_reg(uint opcode)
+        protected virtual uint LslWordReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -307,7 +307,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint Lsl_long_reg(uint opcode)
+        protected virtual uint LslLongReg(uint opcode)
         {
             uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             uint reg = (opcode & 0x07);
@@ -324,7 +324,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint Lsl_word_mem(uint opcode)
+        protected virtual uint LslWordMem(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint v = op.GetWord();

@@ -41,7 +41,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Cmpm_byte(uint opcode)
+        protected uint CmpmByte(uint opcode)
         {
             uint ax = (opcode >> 9) & 0x07;
             uint ay = (opcode & 0x07);
@@ -54,7 +54,7 @@ namespace M68k.CPU.Instructions
             return 12;
         }
 
-        protected uint Cmpm_long(uint opcode)
+        protected uint CmpmLong(uint opcode)
         {
             uint ax = (opcode >> 9) & 0x07;
             uint ay = (opcode & 0x07);
@@ -67,7 +67,7 @@ namespace M68k.CPU.Instructions
             return 20;
         }
 
-        protected uint Cmpm_word(uint opcode)
+        protected uint CmpmWord(uint opcode)
         {
             uint ax = (opcode >> 9) & 0x07;
             uint ay = (opcode & 0x07);
@@ -103,7 +103,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Cmpm_byte(opcode);
+                return parent.CmpmByte(opcode);
             }
         }
 
@@ -123,7 +123,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Cmpm_word(opcode);
+                return parent.CmpmWord(opcode);
             }
         }
 
@@ -143,7 +143,7 @@ namespace M68k.CPU.Instructions
 
             public uint Execute(uint opcode)
             {
-                return parent.Cmpm_long(opcode);
+                return parent.CmpmLong(opcode);
             }
         }
     }

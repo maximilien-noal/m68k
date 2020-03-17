@@ -54,7 +54,7 @@ namespace M68k.CPU.Instructions
             private readonly NOTInstruction parent;
             public uint Execute(uint opcode)
             {
-                return parent.Not_byte(opcode);
+                return parent.NotByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -73,7 +73,7 @@ namespace M68k.CPU.Instructions
             private readonly NOTInstruction parent;
             public uint Execute(uint opcode)
             {
-                return parent.Not_word(opcode);
+                return parent.NotWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -92,7 +92,7 @@ namespace M68k.CPU.Instructions
             private readonly NOTInstruction parent;
             public uint Execute(uint opcode)
             {
-                return parent.Not_long(opcode);
+                return parent.NotLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -101,7 +101,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Not_byte(uint opcode)
+        protected uint NotByte(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Byte);
             uint s = op.GetByte();
@@ -111,7 +111,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
         }
 
-        protected uint Not_word(uint opcode)
+        protected uint NotWord(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint s = op.GetWord();
@@ -121,7 +121,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
         }
 
-        protected uint Not_long(uint opcode)
+        protected uint NotLong(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
             uint s = op.GetLong();

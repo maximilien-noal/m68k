@@ -54,7 +54,7 @@ namespace M68k.CPU.Instructions
             private readonly NEG parent;
             public uint Execute(uint opcode)
             {
-                return parent.Neg_byte(opcode);
+                return parent.NegByte(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -73,7 +73,7 @@ namespace M68k.CPU.Instructions
             private readonly NEG parent;
             public uint Execute(uint opcode)
             {
-                return parent.Neg_word(opcode);
+                return parent.NegWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -92,7 +92,7 @@ namespace M68k.CPU.Instructions
             private readonly NEG parent;
             public uint Execute(uint opcode)
             {
-                return parent.Neg_long(opcode);
+                return parent.NegLong(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -101,7 +101,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual uint Neg_byte(uint opcode)
+        protected virtual uint NegByte(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Byte);
             uint s = op.GetByte();
@@ -111,7 +111,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
         }
 
-        protected virtual uint Neg_word(uint opcode)
+        protected virtual uint NegWord(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             uint s = op.GetWord();
@@ -121,7 +121,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
         }
 
-        protected virtual uint Neg_long(uint opcode)
+        protected virtual uint NegLong(uint opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
             uint s = op.GetLong();

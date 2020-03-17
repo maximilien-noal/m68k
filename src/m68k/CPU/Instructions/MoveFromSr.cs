@@ -1,15 +1,20 @@
 namespace M68k.CPU.Instructions
 {
-    public class MOVE_FROM_SR : IInstructionHandler
+    public class MoveFromSr : IInstructionHandler
     {
         private readonly ICPU cpu;
-        public MOVE_FROM_SR(ICPU cpu)
+        public MoveFromSr(ICPU cpu)
         {
             this.cpu = cpu;
         }
 
         public void Register(IInstructionSet instructionSet)
         {
+            if (instructionSet is null)
+            {
+                throw new System.ArgumentNullException(nameof(instructionSet));
+            }
+
             uint baseAddress = 0x40c0;
             IInstruction i = new AnonymousInstruction(this);
             for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
@@ -27,15 +32,15 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            public AnonymousInstruction(MOVE_FROM_SR parent)
+            public AnonymousInstruction(MoveFromSr parent)
             {
                 this.parent = parent;
             }
 
-            private readonly MOVE_FROM_SR parent;
+            private readonly MoveFromSr parent;
             public uint Execute(uint opcode)
             {
-                return parent.Move_from_sr(opcode);
+                return parent.DoMoveFromSr(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -44,7 +49,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint Move_from_sr(uint opcode)
+        protected uint DoMoveFromSr(uint opcode)
         {
             IOperand dst =cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
             dst.GetWord();

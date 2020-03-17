@@ -2,10 +2,10 @@ using System.Globalization;
 
 namespace M68k.CPU.Instructions
 {
-    public class ANDI_TO_SR : IInstructionHandler
+    public class AndiToSr : IInstructionHandler
     {
         private readonly ICPU cpu;
-        public ANDI_TO_SR(ICPU cpu)
+        public AndiToSr(ICPU cpu)
         {
             this.cpu = cpu;
         }
@@ -26,15 +26,15 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            public AnonymousInstruction(ANDI_TO_SR parent)
+            public AnonymousInstruction(AndiToSr parent)
             {
                 this.parent = parent;
             }
 
-            private readonly ANDI_TO_SR parent;
+            private readonly AndiToSr parent;
             public uint Execute(uint opcode)
             {
-                return parent.Andi_word(opcode);
+                return parent.AndiWord(opcode);
             }
 
             public DisassembledInstruction Disassemble(uint address, uint opcode)
@@ -43,7 +43,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual uint Andi_word(uint opcode)
+        protected virtual uint AndiWord(uint opcode)
         {
             uint s = cpu.FetchPCWordSigned();
             if (cpu.IsSupervisorMode())
