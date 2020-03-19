@@ -14,12 +14,12 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return new DisassembledInstruction(address, opcode, "nop");
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return 4;
             }

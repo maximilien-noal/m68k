@@ -3,6 +3,7 @@ namespace M68k.CPU.Instructions
     public class DIVU : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public DIVU(ICPU cpu)
         {
             this.cpu = cpu;
@@ -10,17 +11,22 @@ namespace M68k.CPU.Instructions
 
         public virtual void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress = 0x80c0;
+            if (instructionSet is null)
+            {
+                throw new System.ArgumentNullException(nameof(instructionSet));
+            }
+
+            int baseAddress = 0x80c0;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 0; ea_mode < 8; ea_mode++)
             {
                 if (ea_mode == 1)
                     continue;
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 4)
                         break;
-                    for (uint r = 0; r < 8; r++)
+                    for (int r = 0; r < 8; r++)
                     {
                         instructionSet.AddInstruction(baseAddress + (r << 9) + (ea_mode << 3) + ea_reg, i);
                     }
@@ -28,32 +34,20 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
-            public AnonymousInstruction(DIVU parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly DIVU parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.Divu(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
+            DisassembledOperand src = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
+            DisassembledOperand dst = new DisassembledOperand("d" + ((opcode >> 9) & 0x07));
+            return new DisassembledInstruction(address, opcode, "divu", src, dst);
         }
 
-        protected uint Divu(uint opcode)
+        protected int Divu(int opcode)
         {
             IOperand op = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
-            uint s = op.GetWord();
-            uint reg = (opcode >> 9) & 0x07;
-            uint d = cpu.GetDataRegisterLong(reg);
-            uint time;
+            int s = op.GetWord();
+            int reg = (opcode >> 9) & 0x07;
+            int d = cpu.GetDataRegisterLong(reg);
+            int time;
             if (s == 0)
             {
                 cpu.RaiseException(5);
@@ -70,8 +64,8 @@ namespace M68k.CPU.Instructions
                 }
                 else
                 {
-                    uint remain = (uint)((dl % s) & 0xffff);
-                    uint result = ((uint)quot & 0x0000ffff) | (remain << 16);
+                    int remain = (int)((dl % s) & 0xffff);
+                    int result = (int)(quot & 0x0000ffff) | (remain << 16);
                     cpu.SetDataRegisterLong(reg, result);
                     if ((quot & 0x8000) != 0)
                     {
@@ -100,11 +94,24 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        private sealed class AnonymousInstruction : IInstruction
         {
-            DisassembledOperand src = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-            DisassembledOperand dst = new DisassembledOperand("d" + ((opcode >> 9) & 0x07));
-            return new DisassembledInstruction(address, opcode, "divu", src, dst);
+            private readonly DIVU parent;
+
+            public AnonymousInstruction(DIVU parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.Divu(opcode);
+            }
         }
     }
 }

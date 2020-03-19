@@ -4,152 +4,152 @@ namespace M68k.CPU
 {
     public interface ICPU
     {
-        uint CFlag { get; }
+        int CFlag { get; }
 
-        uint InterruptFlagMask { get; }
+        int InterruptFlagMask { get; }
 
-        uint NFlag { get; }
+        int NFlag { get; }
 
-        uint SupervisorFlag { get; }
+        int SupervisorFlag { get; }
 
-        uint TraceFlag { get; }
+        int TraceFlag { get; }
 
-        uint VFlag { get; }
+        int VFlag { get; }
 
-        uint XFlag { get; }
+        int XFlag { get; }
 
-        uint ZFlag { get; }
+        int ZFlag { get; }
 
-        void CalcFlags(InstructionType type, uint s, uint d, uint r, Size sz);
+        void CalcFlags(InstructionType type, int s, int d, int r, Size sz);
 
-        void CalcFlagsParam(InstructionType type, uint s, uint d, uint r, uint extraParam, Size sz);
+        void CalcFlagsParam(InstructionType type, int s, int d, int r, int extraParam, Size sz);
 
-        void ClrFlags(uint flags);
+        void ClrFlags(int flags);
 
-        void DecrementAddrRegister(uint reg, uint numBytes);
+        void DecrementAddrRegister(int reg, int numBytes);
 
-        DisassembledOperand DisassembleDstEA(uint address, uint mode, uint reg, Size sz);
+        DisassembledOperand DisassembleDstEA(int address, int mode, int reg, Size sz);
 
-        DisassembledOperand DisassembleSrcEA(uint address, uint mode, uint reg, Size sz);
+        DisassembledOperand DisassembleSrcEA(int address, int mode, int reg, Size sz);
 
-        uint Execute();
+        int Execute();
 
-        uint FetchPCLong();
+        int FetchPCLong();
 
-        uint FetchPCWord();
+        int FetchPCWord();
 
-        uint FetchPCWordSigned();
+        int FetchPCWordSigned();
 
-        uint GetAddrRegisterByte(uint reg);
+        int GetAddrRegisterByte(int reg);
 
-        uint GetAddrRegisterByteSigned(uint reg);
+        int GetAddrRegisterByteSigned(int reg);
 
-        uint GetAddrRegisterLong(uint reg);
+        int GetAddrRegisterLong(int reg);
 
-        uint GetAddrRegisterWord(uint reg);
+        int GetAddrRegisterWord(int reg);
 
-        uint GetAddrRegisterWordSigned(uint reg);
+        int GetAddrRegisterWordSigned(int reg);
 
-        uint GetCCRegister();
+        int GetCCRegister();
 
-        uint GetDataRegisterByte(uint reg);
+        int GetDataRegisterByte(int reg);
 
-        uint GetDataRegisterByteSigned(uint reg);
+        int GetDataRegisterByteSigned(int reg);
 
-        uint GetDataRegisterLong(uint reg);
+        int GetDataRegisterLong(int reg);
 
-        uint GetDataRegisterWord(uint reg);
+        int GetDataRegisterWord(int reg);
 
-        uint GetDataRegisterWordSigned(uint reg);
+        int GetDataRegisterWordSigned(int reg);
 
-        IInstruction GetInstructionAt(uint address);
+        IInstruction GetInstructionAt(int address);
 
-        IInstruction GetInstructionFor(uint opcode);
+        IInstruction GetInstructionFor(int opcode);
 
-        uint GetInterruptLevel();
+        int GetInterruptLevel();
 
-        uint GetPC();
+        int GetPC();
 
-        uint GetSR();
+        int GetSR();
 
-        uint GetSSP();
+        int GetSSP();
 
-        uint GetUSP();
+        int GetUSP();
 
-        void IncrementAddrRegister(uint reg, uint numBytes);
+        void IncrementAddrRegister(int reg, int numBytes);
 
-        bool IsFlagSet(uint flag);
+        bool IsFlagSet(int flag);
 
         bool IsSupervisorMode();
 
-        uint PopLong();
+        int PopLong();
 
-        uint PopWord();
+        int PopWord();
 
-        void PushLong(uint value);
+        void PushLong(int value);
 
-        void PushWord(uint value);
+        void PushWord(int value);
 
-        void RaiseException(uint vector);
+        void RaiseException(int vector);
 
-        void RaiseInterrupt(uint priority);
+        void RaiseInterrupt(int priority);
 
         void RaiseSRException();
 
-        uint ReadMemoryByte(uint addr);
+        int ReadMemoryByte(int addr);
 
-        uint ReadMemoryByteSigned(uint addr);
+        int ReadMemoryByteSigned(int addr);
 
-        uint ReadMemoryLong(uint addr);
+        int ReadMemoryLong(int addr);
 
-        uint ReadMemoryWord(uint addr);
+        int ReadMemoryWord(int addr);
 
-        uint ReadMemoryWordSigned(uint addr);
+        int ReadMemoryWordSigned(int addr);
 
         void Reset();
 
         void ResetExternal();
 
-        IOperand ResolveDstEA(uint mode, uint reg, Size sz);
+        IOperand ResolveDstEA(int mode, int reg, Size sz);
 
-        IOperand ResolveSrcEA(uint mode, uint reg, Size sz);
+        IOperand ResolveSrcEA(int mode, int reg, Size sz);
 
         void SetAddressSpace(IAddressSpace memory);
 
-        void SetAddrRegisterByte(uint reg, uint value);
+        void SetAddrRegisterByte(int reg, int value);
 
-        void SetAddrRegisterLong(uint reg, uint value);
+        void SetAddrRegisterLong(int reg, int value);
 
-        void SetAddrRegisterWord(uint reg, uint value);
+        void SetAddrRegisterWord(int reg, int value);
 
-        void SetCCRegister(uint value);
+        void SetCCRegister(int value);
 
-        void SetDataRegisterByte(uint reg, uint value);
+        void SetDataRegisterByte(int reg, int value);
 
-        void SetDataRegisterLong(uint reg, uint value);
+        void SetDataRegisterLong(int reg, int value);
 
-        void SetDataRegisterWord(uint reg, uint value);
+        void SetDataRegisterWord(int reg, int value);
 
-        void SetFlags(uint flags);
+        void SetFlags(int flags);
 
-        void SetPC(uint address);
+        void SetPC(int address);
 
-        void SetSR(uint value);
+        void SetSR(int value);
 
-        void SetSR2(uint value);
+        void SetSR2(int value);
 
-        void SetSSP(uint address);
+        void SetSSP(int address);
 
-        void SetUSP(uint address);
+        void SetUSP(int address);
 
         void StopNow();
 
-        bool TestCC(uint cc);
+        bool TestCC(int cc);
 
-        void WriteMemoryByte(uint addr, uint value);
+        void WriteMemoryByte(int addr, int value);
 
-        void WriteMemoryLong(uint addr, uint value);
+        void WriteMemoryLong(int addr, int value);
 
-        void WriteMemoryWord(uint addr, uint value);
+        void WriteMemoryWord(int addr, int value);
     }
 }

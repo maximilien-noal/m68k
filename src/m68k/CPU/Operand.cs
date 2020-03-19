@@ -2,32 +2,32 @@ namespace M68k.CPU
 {
     public interface IOperand
     {
-        uint GetByte();
+        int GetByte();
 
-        uint GetByteSigned();
+        int GetByteSigned();
 
-        uint GetComputedAddress();
+        int GetComputedAddress();
 
-        uint GetLong();
+        int GetLong();
 
-        uint GetTiming();
+        int GetTiming();
 
-        uint GetWord();
+        int GetWord();
 
-        uint GetWordSigned();
+        int GetWordSigned();
 
-        uint Index();
+        int Index();
 
-        void Init(uint param, Size size);
+        void Init(int param, Size size);
 
         bool IsRegisterMode();
 
         bool IsSR();
 
-        void SetByte(uint value);
+        void SetByte(int value);
 
-        void SetLong(uint value);
+        void SetLong(int value);
 
-        void SetWord(uint value);
+        void SetWord(int value);
     }
 }

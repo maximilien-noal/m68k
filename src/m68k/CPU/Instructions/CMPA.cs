@@ -16,9 +16,9 @@ namespace M68k.CPU.Instructions
                 throw new System.ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint sz = 0; sz < 2; sz++)
+            for (int sz = 0; sz < 2; sz++)
             {
                 if (sz == 0)
                 {
@@ -31,13 +31,13 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction1(this);
                 }
 
-                for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
+                for (int ea_mode = 0; ea_mode < 8; ea_mode++)
                 {
-                    for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                    for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                     {
                         if (ea_mode == 7 && ea_reg > 4)
                             break;
-                        for (uint r = 0; r < 8; r++)
+                        for (int r = 0; r < 8; r++)
                         {
                             instructionSet.AddInstruction(baseAddress + (r << 9) + (ea_mode << 3) + ea_reg, i);
                         }
@@ -46,27 +46,27 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint CmpaLong(uint opcode)
+        protected int CmpaLong(int opcode)
         {
             IOperand op = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
-            uint d = cpu.GetAddrRegisterLong((opcode >> 9) & 0x07);
-            uint s = op.GetLong();
-            uint r = d - s;
+            int d = cpu.GetAddrRegisterLong((opcode >> 9) & 0x07);
+            int s = op.GetLong();
+            int r = d - s;
             cpu.CalcFlags(InstructionType.CMP, s, d, r, Size.SizeLong);
             return 6 + op.GetTiming();
         }
 
-        protected uint CmpaWord(uint opcode)
+        protected int CmpaWord(int opcode)
         {
             IOperand op = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
-            uint d = cpu.GetAddrRegisterLong((opcode >> 9) & 0x07);
-            uint s = op.GetWordSigned();
-            uint r = d - s;
+            int d = cpu.GetAddrRegisterLong((opcode >> 9) & 0x07);
+            int s = op.GetWordSigned();
+            int r = d - s;
             cpu.CalcFlags(InstructionType.CMP, s, d, r, Size.SizeLong);
             return 6 + op.GetTiming();
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand src = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
             DisassembledOperand dst = new DisassembledOperand("a" + ((opcode >> 9) & 0x07));
@@ -82,12 +82,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Word);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.CmpaWord(opcode);
             }
@@ -102,12 +102,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.SizeLong);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.CmpaLong(opcode);
             }

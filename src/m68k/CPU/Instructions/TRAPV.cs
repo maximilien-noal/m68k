@@ -14,12 +14,12 @@ namespace M68k.CPU.Instructions
             instructionSet.AddInstruction(0x4e76, new AnonymousInstruction(this));
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode)
         {
             return new DisassembledInstruction(address, opcode, "trapv");
         }
 
-        protected uint Trapv()
+        protected int Trapv()
         {
             if (cpu.IsFlagSet(cpu.VFlag))
             {
@@ -39,12 +39,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.Trapv();
             }

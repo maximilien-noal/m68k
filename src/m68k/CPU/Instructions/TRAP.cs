@@ -19,23 +19,23 @@ namespace M68k.CPU.Instructions
                 throw new ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress = 0x4e40;
+            int baseAddress = 0x4e40;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint v = 0; v < 16; v++)
+            for (int v = 0; v < 16; v++)
             {
                 instructionSet.AddInstruction(baseAddress + v, i);
             }
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode)
         {
             DisassembledOperand op = new DisassembledOperand((opcode & 0x0f).ToString("d", CultureInfo.InvariantCulture));
             return new DisassembledInstruction(address, opcode, "trap", op);
         }
 
-        protected uint Trap(uint opcode)
+        protected int Trap(int opcode)
         {
-            uint v = (opcode & 0x0f);
+            int v = (opcode & 0x0f);
             cpu.RaiseException(32 + v);
             return 34;
         }
@@ -49,12 +49,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.Trap(opcode);
             }

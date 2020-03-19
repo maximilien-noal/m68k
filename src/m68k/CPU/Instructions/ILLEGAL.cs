@@ -3,6 +3,7 @@ namespace M68k.CPU.Instructions
     public class ILLEGAL : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public ILLEGAL(ICPU cpu)
         {
             this.cpu = cpu;
@@ -15,21 +16,22 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
+            private readonly ILLEGAL parent;
+
             public AnonymousInstruction(ILLEGAL parent)
             {
                 this.parent = parent;
             }
 
-            private readonly ILLEGAL parent;
-            public uint Execute(uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return new DisassembledInstruction(address, opcode, "illegal");
+            }
+
+            public int Execute(int opcode)
             {
                 parent.cpu.RaiseException(4);
                 return 34;
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return new DisassembledInstruction(address, opcode, "illegal");
             }
         }
     }

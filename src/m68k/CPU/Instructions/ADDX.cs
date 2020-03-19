@@ -16,9 +16,9 @@ namespace M68k.CPU.Instructions
                 throw new System.ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -36,16 +36,16 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction2(this);
                 }
 
-                for (uint regx = 0; regx < 8; regx++)
+                for (int regx = 0; regx < 8; regx++)
                 {
-                    for (uint regy = 0; regy < 8; regy++)
+                    for (int regy = 0; regy < 8; regy++)
                     {
                         instructionSet.AddInstruction(baseAddress + (regx << 9) + regy, i);
                     }
                 }
             }
 
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -63,9 +63,9 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction5(this);
                 }
 
-                for (uint regx = 0; regx < 8; regx++)
+                for (int regx = 0; regx < 8; regx++)
                 {
-                    for (uint regy = 0; regy < 8; regy++)
+                    for (int regy = 0; regy < 8; regy++)
                     {
                         instructionSet.AddInstruction(baseAddress + (regx << 9) + regy, i);
                     }
@@ -73,79 +73,79 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual uint AddxByteMem(uint opcode)
+        protected virtual int AddxByteMem(int opcode)
         {
-            uint rx = (opcode >> 9) & 0x07;
-            uint ry = (opcode & 0x07);
+            int rx = (opcode >> 9) & 0x07;
+            int ry = (opcode & 0x07);
             cpu.DecrementAddrRegister(rx, 1);
             cpu.DecrementAddrRegister(ry, 1);
-            uint s = cpu.ReadMemoryByteSigned(cpu.GetAddrRegisterLong(ry));
-            uint d = cpu.ReadMemoryByteSigned(cpu.GetAddrRegisterLong(rx));
-            uint r = (uint)(s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
+            int s = cpu.ReadMemoryByteSigned(cpu.GetAddrRegisterLong(ry));
+            int d = cpu.ReadMemoryByteSigned(cpu.GetAddrRegisterLong(rx));
+            int r = (s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
             cpu.WriteMemoryByte(cpu.GetAddrRegisterLong(rx), r);
             cpu.CalcFlags(InstructionType.ADDX, s, d, r, Size.Byte);
             return 18;
         }
 
-        protected virtual uint AddxByteReg(uint opcode)
+        protected virtual int AddxByteReg(int opcode)
         {
-            uint s = cpu.GetDataRegisterByteSigned((opcode & 0x07));
-            uint d = cpu.GetDataRegisterByteSigned((opcode >> 9) & 0x07);
-            uint r = (uint)(s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
+            int s = cpu.GetDataRegisterByteSigned((opcode & 0x07));
+            int d = cpu.GetDataRegisterByteSigned((opcode >> 9) & 0x07);
+            int r = (s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
             cpu.SetDataRegisterByte((opcode >> 9) & 0x07, r);
             cpu.CalcFlags(InstructionType.ADDX, s, d, r, Size.Byte);
             return 4;
         }
 
-        protected virtual uint AddxLongMem(uint opcode)
+        protected virtual int AddxLongMem(int opcode)
         {
-            uint rx = (opcode >> 9) & 0x07;
-            uint ry = (opcode & 0x07);
+            int rx = (opcode >> 9) & 0x07;
+            int ry = (opcode & 0x07);
             cpu.DecrementAddrRegister(rx, 4);
             cpu.DecrementAddrRegister(ry, 4);
-            uint s = cpu.ReadMemoryLong(cpu.GetAddrRegisterLong(ry));
-            uint d = cpu.ReadMemoryLong(cpu.GetAddrRegisterLong(rx));
-            uint r = (uint)(s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
+            int s = cpu.ReadMemoryLong(cpu.GetAddrRegisterLong(ry));
+            int d = cpu.ReadMemoryLong(cpu.GetAddrRegisterLong(rx));
+            int r = (s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
             cpu.WriteMemoryLong(cpu.GetAddrRegisterLong(rx), r);
             cpu.CalcFlags(InstructionType.ADDX, s, d, r, Size.Byte);
             return 30;
         }
 
-        protected virtual uint AddxLongReg(uint opcode)
+        protected virtual int AddxLongReg(int opcode)
         {
-            uint s = cpu.GetDataRegisterLong((opcode & 0x07));
-            uint d = cpu.GetDataRegisterLong((opcode >> 9) & 0x07);
-            uint r = (uint)(s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
+            int s = cpu.GetDataRegisterLong((opcode & 0x07));
+            int d = cpu.GetDataRegisterLong((opcode >> 9) & 0x07);
+            int r = (s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
             cpu.SetDataRegisterLong((opcode >> 9) & 0x07, r);
             cpu.CalcFlags(InstructionType.ADDX, s, d, r, Size.SizeLong);
             return 8;
         }
 
-        protected virtual uint AddxWordMem(uint opcode)
+        protected virtual int AddxWordMem(int opcode)
         {
-            uint rx = (opcode >> 9) & 0x07;
-            uint ry = (opcode & 0x07);
+            int rx = (opcode >> 9) & 0x07;
+            int ry = (opcode & 0x07);
             cpu.DecrementAddrRegister(rx, 2);
             cpu.DecrementAddrRegister(ry, 2);
-            uint s = cpu.ReadMemoryWordSigned(cpu.GetAddrRegisterLong(ry));
-            uint d = cpu.ReadMemoryWordSigned(cpu.GetAddrRegisterLong(rx));
-            uint r = (uint)(s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
+            int s = cpu.ReadMemoryWordSigned(cpu.GetAddrRegisterLong(ry));
+            int d = cpu.ReadMemoryWordSigned(cpu.GetAddrRegisterLong(rx));
+            int r = (s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
             cpu.WriteMemoryWord(cpu.GetAddrRegisterLong(rx), r);
             cpu.CalcFlags(InstructionType.ADDX, s, d, r, Size.Word);
             return 18;
         }
 
-        protected virtual uint AddxWordReg(uint opcode)
+        protected virtual int AddxWordReg(int opcode)
         {
-            uint s = cpu.GetDataRegisterWordSigned((opcode & 0x07));
-            uint d = cpu.GetDataRegisterWordSigned((opcode >> 9) & 0x07);
-            uint r = (uint)(s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
+            int s = cpu.GetDataRegisterWordSigned((opcode & 0x07));
+            int d = cpu.GetDataRegisterWordSigned((opcode >> 9) & 0x07);
+            int r = (s + d + (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
             cpu.SetDataRegisterWord((opcode >> 9) & 0x07, r);
             cpu.CalcFlags(InstructionType.ADDX, s, d, r, Size.Word);
             return 4;
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand src;
             DisassembledOperand dst;
@@ -172,12 +172,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Byte);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.AddxByteReg(opcode);
             }
@@ -192,12 +192,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Word);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.AddxWordReg(opcode);
             }
@@ -212,12 +212,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.SizeLong);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.AddxLongReg(opcode);
             }
@@ -232,12 +232,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Byte);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.AddxByteMem(opcode);
             }
@@ -252,12 +252,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Word);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.AddxWordMem(opcode);
             }
@@ -272,12 +272,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.SizeLong);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.AddxLongMem(opcode);
             }

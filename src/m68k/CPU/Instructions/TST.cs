@@ -18,9 +18,9 @@ namespace M68k.CPU.Instructions
                 throw new ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -38,11 +38,11 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction2(this);
                 }
 
-                for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
+                for (int ea_mode = 0; ea_mode < 8; ea_mode++)
                 {
                     if (ea_mode == 1)
                         continue;
-                    for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                    for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                     {
                         if (ea_mode == 7 && ea_reg > 1)
                             break;
@@ -52,18 +52,18 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand op = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
             return new DisassembledInstruction(address, opcode, $"tst{sz.Ext}", op);
         }
 
-        protected uint TstByte(uint opcode)
+        protected int TstByte(int opcode)
         {
-            uint mode = (opcode >> 3) & 0x07;
-            uint reg = (opcode & 0x07);
+            int mode = (opcode >> 3) & 0x07;
+            int reg = (opcode & 0x07);
             IOperand op = cpu.ResolveSrcEA(mode, reg, Size.Byte);
-            uint v = op.GetByte();
+            int v = op.GetByte();
             if (v == 0)
             {
                 cpu.SetFlags(cpu.ZFlag);
@@ -86,12 +86,12 @@ namespace M68k.CPU.Instructions
             return 4 + op.GetTiming();
         }
 
-        protected uint TstLong(uint opcode)
+        protected int TstLong(int opcode)
         {
-            uint mode = (opcode >> 3) & 0x07;
-            uint reg = (opcode & 0x07);
+            int mode = (opcode >> 3) & 0x07;
+            int reg = (opcode & 0x07);
             IOperand op = cpu.ResolveSrcEA(mode, reg, Size.SizeLong);
-            uint v = op.GetLong();
+            int v = op.GetLong();
             if (v == 0)
             {
                 cpu.SetFlags(cpu.ZFlag);
@@ -114,12 +114,12 @@ namespace M68k.CPU.Instructions
             return 4 + op.GetTiming();
         }
 
-        protected uint TstWord(uint opcode)
+        protected int TstWord(int opcode)
         {
-            uint mode = (opcode >> 3) & 0x07;
-            uint reg = (opcode & 0x07);
+            int mode = (opcode >> 3) & 0x07;
+            int reg = (opcode & 0x07);
             IOperand op = cpu.ResolveSrcEA(mode, reg, Size.Word);
-            uint v = op.GetWord();
+            int v = op.GetWord();
             if (v == 0)
             {
                 cpu.SetFlags(cpu.ZFlag);
@@ -151,12 +151,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Byte);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.TstByte(opcode);
             }
@@ -171,12 +171,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Word);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.TstWord(opcode);
             }
@@ -191,12 +191,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.SizeLong);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.TstLong(opcode);
             }

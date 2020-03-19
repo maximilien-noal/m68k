@@ -11,30 +11,30 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public DisassembledInstruction DisassembleOp(uint address, uint opcode)
+        public DisassembledInstruction DisassembleOp(int address, int opcode)
         {
             DisassembledOperand src = new DisassembledOperand("a" + (opcode & 0x07));
-            uint dis = cpu.ReadMemoryWordSigned(address + 2);
+            int dis = cpu.ReadMemoryWordSigned(address + 2);
             DisassembledOperand dst = new DisassembledOperand($"#${dis.ToString("x4", CultureInfo.InvariantCulture)}", 2, dis);
             return new DisassembledInstruction(address, opcode, "link", src, dst);
         }
 
         public void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress = 0x4e50;
+            int baseAddress = 0x4e50;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint reg = 0; reg < 8; reg++)
+            for (int reg = 0; reg < 8; reg++)
             {
                 instructionSet.AddInstruction(baseAddress + reg, i);
             }
         }
 
-        protected virtual uint Link(uint opcode)
+        protected virtual int Link(int opcode)
         {
-            uint sreg = (opcode & 0x007);
-            uint displacement = cpu.FetchPCWordSigned();
+            int sreg = (opcode & 0x007);
+            int displacement = cpu.FetchPCWordSigned();
             cpu.PushLong(cpu.GetAddrRegisterLong(sreg));
-            uint sp = cpu.GetAddrRegisterLong(7);
+            int sp = cpu.GetAddrRegisterLong(7);
             cpu.SetAddrRegisterLong(sreg, sp);
             cpu.SetAddrRegisterLong(7, sp + displacement);
             return 16;
@@ -49,12 +49,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.Link(opcode);
             }

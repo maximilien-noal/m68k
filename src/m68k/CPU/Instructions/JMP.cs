@@ -2,8 +2,10 @@ namespace M68k.CPU.Instructions
 {
     public class JMP : IInstructionHandler
     {
+        protected static readonly int[] TIMING = new int[] { 0, 0, 8, 0, 0, 10, 14, 10, 12, 10, 14 };
+
         private readonly ICPU cpu;
-        protected static readonly uint[] TIMING = new uint[]{0, 0, 8, 0, 0, 10, 14, 10, 12, 10, 14};
+
         public JMP(ICPU cpu)
         {
             this.cpu = cpu;
@@ -11,13 +13,13 @@ namespace M68k.CPU.Instructions
 
         public void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress = 0x4ec0;
+            int baseAddress = 0x4ec0;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint ea_mode = 2; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 2; ea_mode < 8; ea_mode++)
             {
                 if (ea_mode == 3 || ea_mode == 4)
                     continue;
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 3)
                         break;
@@ -26,36 +28,37 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
-            public AnonymousInstruction(JMP parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly JMP parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.Jmp(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
+            DisassembledOperand op = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
+            return new DisassembledInstruction(address, opcode, "jmp", op);
         }
 
-        protected uint Jmp(uint opcode)
+        protected int Jmp(int opcode)
         {
             IOperand op = cpu.ResolveSrcEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
             cpu.SetPC(op.GetComputedAddress());
             return TIMING[op.Index()];
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        private sealed class AnonymousInstruction : IInstruction
         {
-            DisassembledOperand op = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-            return new DisassembledInstruction(address, opcode, "jmp", op);
+            private readonly JMP parent;
+
+            public AnonymousInstruction(JMP parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.Jmp(opcode);
+            }
         }
     }
 }

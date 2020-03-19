@@ -28,12 +28,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return new DisassembledInstruction(address, opcode, "rtr");
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 parent.cpu.SetCCRegister(parent.cpu.PopWord());
                 parent.cpu.SetPC(parent.cpu.PopLong());

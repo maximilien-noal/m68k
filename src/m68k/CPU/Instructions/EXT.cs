@@ -3,6 +3,7 @@ namespace M68k.CPU.Instructions
     public class EXT : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public EXT(ICPU cpu)
         {
             this.cpu = cpu;
@@ -10,9 +11,9 @@ namespace M68k.CPU.Instructions
 
         public void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint sz = 0; sz < 2; sz++)
+            for (int sz = 0; sz < 2; sz++)
             {
                 if (sz == 0)
                 {
@@ -25,54 +26,22 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction1(this);
                 }
 
-                for (uint reg = 0; reg < 8; reg++)
+                for (int reg = 0; reg < 8; reg++)
                 {
                     instructionSet.AddInstruction(baseAddress + reg, i);
                 }
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
-            public AnonymousInstruction(EXT parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly EXT parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.ExtByteToWord(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
+            DisassembledOperand src = new DisassembledOperand("d" + (opcode & 0x07));
+            return new DisassembledInstruction(address, opcode, "ext" + sz.Ext, src);
         }
 
-        private sealed class AnonymousInstruction1 : IInstruction
+        protected int ExtByteToWord(int opcode)
         {
-            public AnonymousInstruction1(EXT parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly EXT parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.ExtWordToLong(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
-        }
-
-        protected uint ExtByteToWord(uint opcode)
-        {
-            uint s = cpu.GetDataRegisterByte(opcode & 0x07);
+            int s = cpu.GetDataRegisterByte(opcode & 0x07);
             if ((s & 0x80) == 0x80)
             {
                 s |= 0xff00;
@@ -97,12 +66,15 @@ namespace M68k.CPU.Instructions
             return 4;
         }
 
-        protected uint ExtWordToLong(uint opcode)
+        protected int ExtWordToLong(int opcode)
         {
-            uint s = cpu.GetDataRegisterWord(opcode & 0x07);
+            int s = cpu.GetDataRegisterWord(opcode & 0x07);
             if ((s & 0x8000) == 0x8000)
             {
-                s |= 0xffff0000;
+                unchecked
+                {
+                    s |= (int)0xffff0000;
+                }
                 cpu.SetFlags(cpu.NFlag);
             }
             else
@@ -124,10 +96,44 @@ namespace M68k.CPU.Instructions
             return 4;
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        private sealed class AnonymousInstruction : IInstruction
         {
-            DisassembledOperand src = new DisassembledOperand("d" + (opcode & 0x07));
-            return new DisassembledInstruction(address, opcode, "ext" + sz.Ext, src);
+            private readonly EXT parent;
+
+            public AnonymousInstruction(EXT parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.ExtByteToWord(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction1 : IInstruction
+        {
+            private readonly EXT parent;
+
+            public AnonymousInstruction1(EXT parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.ExtWordToLong(opcode);
+            }
         }
     }
 }

@@ -13,28 +13,28 @@ namespace M68k.CPU.Instructions
 
         public void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress = 0x7000;
+            int baseAddress = 0x7000;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint reg = 0; reg < 8; reg++)
+            for (int reg = 0; reg < 8; reg++)
             {
-                for (uint imm = 0; imm < 256; imm++)
+                for (int imm = 0; imm < 256; imm++)
                 {
                     instructionSet.AddInstruction(baseAddress + (reg << 9) + imm, i);
                 }
             }
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode)
         {
             DisassembledOperand src = new DisassembledOperand($"#${(opcode & 0xff).ToString("x2", CultureInfo.InvariantCulture)}");
             DisassembledOperand dst = new DisassembledOperand($"d{(opcode >> 9) & 0x07}");
             return new DisassembledInstruction(address, opcode, "moveq", src, dst);
         }
 
-        protected uint Moveq(uint opcode)
+        protected int Moveq(int opcode)
         {
-            uint reg = (opcode >> 9 & 0x07);
-            uint data = CpuUtils.SignExtendWord(CpuUtils.SignExtendByte(opcode & 0xff));
+            int reg = (opcode >> 9 & 0x07);
+            int data = CpuUtils.SignExtendWord(CpuUtils.SignExtendByte(opcode & 0xff));
             cpu.SetDataRegisterLong(reg, data);
             if (data < 0)
             {
@@ -67,12 +67,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.Moveq(opcode);
             }

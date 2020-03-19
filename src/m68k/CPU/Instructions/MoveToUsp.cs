@@ -3,6 +3,7 @@ namespace M68k.CPU.Instructions
     public class MoveToUsp : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public MoveToUsp(ICPU cpu)
         {
             this.cpu = cpu;
@@ -15,9 +16,9 @@ namespace M68k.CPU.Instructions
                 throw new System.ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint t = 0; t < 2; t++)
+            for (int t = 0; t < 2; t++)
             {
                 if (t == 0)
                 {
@@ -30,76 +31,14 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction1(this);
                 }
 
-                for (uint reg = 0; reg < 8; reg++)
+                for (int reg = 0; reg < 8; reg++)
                 {
                     instructionSet.AddInstruction(baseAddress + reg, i);
                 }
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
-        {
-            public AnonymousInstruction(MoveToUsp parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly MoveToUsp parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.DoMoveToUsp(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, true);
-            }
-        }
-
-        private sealed class AnonymousInstruction1 : IInstruction
-        {
-            public AnonymousInstruction1(MoveToUsp parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly MoveToUsp parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.MoveFromUsp(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, false);
-            }
-        }
-
-        protected uint DoMoveToUsp(uint opcode)
-        {
-            if (!cpu.IsSupervisorMode())
-            {
-                cpu.RaiseSRException();
-                return 34;
-            }
-
-            cpu.SetUSP(cpu.GetAddrRegisterLong(opcode & 0x07));
-            return 4;
-        }
-
-        protected uint MoveFromUsp(uint opcode)
-        {
-            if (!cpu.IsSupervisorMode())
-            {
-                cpu.RaiseSRException();
-                return 34;
-            }
-
-            cpu.SetAddrRegisterLong(opcode & 0x07, cpu.GetUSP());
-            return 4;
-        }
-
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, bool moveToUsp)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, bool moveToUsp)
         {
             DisassembledOperand src;
             DisassembledOperand dst;
@@ -115,6 +54,70 @@ namespace M68k.CPU.Instructions
             }
 
             return new DisassembledInstruction(address, opcode, "move", src, dst);
+        }
+
+        protected int DoMoveToUsp(int opcode)
+        {
+            if (!cpu.IsSupervisorMode())
+            {
+                cpu.RaiseSRException();
+                return 34;
+            }
+
+            cpu.SetUSP(cpu.GetAddrRegisterLong(opcode & 0x07));
+            return 4;
+        }
+
+        protected int MoveFromUsp(int opcode)
+        {
+            if (!cpu.IsSupervisorMode())
+            {
+                cpu.RaiseSRException();
+                return 34;
+            }
+
+            cpu.SetAddrRegisterLong(opcode & 0x07, cpu.GetUSP());
+            return 4;
+        }
+
+        private sealed class AnonymousInstruction : IInstruction
+        {
+            private readonly MoveToUsp parent;
+
+            public AnonymousInstruction(MoveToUsp parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, true);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.DoMoveToUsp(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction1 : IInstruction
+        {
+            private readonly MoveToUsp parent;
+
+            public AnonymousInstruction1(MoveToUsp parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, false);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.MoveFromUsp(opcode);
+            }
         }
     }
 }

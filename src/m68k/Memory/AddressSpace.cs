@@ -1,39 +1,37 @@
-using System;
-
 namespace M68k.Memory
 {
-    public interface IAddressSpace : IDisposable
+    public interface IAddressSpace
     {
-        uint GetEndAddress();
+        int GetEndAddress();
 
-        uint GetStartAddress();
+        int GetStartAddress();
 
-        uint InternalReadByte(uint addr);
+        byte InternalReadByte(int addr);
 
-        uint InternalReadLong(uint addr);
+        uint InternalReadLong(int addr);
 
-        uint InternalReadWord(uint addr);
+        int InternalReadWord(int addr);
 
-        void InternalWriteByte(uint addr, uint value);
+        void InternalWriteByte(int addr, int value);
 
-        void InternalWriteLong(uint addr, uint value);
+        void InternalWriteLong(int addr, uint value);
 
-        void InternalWriteWord(uint addr, uint value);
+        void InternalWriteWord(int addr, int value);
 
-        uint ReadByte(uint addr);
+        byte ReadByte(int addr);
 
-        uint ReadLong(uint addr);
+        uint ReadLong(int addr);
 
-        uint ReadWord(uint addr);
+        int ReadWord(int addr);
 
         void Reset();
 
-        uint Size();
+        int Size();
 
-        void WriteByte(uint addr, uint value);
+        void WriteByte(int addr, int value);
 
-        void WriteLong(uint addr, uint value);
+        void WriteLong(int addr, uint value);
 
-        void WriteWord(uint addr, uint value);
+        void WriteWord(int addr, int value);
     }
 }

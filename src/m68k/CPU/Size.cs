@@ -12,13 +12,13 @@ namespace M68k.CPU
 
         public static readonly Size Byte = new Size(1, BYTESIZE, 0x80);
 
-        public static readonly Size SizeLong = new Size(4, LONGSIZE, 0x80000000);
+        public static readonly Size SizeLong = new Size(4, LONGSIZE, 0x7FFFFFFF);
 
         public static readonly Size Unsized = new Size(0, "", 0);
 
         public static readonly Size Word = new Size(2, WORDSIZE, 0x8000);
 
-        private Size(uint numBytes, string ext, uint msb)
+        private Size(int numBytes, string ext, int msb)
         {
             this.ByteCount = numBytes;
             this.Ext = ext;
@@ -26,13 +26,13 @@ namespace M68k.CPU
             this.Mask = (msb * 2) - 1;
         }
 
-        public uint ByteCount { get; }
+        public int ByteCount { get; }
 
         public string Ext { get; }
 
-        public uint Mask { get; }
+        public int Mask { get; }
 
-        public uint MSB { get; }
+        public int MSB { get; }
 
         public static bool operator !=(Size left, Size right)
         {

@@ -18,17 +18,17 @@ namespace M68k.CPU.Instructions
                 throw new System.ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
             baseAddress = 0x0a7c;
             i = new AnonymousInstruction(this);
             instructionSet.AddInstruction(baseAddress, i);
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
-            uint imm_bytes;
-            uint imm;
+            int imm_bytes;
+            int imm;
             string instructionSet;
             imm = cpu.ReadMemoryWord(address + 2);
             instructionSet = $"#${imm.ToString("x4", CultureInfo.InvariantCulture)}";
@@ -47,14 +47,14 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Word);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
-                uint s = parent.cpu.FetchPCWordSigned();
+                int s = parent.cpu.FetchPCWordSigned();
                 if (parent.cpu.IsSupervisorMode())
                 {
                     s &= 0xf71f;

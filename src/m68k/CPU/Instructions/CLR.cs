@@ -3,6 +3,7 @@ namespace M68k.CPU.Instructions
     public class CLR : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public CLR(ICPU cpu)
         {
             this.cpu = cpu;
@@ -10,9 +11,9 @@ namespace M68k.CPU.Instructions
 
         public virtual void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -30,11 +31,11 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction2(this);
                 }
 
-                for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
+                for (int ea_mode = 0; ea_mode < 8; ea_mode++)
                 {
                     if (ea_mode == 1)
                         continue;
-                    for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                    for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                     {
                         if (ea_mode == 7 && ea_reg > 1)
                             break;
@@ -44,103 +45,106 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
-        {
-            public AnonymousInstruction(CLR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly CLR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.ClrByte(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Byte);
-            }
-        }
-
-        private sealed class AnonymousInstruction1 : IInstruction
-        {
-            public AnonymousInstruction1(CLR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly CLR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.ClrWord(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
-        }
-
-        private sealed class AnonymousInstruction2 : IInstruction
-        {
-            public AnonymousInstruction2(CLR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly CLR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.ClrLong(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
-        }
-
-        protected uint ClrByte(uint opcode)
+        protected int ClrByte(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Byte);
             op.GetByte();
             op.SetByte(0);
-            uint flags = cpu.GetCCRegister();
+            int flags = cpu.GetCCRegister();
             flags &= ~(cpu.NFlag | cpu.CFlag | cpu.VFlag);
             flags |= cpu.ZFlag;
             cpu.SetCCRegister(flags);
             return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
         }
 
-        protected uint ClrWord(uint opcode)
-        {
-            IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
-            op.GetWord();
-            op.SetWord(0);
-            uint flags = cpu.GetCCRegister();
-            flags &= ~(cpu.NFlag | cpu.CFlag | cpu.VFlag);
-            flags |= cpu.ZFlag;
-            cpu.SetCCRegister(flags);
-            return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
-        }
-
-        protected uint ClrLong(uint opcode)
+        protected int ClrLong(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
             op.GetLong();
             op.SetLong(0);
-            uint flags = cpu.GetCCRegister();
+            int flags = cpu.GetCCRegister();
             flags &= ~(cpu.NFlag | cpu.CFlag | cpu.VFlag);
             flags |= cpu.ZFlag;
             cpu.SetCCRegister(flags);
             return (op.IsRegisterMode() ? 6 : 12 + op.GetTiming());
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected int ClrWord(int opcode)
+        {
+            IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
+            op.GetWord();
+            op.SetWord(0);
+            int flags = cpu.GetCCRegister();
+            flags &= ~(cpu.NFlag | cpu.CFlag | cpu.VFlag);
+            flags |= cpu.ZFlag;
+            cpu.SetCCRegister(flags);
+            return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
+        }
+
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand dst = cpu.DisassembleDstEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
             return new DisassembledInstruction(address, opcode, "clr" + sz.Ext, dst);
+        }
+
+        private sealed class AnonymousInstruction : IInstruction
+        {
+            private readonly CLR parent;
+
+            public AnonymousInstruction(CLR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Byte);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.ClrByte(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction1 : IInstruction
+        {
+            private readonly CLR parent;
+
+            public AnonymousInstruction1(CLR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.ClrWord(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction2 : IInstruction
+        {
+            private readonly CLR parent;
+
+            public AnonymousInstruction2(CLR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.ClrLong(opcode);
+            }
         }
     }
 }

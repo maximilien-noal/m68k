@@ -20,31 +20,31 @@ namespace M68k.CPU.Instructions
                 throw new System.ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress = 0x50c8;
+            int baseAddress = 0x50c8;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint cc = 0; cc < 16; cc++)
+            for (int cc = 0; cc < 16; cc++)
             {
-                for (uint r = 0; r < 8; r++)
+                for (int r = 0; r < 8; r++)
                 {
                     instructionSet.AddInstruction(baseAddress + (cc << 8) + r, i);
                 }
             }
         }
 
-        protected uint Dbxx(uint opcode)
+        protected int Dbxx(int opcode)
         {
-            uint reg = (opcode & 0x07);
-            uint pc = cpu.GetPC();
-            uint dis = cpu.FetchPCWordSigned();
-            uint time;
-            int count = (int)cpu.GetDataRegisterWordSigned(reg) - 1;
+            int reg = (opcode & 0x07);
+            int pc = cpu.GetPC();
+            int dis = cpu.FetchPCWordSigned();
+            int time;
+            int count = cpu.GetDataRegisterWordSigned(reg) - 1;
             if (cpu.TestCC((opcode >> 8) & 0x0f))
             {
                 time = 12;
             }
             else
             {
-                cpu.SetDataRegisterWord(reg, (uint)count);
+                cpu.SetDataRegisterWord(reg, count);
                 if (count == -1)
                 {
                     time = 14;
@@ -59,10 +59,10 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode)
         {
-            uint cc = (opcode >> 8) & 0x0f;
-            uint dis = cpu.ReadMemoryWordSigned(address + 2);
+            int cc = (opcode >> 8) & 0x0f;
+            int dis = cpu.ReadMemoryWordSigned(address + 2);
             DisassembledOperand reg = new DisassembledOperand($"d{opcode & 0x07}");
             DisassembledOperand where = new DisassembledOperand($"${(dis + address + 2).ToString("x8", CultureInfo.InvariantCulture)}", 2, dis);
             return new DisassembledInstruction(address, opcode, names[cc], reg, where);
@@ -77,12 +77,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.Dbxx(opcode);
             }

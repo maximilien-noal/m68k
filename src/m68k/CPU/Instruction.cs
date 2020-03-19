@@ -2,8 +2,8 @@ namespace M68k.CPU
 {
     public interface IInstruction
     {
-        DisassembledInstruction Disassemble(uint address, uint opcode);
+        DisassembledInstruction Disassemble(int address, int opcode);
 
-        uint Execute(uint opcode);
+        int Execute(int opcode);
     }
 }

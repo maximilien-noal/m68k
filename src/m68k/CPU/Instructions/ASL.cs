@@ -3,6 +3,7 @@ namespace M68k.CPU.Instructions
     public class ASL : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public ASL(ICPU cpu)
         {
             this.cpu = cpu;
@@ -10,9 +11,9 @@ namespace M68k.CPU.Instructions
 
         public virtual void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -30,16 +31,16 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction2(this);
                 }
 
-                for (uint imm = 0; imm < 8; imm++)
+                for (int imm = 0; imm < 8; imm++)
                 {
-                    for (uint reg = 0; reg < 8; reg++)
+                    for (int reg = 0; reg < 8; reg++)
                     {
                         instructionSet.AddInstruction(baseAddress + (imm << 9) + reg, i);
                     }
                 }
             }
 
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -57,9 +58,9 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction5(this);
                 }
 
-                for (uint imm = 0; imm < 8; imm++)
+                for (int imm = 0; imm < 8; imm++)
                 {
-                    for (uint reg = 0; reg < 8; reg++)
+                    for (int reg = 0; reg < 8; reg++)
                     {
                         instructionSet.AddInstruction(baseAddress + (imm << 9) + reg, i);
                     }
@@ -68,9 +69,9 @@ namespace M68k.CPU.Instructions
 
             baseAddress = 0xe1c0;
             i = new AnonymousInstruction6(this);
-            for (uint ea_mode = 2; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 2; ea_mode < 8; ea_mode++)
             {
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 1)
                         break;
@@ -79,150 +80,17 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
+        protected virtual int AslByteImm(int opcode)
         {
-            public AnonymousInstruction(ASL parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASL parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AslByteImm(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Byte);
-            }
-        }
-
-        private sealed class AnonymousInstruction1 : IInstruction
-        {
-            public AnonymousInstruction1(ASL parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASL parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AslWordImm(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
-        }
-
-        private sealed class AnonymousInstruction2 : IInstruction
-        {
-            public AnonymousInstruction2(ASL parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASL parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AslLongImm(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
-        }
-
-        private sealed class AnonymousInstruction3 : IInstruction
-        {
-            public AnonymousInstruction3(ASL parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASL parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AslByteReg(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Byte);
-            }
-        }
-
-        private sealed class AnonymousInstruction4 : IInstruction
-        {
-            public AnonymousInstruction4(ASL parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASL parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AslWordReg(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
-        }
-
-        private sealed class AnonymousInstruction5 : IInstruction
-        {
-            public AnonymousInstruction5(ASL parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASL parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AslLongReg(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
-        }
-
-        private sealed class AnonymousInstruction6 : IInstruction
-        {
-            public AnonymousInstruction6(ASL parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASL parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AslWordMem(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
-        }
-
-        protected virtual uint AslByteImm(uint opcode)
-        {
-            uint shift = (opcode >> 9) & 0x07;
+            int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
                 shift = 8;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterByte(reg);
-            uint msb;
-            uint last_out = 0;
-            uint msb_changed = 0;
-            for (uint s = 0; s < shift; s++)
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterByte(reg);
+            int msb;
+            int last_out = 0;
+            int msb_changed = 0;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x80;
                 d <<= 1;
@@ -237,17 +105,90 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint AslWordImm(uint opcode)
+        protected virtual int AslByteReg(int opcode)
         {
-            uint shift = (opcode >> 9) & 0x07;
+            int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterByte(reg);
+            int msb;
+            int last_out = 0;
+            int msb_changed = 0;
+            for (int s = 0; s < shift; s++)
+            {
+                last_out = d & 0x80;
+                d <<= 1;
+                msb = d & 0x80;
+                if (msb != last_out)
+                    msb_changed = 1;
+            }
+
+            d &= 0x00ff;
+            cpu.SetDataRegisterByte(reg, d);
+            cpu.CalcFlagsParam(InstructionType.ASL, shift, last_out, d, msb_changed, Size.Byte);
+            return 6 + shift + shift;
+        }
+
+        protected virtual int AslLongImm(int opcode)
+        {
+            int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
                 shift = 8;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterWord(reg);
-            uint msb;
-            uint last_out = 0;
-            uint msb_changed = 0;
-            for (uint s = 0; s < shift; s++)
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterLong(reg);
+            int msb;
+            int last_out = 0;
+            int msb_changed = 0;
+            for (int s = 0; s < shift; s++)
+            {
+                last_out = (int)(d & 0x80000000);
+                d <<= 1;
+                msb = (int)(d & 0x80000000);
+                if (msb != last_out)
+                {
+                    msb_changed = 1;
+                }
+            }
+
+            cpu.SetDataRegisterLong(reg, d);
+            cpu.CalcFlagsParam(InstructionType.ASL, shift, last_out, d, msb_changed, Size.SizeLong);
+            return 8 + shift + shift;
+        }
+
+        protected virtual int AslLongReg(int opcode)
+        {
+            int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterLong(reg);
+            int msb;
+            int last_out = 0;
+            int msb_changed = 0;
+            for (int s = 0; s < shift; s++)
+            {
+                last_out = (int)(d & 0x80000000);
+                d <<= 1;
+                msb = (int)(d & 0x80000000);
+                if (msb != last_out)
+                {
+                    msb_changed = 1;
+                }
+            }
+
+            cpu.SetDataRegisterLong(reg, d);
+            cpu.CalcFlagsParam(InstructionType.ASL, shift, last_out, d, msb_changed, Size.SizeLong);
+            return 8 + shift + shift;
+        }
+
+        protected virtual int AslWordImm(int opcode)
+        {
+            int shift = (opcode >> 9) & 0x07;
+            if (shift == 0)
+                shift = 8;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterWord(reg);
+            int msb;
+            int last_out = 0;
+            int msb_changed = 0;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x8000;
                 d <<= 1;
@@ -262,62 +203,32 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint AslLongImm(uint opcode)
+        protected virtual int AslWordMem(int opcode)
         {
-            uint shift = (opcode >> 9) & 0x07;
-            if (shift == 0)
-                shift = 8;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterLong(reg);
-            uint msb;
-            uint last_out = 0;
-            uint msb_changed = 0;
-            for (uint s = 0; s < shift; s++)
+            IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
+            int v = op.GetWord();
+            int last_out = v & 0x8000;
+            int msb_changed = 0;
+            v <<= 1;
+            if ((v & 0x8000) != last_out)
             {
-                last_out = d & 0x80000000;
-                d <<= 1;
-                msb = d & 0x80000000;
-                if (msb != last_out)
-                    msb_changed = 1;
+                msb_changed = 1;
             }
 
-            cpu.SetDataRegisterLong(reg, d);
-            cpu.CalcFlagsParam(InstructionType.ASL, shift, last_out, d, msb_changed, Size.SizeLong);
-            return 8 + shift + shift;
+            op.SetWord(v);
+            cpu.CalcFlagsParam(InstructionType.ASL, 1, last_out, v, msb_changed, Size.Word);
+            return 8 + op.GetTiming();
         }
 
-        protected virtual uint AslByteReg(uint opcode)
+        protected virtual int AslWordReg(int opcode)
         {
-            uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterByte(reg);
-            uint msb;
-            uint last_out = 0;
-            uint msb_changed = 0;
-            for (uint s = 0; s < shift; s++)
-            {
-                last_out = d & 0x80;
-                d <<= 1;
-                msb = d & 0x80;
-                if (msb != last_out)
-                    msb_changed = 1;
-            }
-
-            d &= 0x00ff;
-            cpu.SetDataRegisterByte(reg, d);
-            cpu.CalcFlagsParam(InstructionType.ASL, shift, last_out, d, msb_changed, Size.Byte);
-            return 6 + shift + shift;
-        }
-
-        protected virtual uint AslWordReg(uint opcode)
-        {
-            uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterWord(reg);
-            uint msb;
-            uint last_out = 0;
-            uint msb_changed = 0;
-            for (uint s = 0; s < shift; s++)
+            int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterWord(reg);
+            int msb;
+            int last_out = 0;
+            int msb_changed = 0;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x8000;
                 d <<= 1;
@@ -332,43 +243,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint AslLongReg(uint opcode)
-        {
-            uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterLong(reg);
-            uint msb;
-            uint last_out = 0;
-            uint msb_changed = 0;
-            for (uint s = 0; s < shift; s++)
-            {
-                last_out = d & 0x80000000;
-                d <<= 1;
-                msb = d & 0x80000000;
-                if (msb != last_out)
-                    msb_changed = 1;
-            }
-
-            cpu.SetDataRegisterLong(reg, d);
-            cpu.CalcFlagsParam(InstructionType.ASL, shift, last_out, d, msb_changed, Size.SizeLong);
-            return 8 + shift + shift;
-        }
-
-        protected virtual uint AslWordMem(uint opcode)
-        {
-            IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
-            uint v = op.GetWord();
-            uint last_out = v & 0x8000;
-            uint msb_changed = 0;
-            v <<= 1;
-            if ((v & 0x8000) != last_out)
-                msb_changed = 1;
-            op.SetWord(v);
-            cpu.CalcFlagsParam(InstructionType.ASL, 1, last_out, v, msb_changed, Size.Word);
-            return 8 + op.GetTiming();
-        }
-
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand src;
             DisassembledOperand dst;
@@ -384,7 +259,7 @@ namespace M68k.CPU.Instructions
             }
             else
             {
-                uint count = (opcode >> 9) & 0x07;
+                int count = (opcode >> 9) & 0x07;
                 if (count == 0)
                     count = 8;
                 src = new DisassembledOperand("#" + count);
@@ -392,6 +267,146 @@ namespace M68k.CPU.Instructions
             }
 
             return new DisassembledInstruction(address, opcode, "asl" + sz.Ext, src, dst);
+        }
+
+        private sealed class AnonymousInstruction : IInstruction
+        {
+            private readonly ASL parent;
+
+            public AnonymousInstruction(ASL parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Byte);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AslByteImm(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction1 : IInstruction
+        {
+            private readonly ASL parent;
+
+            public AnonymousInstruction1(ASL parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AslWordImm(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction2 : IInstruction
+        {
+            private readonly ASL parent;
+
+            public AnonymousInstruction2(ASL parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AslLongImm(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction3 : IInstruction
+        {
+            private readonly ASL parent;
+
+            public AnonymousInstruction3(ASL parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Byte);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AslByteReg(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction4 : IInstruction
+        {
+            private readonly ASL parent;
+
+            public AnonymousInstruction4(ASL parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AslWordReg(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction5 : IInstruction
+        {
+            private readonly ASL parent;
+
+            public AnonymousInstruction5(ASL parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AslLongReg(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction6 : IInstruction
+        {
+            private readonly ASL parent;
+
+            public AnonymousInstruction6(ASL parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AslWordMem(opcode);
+            }
         }
     }
 }

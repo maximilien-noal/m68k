@@ -11,9 +11,9 @@ namespace M68k.CPU.Instructions
 
         public virtual void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -31,16 +31,16 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction2(this);
                 }
 
-                for (uint imm = 0; imm < 8; imm++)
+                for (int imm = 0; imm < 8; imm++)
                 {
-                    for (uint reg = 0; reg < 8; reg++)
+                    for (int reg = 0; reg < 8; reg++)
                     {
                         instructionSet.AddInstruction(baseAddress + (imm << 9) + reg, i);
                     }
                 }
             }
 
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -58,9 +58,9 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction5(this);
                 }
 
-                for (uint imm = 0; imm < 8; imm++)
+                for (int imm = 0; imm < 8; imm++)
                 {
-                    for (uint reg = 0; reg < 8; reg++)
+                    for (int reg = 0; reg < 8; reg++)
                     {
                         instructionSet.AddInstruction(baseAddress + (imm << 9) + reg, i);
                     }
@@ -69,9 +69,9 @@ namespace M68k.CPU.Instructions
 
             baseAddress = 0xe5c0;
             i = new AnonymousInstruction6(this);
-            for (uint ea_mode = 2; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 2; ea_mode < 8; ea_mode++)
             {
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 1)
                         break;
@@ -80,7 +80,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand src;
             DisassembledOperand dst;
@@ -96,7 +96,7 @@ namespace M68k.CPU.Instructions
             }
             else
             {
-                uint count = (opcode >> 9) & 0x07;
+                int count = (opcode >> 9) & 0x07;
                 if (count == 0)
                     count = 8;
                 src = new DisassembledOperand("#" + count);
@@ -106,17 +106,17 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "roxl" + sz.Ext, src, dst);
         }
 
-        protected virtual uint RoxlByteImm(uint opcode)
+        protected virtual int RoxlByteImm(int opcode)
         {
-            uint shift = (opcode >> 9) & 0x07;
+            int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
                 shift = 8;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterByte(reg);
-            uint last_out;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterByte(reg);
+            int last_out;
             bool xflag = cpu.IsFlagSet(cpu.XFlag);
-            uint maskFlags;
-            for (uint s = 0; s < shift; s++)
+            int maskFlags;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x80;
                 d <<= 1;
@@ -142,15 +142,15 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint RoxlByteReg(uint opcode)
+        protected virtual int RoxlByteReg(int opcode)
         {
-            uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterByte(reg);
-            uint last_out;
+            int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterByte(reg);
+            int last_out;
             bool xflag = cpu.IsFlagSet(cpu.XFlag);
-            uint maskFlags = xflag ? cpu.XFlag : 0;
-            for (uint s = 0; s < shift; s++)
+            int maskFlags = xflag ? cpu.XFlag : 0;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x80;
                 d <<= 1;
@@ -185,19 +185,19 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint RoxlLongImm(uint opcode)
+        protected virtual int RoxlLongImm(int opcode)
         {
-            uint shift = (opcode >> 9) & 0x07;
+            int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
                 shift = 8;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterLong(reg);
-            uint last_out;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterLong(reg);
+            int last_out;
             bool xflag = cpu.IsFlagSet(cpu.XFlag);
-            uint maskFlags;
-            for (uint s = 0; s < shift; s++)
+            int maskFlags;
+            for (int s = 0; s < shift; s++)
             {
-                last_out = d & 0x80000000;
+                last_out = (int)(d & 0x80000000);
                 d <<= 1;
                 if (xflag)
                     d |= 1;
@@ -220,17 +220,17 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint RoxlLongReg(uint opcode)
+        protected virtual int RoxlLongReg(int opcode)
         {
-            uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterLong(reg);
-            uint last_out;
+            int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterLong(reg);
+            int last_out;
             bool xflag = cpu.IsFlagSet(cpu.XFlag);
-            uint maskFlags = xflag ? cpu.XFlag : 0;
-            for (uint s = 0; s < shift; s++)
+            int maskFlags = xflag ? cpu.XFlag : 0;
+            for (int s = 0; s < shift; s++)
             {
-                last_out = d & 0x80000000;
+                last_out = (int)(d & 0x80000000);
                 d <<= 1;
                 if (xflag)
                     d |= 1;
@@ -262,17 +262,17 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual uint RoxlWordImm(uint opcode)
+        protected virtual int RoxlWordImm(int opcode)
         {
-            uint shift = (opcode >> 9) & 0x07;
+            int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
                 shift = 8;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterWord(reg);
-            uint last_out;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterWord(reg);
+            int last_out;
             bool xflag = cpu.IsFlagSet(cpu.XFlag);
-            uint maskFlags;
-            for (uint s = 0; s < shift; s++)
+            int maskFlags;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x8000;
                 d <<= 1;
@@ -298,16 +298,16 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint RoxlWordMem(uint opcode)
+        protected virtual int RoxlWordMem(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
-            uint v = op.GetWord();
-            uint last_out = v & 0x8000;
+            int v = op.GetWord();
+            int last_out = v & 0x8000;
             v <<= 1;
             if (cpu.IsFlagSet(cpu.XFlag))
                 v |= 0x01;
             op.SetWord(v);
-            uint maskFlags;
+            int maskFlags;
             if (last_out != 0)
                 maskFlags = cpu.XFlag + cpu.CFlag;
             else
@@ -320,15 +320,15 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected virtual uint RoxlWordReg(uint opcode)
+        protected virtual int RoxlWordReg(int opcode)
         {
-            uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterWord(reg);
-            uint last_out;
+            int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterWord(reg);
+            int last_out;
             bool xflag = cpu.IsFlagSet(cpu.XFlag);
-            uint maskFlags = xflag ? cpu.XFlag : 0;
-            for (uint s = 0; s < shift; s++)
+            int maskFlags = xflag ? cpu.XFlag : 0;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x8000;
                 d <<= 1;
@@ -372,12 +372,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Byte);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.RoxlByteImm(opcode);
             }
@@ -392,12 +392,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Word);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.RoxlWordImm(opcode);
             }
@@ -412,12 +412,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.SizeLong);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.RoxlLongImm(opcode);
             }
@@ -432,12 +432,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Byte);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.RoxlByteReg(opcode);
             }
@@ -452,12 +452,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Word);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.RoxlWordReg(opcode);
             }
@@ -472,12 +472,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.SizeLong);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.RoxlLongReg(opcode);
             }
@@ -492,12 +492,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Word);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.RoxlWordMem(opcode);
             }

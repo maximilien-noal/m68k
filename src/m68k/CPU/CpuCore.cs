@@ -10,74 +10,74 @@ namespace M68k.CPU
 {
     public abstract class CpuCore : ICPU
     {
-        private const uint C_FLAG = 1;
+        private const int C_FLAG = 1;
 
-        private const uint INTERRUPT_FLAGS_MASK = 0x0700;
+        private const int INTERRUPT_FLAGS_MASK = 0x0700;
 
-        private const uint N_FLAG = 8;
+        private const int N_FLAG = 8;
 
-        private const uint SUPERVISOR_FLAG = 0x2000;
+        private const int SUPERVISOR_FLAG = 0x2000;
 
-        private const uint TRACE_FLAG = 0x8000;
+        private const int TRACE_FLAG = 0x8000;
 
-        private const uint V_FLAG = 2;
+        private const int V_FLAG = 2;
 
-        private const uint X_FLAG = 16;
+        private const int X_FLAG = 16;
 
-        private const uint Z_FLAG = 4;
+        private const int Z_FLAG = 4;
 
-        private readonly List<uint> addressRegisters = new uint[8].ToList();
+        private readonly List<int> addressRegisters = new int[8].ToList();
 
-        private readonly List<uint> dataRegisters = new uint[8].ToList();
+        private readonly List<int> dataRegisters = new int[8].ToList();
 
         private IOperand[] dstHandlers;
 
-        private uint reg_sr;
+        private int reg_sr;
 
-        private uint reg_ssp;
+        private int reg_ssp;
 
-        private uint reg_usp;
+        private int reg_usp;
 
         private IOperand[] srcHandlers;
 
-        public List<uint> AdressRegisters { get => addressRegisters; }
+        public List<int> AdressRegisters { get => addressRegisters; }
 
-        public uint CFlag => C_FLAG;
+        public int CFlag => C_FLAG;
 
-        public uint CurrentInstructionAddress { get; set; }
+        public int CurrentInstructionAddress { get; set; }
 
-        public List<uint> DataRegisters { get => dataRegisters; }
+        public List<int> DataRegisters { get => dataRegisters; }
 
         public StringBuilder DisasmBuffer { get; set; }
 
         public IOperand DstEAHandler { get; set; }
 
-        public uint InterruptFlagMask => INTERRUPT_FLAGS_MASK;
+        public int InterruptFlagMask => INTERRUPT_FLAGS_MASK;
 
         public IAddressSpace Memory { get; set; }
 
-        public uint NFlag => N_FLAG;
+        public int NFlag => N_FLAG;
 
-        public uint RegPc { get; set; }
+        public int RegPc { get; set; }
 
         public IOperand SrcEAHandler { get; set; }
 
-        public uint SupervisorFlag => SUPERVISOR_FLAG;
+        public int SupervisorFlag => SUPERVISOR_FLAG;
 
-        public uint TraceFlag => TRACE_FLAG;
+        public int TraceFlag => TRACE_FLAG;
 
-        public uint VFlag => V_FLAG;
+        public int VFlag => V_FLAG;
 
-        public uint XFlag => X_FLAG;
+        public int XFlag => X_FLAG;
 
-        public uint ZFlag => Z_FLAG;
+        public int ZFlag => Z_FLAG;
 
-        public virtual void CalcFlags(InstructionType type, uint src, uint dst, uint result, Size sz)
+        public virtual void CalcFlags(InstructionType type, int src, int dst, int result, Size sz)
         {
             CalcFlagsParam(type, src, dst, result, 0, sz);
         }
 
-        public virtual void CalcFlagsParam(InstructionType type, uint src, uint dst, uint result, uint extraParam, Size sz)
+        public virtual void CalcFlagsParam(InstructionType type, int src, int dst, int result, int extraParam, Size sz)
         {
             bool Sm = (src & sz.MSB) != 0;
             bool Dm = (dst & sz.MSB) != 0;
@@ -589,148 +589,148 @@ namespace M68k.CPU
             }
         }
 
-        public virtual void ClrFlags(uint flags)
+        public virtual void ClrFlags(int flags)
         {
             reg_sr &= ~(flags & 0x00ff);
         }
 
-        public virtual void DecrementAddrRegister(uint reg, uint numBytes)
+        public virtual void DecrementAddrRegister(int reg, int numBytes)
         {
-            AdressRegisters[(int)reg] -= numBytes;
+            AdressRegisters[reg] -= numBytes;
         }
 
-        public virtual DisassembledOperand DisassembleDstEA(uint address, uint mode, uint reg, Size sz)
+        public virtual DisassembledOperand DisassembleDstEA(int address, int mode, int reg, Size sz)
         {
             return DisassembleEA(address, mode, reg, sz, false);
         }
 
-        public virtual DisassembledOperand DisassembleSrcEA(uint address, uint mode, uint reg, Size sz)
+        public virtual DisassembledOperand DisassembleSrcEA(int address, int mode, int reg, Size sz)
         {
             return DisassembleEA(address, mode, reg, sz, true);
         }
 
-        public virtual uint Execute()
+        public virtual int Execute()
         {
             throw new NotImplementedException($"Use {nameof(MC68000)}, not {nameof(CpuCore)}");
         }
 
-        public virtual uint FetchPCLong()
+        public virtual int FetchPCLong()
         {
-            uint value = ReadMemoryLong(RegPc);
+            int value = ReadMemoryLong(RegPc);
             RegPc += 4;
             return value;
         }
 
-        public virtual uint FetchPCWord()
+        public virtual int FetchPCWord()
         {
-            uint value = ReadMemoryWord(RegPc);
+            int value = ReadMemoryWord(RegPc);
             RegPc += 2;
             return value;
         }
 
-        public virtual uint FetchPCWordSigned()
+        public virtual int FetchPCWordSigned()
         {
-            uint value = ReadMemoryWordSigned(RegPc);
+            int value = ReadMemoryWordSigned(RegPc);
             RegPc += 2;
             return value;
         }
 
-        public virtual uint GetAddrRegisterByte(uint reg)
+        public virtual int GetAddrRegisterByte(int reg)
         {
-            return AdressRegisters[(int)reg] & 0x00ff;
+            return AdressRegisters[reg] & 0x00ff;
         }
 
-        public virtual uint GetAddrRegisterByteSigned(uint reg)
+        public virtual int GetAddrRegisterByteSigned(int reg)
         {
-            return SignExtendByte(AdressRegisters[(int)reg]);
+            return SignExtendByte(AdressRegisters[reg]);
         }
 
-        public virtual uint GetAddrRegisterLong(uint reg)
+        public virtual int GetAddrRegisterLong(int reg)
         {
-            return AdressRegisters[(int)reg];
+            return AdressRegisters[reg];
         }
 
-        public virtual uint GetAddrRegisterWord(uint reg)
+        public virtual int GetAddrRegisterWord(int reg)
         {
-            return AdressRegisters[(int)reg] & 0x0000ffff;
+            return AdressRegisters[reg] & 0x0000ffff;
         }
 
-        public virtual uint GetAddrRegisterWordSigned(uint reg)
+        public virtual int GetAddrRegisterWordSigned(int reg)
         {
-            return SignExtendWord(AdressRegisters[(int)reg]);
+            return SignExtendWord(AdressRegisters[reg]);
         }
 
-        public virtual uint GetCCRegister()
+        public virtual int GetCCRegister()
         {
             return reg_sr & 0x00ff;
         }
 
-        public virtual uint GetDataRegisterByte(uint reg)
+        public virtual int GetDataRegisterByte(int reg)
         {
-            return DataRegisters[(int)reg] & 0x00ff;
+            return DataRegisters[reg] & 0x00ff;
         }
 
-        public virtual uint GetDataRegisterByteSigned(uint reg)
+        public virtual int GetDataRegisterByteSigned(int reg)
         {
-            return SignExtendByte(DataRegisters[(int)reg]);
+            return SignExtendByte(DataRegisters[reg]);
         }
 
-        public virtual uint GetDataRegisterLong(uint reg)
+        public virtual int GetDataRegisterLong(int reg)
         {
-            return DataRegisters[(int)reg];
+            return DataRegisters[reg];
         }
 
-        public virtual uint GetDataRegisterWord(uint reg)
+        public virtual int GetDataRegisterWord(int reg)
         {
-            return DataRegisters[(int)reg] & 0x0000ffff;
+            return DataRegisters[reg] & 0x0000ffff;
         }
 
-        public virtual uint GetDataRegisterWordSigned(uint reg)
+        public virtual int GetDataRegisterWordSigned(int reg)
         {
-            return SignExtendWord(DataRegisters[(int)reg]);
+            return SignExtendWord(DataRegisters[reg]);
         }
 
-        public virtual IInstruction GetInstructionAt(uint address)
-        {
-            throw new NotImplementedException($"Use {nameof(MC68000)}, not {nameof(CpuCore)}");
-        }
-
-        public virtual IInstruction GetInstructionFor(uint opcode)
+        public virtual IInstruction GetInstructionAt(int address)
         {
             throw new NotImplementedException($"Use {nameof(MC68000)}, not {nameof(CpuCore)}");
         }
 
-        public virtual uint GetInterruptLevel()
+        public virtual IInstruction GetInstructionFor(int opcode)
+        {
+            throw new NotImplementedException($"Use {nameof(MC68000)}, not {nameof(CpuCore)}");
+        }
+
+        public virtual int GetInterruptLevel()
         {
             return (reg_sr >> 8) & 0x07;
         }
 
-        public virtual uint GetPC()
+        public virtual int GetPC()
         {
             return RegPc;
         }
 
-        public virtual uint GetSR()
+        public virtual int GetSR()
         {
             return reg_sr;
         }
 
-        public virtual uint GetSSP()
+        public virtual int GetSSP()
         {
             return reg_ssp;
         }
 
-        public virtual uint GetUSP()
+        public virtual int GetUSP()
         {
             return reg_usp;
         }
 
-        public virtual void IncrementAddrRegister(uint reg, uint numBytes)
+        public virtual void IncrementAddrRegister(int reg, int numBytes)
         {
-            AdressRegisters[(int)reg] += numBytes;
+            AdressRegisters[reg] += numBytes;
         }
 
-        public virtual bool IsFlagSet(uint flag)
+        public virtual bool IsFlagSet(int flag)
         {
             return ((reg_sr & flag) == flag);
         }
@@ -740,36 +740,36 @@ namespace M68k.CPU
             return (reg_sr & SUPERVISOR_FLAG) == SUPERVISOR_FLAG;
         }
 
-        public virtual uint PopLong()
+        public virtual int PopLong()
         {
-            uint val = ReadMemoryLong(AdressRegisters[7]);
+            int val = ReadMemoryLong(AdressRegisters[7]);
             AdressRegisters[7] += 4;
             return val;
         }
 
-        public virtual uint PopWord()
+        public virtual int PopWord()
         {
-            uint val = ReadMemoryWord(AdressRegisters[7]);
+            int val = ReadMemoryWord(AdressRegisters[7]);
             AdressRegisters[7] += 2;
             return val;
         }
 
-        public virtual void PushLong(uint value)
+        public virtual void PushLong(int value)
         {
             AdressRegisters[7] -= 4;
             WriteMemoryLong(AdressRegisters[7], value);
         }
 
-        public virtual void PushWord(uint value)
+        public virtual void PushWord(int value)
         {
             AdressRegisters[7] -= 2;
             WriteMemoryWord(AdressRegisters[7], value);
         }
 
-        public virtual void RaiseException(uint vector)
+        public virtual void RaiseException(int vector)
         {
-            uint address = (vector & 0x00ff) << 2;
-            uint old_sr = reg_sr;
+            int address = (vector & 0x00ff) << 2;
+            int old_sr = reg_sr;
             if ((reg_sr & SUPERVISOR_FLAG) == 0)
             {
                 reg_sr |= SUPERVISOR_FLAG;
@@ -780,7 +780,7 @@ namespace M68k.CPU
             PushLong(RegPc);
             PushWord(old_sr);
             reg_sr &= ~(TRACE_FLAG);
-            uint xaddress = ReadMemoryLong(address);
+            int xaddress = ReadMemoryLong(address);
             if (xaddress == 0)
             {
                 xaddress = ReadMemoryLong(0x003c);
@@ -793,7 +793,7 @@ namespace M68k.CPU
             RegPc = xaddress;
         }
 
-        public virtual void RaiseInterrupt(uint priority)
+        public virtual void RaiseInterrupt(int priority)
         {
             if (priority == 0)
                 return;
@@ -807,8 +807,8 @@ namespace M68k.CPU
 
         public virtual void RaiseSRException()
         {
-            uint address = 32;
-            uint old_sr = reg_sr;
+            int address = 32;
+            int old_sr = reg_sr;
             if ((reg_sr & SUPERVISOR_FLAG) == 0)
             {
                 reg_sr |= SUPERVISOR_FLAG;
@@ -818,7 +818,7 @@ namespace M68k.CPU
 
             PushLong(CurrentInstructionAddress);
             PushWord(old_sr);
-            uint xaddress = ReadMemoryLong(address);
+            int xaddress = ReadMemoryLong(address);
             if (xaddress == 0)
             {
                 xaddress = ReadMemoryLong(0x003c);
@@ -831,36 +831,37 @@ namespace M68k.CPU
             RegPc = xaddress;
         }
 
-        public virtual uint ReadMemoryByte(uint addr)
+        public virtual int ReadMemoryByte(int addr)
         {
             return Memory.ReadByte(addr);
         }
 
-        public virtual uint ReadMemoryByteSigned(uint addr)
+        public virtual int ReadMemoryByteSigned(int addr)
         {
             return SignExtendByte(Memory.ReadByte(addr));
         }
 
-        public virtual uint ReadMemoryLong(uint addr)
+        public virtual int ReadMemoryLong(int addr)
         {
-            return Memory.ReadLong(addr);
+            return (int)Memory.ReadLong(addr);
         }
 
-        public virtual uint ReadMemoryWord(uint addr)
+        public virtual int ReadMemoryWord(int addr)
         {
             return Memory.ReadWord(addr);
         }
 
-        public virtual uint ReadMemoryWordSigned(uint addr)
+        public virtual int ReadMemoryWordSigned(int addr)
         {
             return SignExtendWord(Memory.ReadWord(addr));
         }
 
         public virtual void Reset()
         {
-            reg_ssp = Memory.ReadLong(0);
+            reg_ssp = (int)Memory.ReadLong(0);
             AdressRegisters[7] = reg_ssp;
-            RegPc = Memory.ReadLong(4);
+
+            RegPc = (int)Memory.ReadLong(4);
             reg_sr = 0x2700;
         }
 
@@ -869,22 +870,32 @@ namespace M68k.CPU
             // Method intentionally left empty.
         }
 
-        public virtual IOperand ResolveDstEA(uint mode, uint reg, Size size)
+        public virtual IOperand ResolveDstEA(int mode, int reg, Size size)
         {
             if (mode < 7)
+            {
                 DstEAHandler = dstHandlers[mode];
+            }
             else
+            {
                 DstEAHandler = dstHandlers[mode + reg];
+            }
+
             DstEAHandler.Init(reg, size);
             return DstEAHandler;
         }
 
-        public virtual IOperand ResolveSrcEA(uint mode, uint reg, Size size)
+        public virtual IOperand ResolveSrcEA(int mode, int reg, Size size)
         {
             if (mode < 7)
+            {
                 SrcEAHandler = srcHandlers[mode];
+            }
             else
+            {
                 SrcEAHandler = srcHandlers[mode + reg];
+            }
+
             SrcEAHandler.Init(reg, size);
             return SrcEAHandler;
         }
@@ -894,25 +905,25 @@ namespace M68k.CPU
             this.Memory = memory;
         }
 
-        public virtual void SetAddrRegisterByte(uint reg, uint value)
+        public virtual void SetAddrRegisterByte(int reg, int value)
         {
-            AdressRegisters[(int)reg] = (AdressRegisters[(int)reg] & 0xffffff00) | (value & 0x00ff);
+            AdressRegisters[reg] = (int)(AdressRegisters[reg] & 0xffffff00) | (value & 0x00ff);
             if (reg == 7)
             {
                 if (IsSupervisorMode())
                 {
-                    reg_ssp = AdressRegisters[(int)reg];
+                    reg_ssp = AdressRegisters[reg];
                 }
                 else
                 {
-                    reg_usp = AdressRegisters[(int)reg];
+                    reg_usp = AdressRegisters[reg];
                 }
             }
         }
 
-        public virtual void SetAddrRegisterLong(uint reg, uint value)
+        public virtual void SetAddrRegisterLong(int reg, int value)
         {
-            AdressRegisters[(int)reg] = value;
+            AdressRegisters[reg] = value;
             if (reg == 7)
             {
                 if (IsSupervisorMode())
@@ -926,53 +937,53 @@ namespace M68k.CPU
             }
         }
 
-        public virtual void SetAddrRegisterWord(uint reg, uint value)
+        public virtual void SetAddrRegisterWord(int reg, int value)
         {
-            AdressRegisters[(int)reg] = (AdressRegisters[(int)reg] & 0xffff0000) | (value & 0x0000ffff);
+            AdressRegisters[reg] = (int)(AdressRegisters[reg] & 0xffff0000) | (value & 0x0000ffff);
             if (reg == 7)
             {
                 if (IsSupervisorMode())
                 {
-                    reg_ssp = AdressRegisters[(int)reg];
+                    reg_ssp = AdressRegisters[reg];
                 }
                 else
                 {
-                    reg_usp = AdressRegisters[(int)reg];
+                    reg_usp = AdressRegisters[reg];
                 }
             }
         }
 
-        public virtual void SetCCRegister(uint value)
+        public virtual void SetCCRegister(int value)
         {
             reg_sr = (reg_sr & 0xff00) | (value & 0x00ff);
         }
 
-        public virtual void SetDataRegisterByte(uint reg, uint value)
+        public virtual void SetDataRegisterByte(int reg, int value)
         {
-            DataRegisters[(int)reg] = (DataRegisters[(int)reg] & 0xffffff00) | (value & 0x00ff);
+            DataRegisters[reg] = (int)(DataRegisters[reg] & 0xffffff00) | (value & 0x00ff);
         }
 
-        public virtual void SetDataRegisterLong(uint reg, uint value)
+        public virtual void SetDataRegisterLong(int reg, int value)
         {
-            DataRegisters[(int)reg] = value;
+            DataRegisters[reg] = value;
         }
 
-        public virtual void SetDataRegisterWord(uint reg, uint value)
+        public virtual void SetDataRegisterWord(int reg, int value)
         {
-            DataRegisters[(int)reg] = (DataRegisters[(int)reg] & 0xffff0000) | (value & 0x0000ffff);
+            DataRegisters[reg] = (int)(DataRegisters[reg] & 0xffff0000) | (value & 0x0000ffff);
         }
 
-        public virtual void SetFlags(uint flags)
+        public virtual void SetFlags(int flags)
         {
             reg_sr |= (flags & 0x00ff);
         }
 
-        public virtual void SetPC(uint address)
+        public virtual void SetPC(int address)
         {
             RegPc = address;
         }
 
-        public virtual void SetSR(uint value)
+        public virtual void SetSR(int value)
         {
             if (((reg_sr & SUPERVISOR_FLAG) ^ (value & SUPERVISOR_FLAG)) != 0)
             {
@@ -991,7 +1002,7 @@ namespace M68k.CPU
             reg_sr = value;
         }
 
-        public virtual void SetSR2(uint value)
+        public virtual void SetSR2(int value)
         {
             reg_sr = value;
             if ((reg_sr & SUPERVISOR_FLAG) == 0)
@@ -1001,7 +1012,7 @@ namespace M68k.CPU
             }
         }
 
-        public virtual void SetSSP(uint address)
+        public virtual void SetSSP(int address)
         {
             reg_ssp = address;
             if (IsSupervisorMode())
@@ -1012,7 +1023,7 @@ namespace M68k.CPU
         {
             if (enable)
             {
-                uint old_sr = reg_sr;
+                int old_sr = reg_sr;
                 if ((reg_sr & SUPERVISOR_FLAG) == 0)
                 {
                     reg_sr |= SUPERVISOR_FLAG;
@@ -1035,20 +1046,22 @@ namespace M68k.CPU
             }
         }
 
-        public virtual void SetUSP(uint address)
+        public virtual void SetUSP(int address)
         {
             reg_usp = address;
             if (!IsSupervisorMode())
+            {
                 AdressRegisters[7] = reg_usp;
+            }
         }
 
         public virtual void StopNow()
         {
         }
 
-        public virtual bool TestCC(uint cc)
+        public virtual bool TestCC(int cc)
         {
-            uint ccr = reg_sr & 0x001f;
+            int ccr = reg_sr & 0x001f;
             switch (cc)
             {
                 case 0:
@@ -1113,25 +1126,25 @@ namespace M68k.CPU
 
                 case 12:
                     {
-                        uint v = ccr & (N_FLAG | V_FLAG);
+                        int v = ccr & (N_FLAG | V_FLAG);
                         return (v == 0 || v == (N_FLAG | V_FLAG));
                     }
 
                 case 13:
                     {
-                        uint v = ccr & (N_FLAG | V_FLAG);
+                        int v = ccr & (N_FLAG | V_FLAG);
                         return (v == N_FLAG || v == V_FLAG);
                     }
 
                 case 14:
                     {
-                        uint v = ccr & (N_FLAG | V_FLAG | Z_FLAG);
+                        int v = ccr & (N_FLAG | V_FLAG | Z_FLAG);
                         return (v == 0 || v == (N_FLAG | V_FLAG));
                     }
 
                 case 15:
                     {
-                        uint v = ccr & (N_FLAG | V_FLAG | Z_FLAG);
+                        int v = ccr & (N_FLAG | V_FLAG | Z_FLAG);
                         return ((v & Z_FLAG) != 0 || (v == N_FLAG) || (v == V_FLAG));
                     }
             }
@@ -1139,25 +1152,25 @@ namespace M68k.CPU
             throw new ArgumentException("Invalid Condition Code value!");
         }
 
-        public virtual void WriteMemoryByte(uint addr, uint value)
+        public virtual void WriteMemoryByte(int addr, int value)
         {
             Memory.WriteByte(addr, value);
         }
 
-        public virtual void WriteMemoryLong(uint addr, uint value)
+        public virtual void WriteMemoryLong(int addr, int value)
         {
-            Memory.WriteLong(addr, value);
+            Memory.WriteLong(addr, (uint)value);
         }
 
-        public virtual void WriteMemoryWord(uint addr, uint value)
+        public virtual void WriteMemoryWord(int addr, int value)
         {
             Memory.WriteWord(addr, value);
         }
 
-        protected virtual DisassembledOperand DisassembleEA(uint address, uint mode, uint reg, Size sz, bool isSrc)
+        protected virtual DisassembledOperand DisassembleEA(int address, int mode, int reg, Size sz, bool isSrc)
         {
-            uint bytes_read = 0;
-            uint mem = 0;
+            int bytes_read = 0;
+            int mem = 0;
             DisasmBuffer.Clear();
             switch (mode)
             {
@@ -1202,7 +1215,7 @@ namespace M68k.CPU
                 case 6:
                     {
                         mem = ReadMemoryWord(address);
-                        uint dis = SignExtendByte(mem);
+                        int dis = SignExtendByte(mem);
                         DisasmBuffer.Append($"{dis.ToString("x4", CultureInfo.InvariantCulture)}(a{reg},");
                         DisasmBuffer.Append((mem & 0x8000) != 0 ? "a" : "d").Append((mem >> 12) & 0x07).Append((mem & 0x0800) != 0 ? ".l" : ".w").Append(")");
                         bytes_read = 2;
@@ -1240,7 +1253,7 @@ namespace M68k.CPU
                             case 3:
                                 {
                                     mem = ReadMemoryWord(address);
-                                    uint dis = SignExtendByte(mem);
+                                    int dis = SignExtendByte(mem);
                                     DisasmBuffer.Append($"${((byte)dis).ToString("x2", CultureInfo.InvariantCulture)}(pc,");
                                     DisasmBuffer.Append(((mem & 0x8000) != 0 ? "a" : "d")).Append((mem >> 12) & 0x07).Append(((mem & 0x0800) != 0 ? ".l" : ".w")).Append(")");
                                     bytes_read = 2;
@@ -1331,17 +1344,20 @@ namespace M68k.CPU
             dstHandlers[11] = new StatusRegisterOperand(this);
         }
 
-        protected virtual void SetInterruptLevel(uint level)
+        protected virtual void SetInterruptLevel(int level)
         {
             reg_sr &= ~(INTERRUPT_FLAGS_MASK);
             reg_sr |= (level & 0x07) << 8;
         }
 
-        protected virtual uint SignExtendByte(uint value)
+        protected virtual int SignExtendByte(int value)
         {
             if ((value & 0x80) == 0x80)
             {
-                value |= 0xffffff00;
+                unchecked
+                {
+                    value |= (int)0xffffff00;
+                }
             }
             else
             {
@@ -1351,11 +1367,14 @@ namespace M68k.CPU
             return value;
         }
 
-        protected virtual uint SignExtendWord(uint value)
+        protected virtual int SignExtendWord(int value)
         {
             if ((value & 0x8000) == 0x8000)
             {
-                value |= 0xffff0000;
+                unchecked
+                {
+                    value |= (int)0xffff0000;
+                }
             }
             else
             {
@@ -1367,9 +1386,9 @@ namespace M68k.CPU
 
         private class AbsoluteLongOperand : IOperand
         {
-            protected readonly uint index = 8;
+            protected readonly int index = 8;
 
-            protected uint address;
+            protected int address;
 
             protected Size size;
 
@@ -1380,47 +1399,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.ReadMemoryByte(address);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.ReadMemoryByteSigned(address);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 return address;
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.ReadMemoryLong(address);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 16 : 12);
+                return (size.Equals(Size.SizeLong) ? 16 : 12);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.ReadMemoryWord(address);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.ReadMemoryWordSigned(address);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 size = sz;
                 address = cpu.FetchPCLong();
@@ -1436,17 +1455,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.WriteMemoryByte(address, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.WriteMemoryLong(address, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.WriteMemoryWord(address, value);
             }
@@ -1459,9 +1478,9 @@ namespace M68k.CPU
 
         private class AbsoluteShortOperand : IOperand
         {
-            protected readonly uint index = 7;
+            protected readonly int index = 7;
 
-            protected uint address;
+            protected int address;
 
             protected Size size;
 
@@ -1472,47 +1491,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.ReadMemoryByte(address);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.ReadMemoryByteSigned(address);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 return address;
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.ReadMemoryLong(address);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 12 : 8);
+                return (size.Equals(Size.SizeLong) ? 12 : 8);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.ReadMemoryWord(address);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.ReadMemoryWordSigned(address);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 size = sz;
                 address = cpu.FetchPCWordSigned();
@@ -1528,17 +1547,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.WriteMemoryByte(address, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.WriteMemoryLong(address, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.WriteMemoryWord(address, value);
             }
@@ -1551,11 +1570,11 @@ namespace M68k.CPU
 
         private class AddressRegisterIndirectOperand : IOperand
         {
-            protected readonly uint index = 2;
+            protected readonly int index = 2;
 
-            protected uint address;
+            protected int address;
 
-            protected uint regNumber;
+            protected int regNumber;
 
             protected Size size;
 
@@ -1566,47 +1585,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.ReadMemoryByte(address);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.ReadMemoryByteSigned(address);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 return address;
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.ReadMemoryLong(address);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 8 : 4);
+                return (size.Equals(Size.SizeLong) ? 8 : 4);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.ReadMemoryWord(address);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.ReadMemoryWordSigned(address);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 regNumber = param;
                 size = sz;
@@ -1623,17 +1642,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.WriteMemoryByte(address, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.WriteMemoryLong(address, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.WriteMemoryWord(address, value);
             }
@@ -1646,9 +1665,9 @@ namespace M68k.CPU
 
         private class AddressRegisterOperand : IOperand
         {
-            protected readonly uint index = 1;
+            protected readonly int index = 1;
 
-            protected uint regNumber;
+            protected int regNumber;
 
             protected Size size;
 
@@ -1659,47 +1678,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.GetAddrRegisterByte(regNumber);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.GetAddrRegisterByteSigned(regNumber);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 throw new Exception("Address Register direct has no computed address");
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.GetAddrRegisterLong(regNumber);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
                 return 0;
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.GetAddrRegisterWord(regNumber);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.GetAddrRegisterWordSigned(regNumber);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 regNumber = param;
                 size = sz;
@@ -1715,17 +1734,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.SetAddrRegisterByte(regNumber, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.SetAddrRegisterLong(regNumber, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.SetAddrRegisterWord(regNumber, value);
             }
@@ -1738,11 +1757,11 @@ namespace M68k.CPU
 
         private class AddressRegisterPostIncOperand : IOperand
         {
-            protected readonly uint index = 3;
+            protected readonly int index = 3;
 
-            protected uint address;
+            protected int address;
 
-            protected uint regNumber;
+            protected int regNumber;
 
             protected Size size;
 
@@ -1753,47 +1772,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.ReadMemoryByte(address);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.ReadMemoryByteSigned(address);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 return address;
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.ReadMemoryLong(address);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 8 : 4);
+                return (size.Equals(Size.SizeLong) ? 8 : 4);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.ReadMemoryWord(address);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.ReadMemoryWordSigned(address);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 regNumber = param;
                 size = sz;
@@ -1818,17 +1837,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.WriteMemoryByte(address, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.WriteMemoryLong(address, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.WriteMemoryWord(address, value);
             }
@@ -1841,11 +1860,11 @@ namespace M68k.CPU
 
         private class AddressRegisterPreDecOperand : IOperand
         {
-            protected readonly uint index = 4;
+            protected readonly int index = 4;
 
-            protected uint address;
+            protected int address;
 
-            protected uint regNumber;
+            protected int regNumber;
 
             protected Size size;
 
@@ -1856,47 +1875,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.ReadMemoryByte(address);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.ReadMemoryByteSigned(address);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 return address;
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.ReadMemoryLong(address);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 10 : 6);
+                return (size.Equals(Size.SizeLong) ? 10 : 6);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.ReadMemoryWord(address);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.ReadMemoryWordSigned(address);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 regNumber = param;
                 size = sz;
@@ -1922,18 +1941,18 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.WriteMemoryByte(address, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.WriteMemoryWord(address + 2, value & 0xFFFF);
                 cpu.WriteMemoryWord(address, (value >> 16) & 0xFFFF);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.WriteMemoryWord(address, value);
             }
@@ -1946,13 +1965,13 @@ namespace M68k.CPU
 
         private class AddressRegisterWithDisplacementOperand : IOperand
         {
-            protected readonly uint index = 5;
+            protected readonly int index = 5;
 
-            protected uint address;
+            protected int address;
 
-            protected uint displacement;
+            protected int displacement;
 
-            protected uint regNumber;
+            protected int regNumber;
 
             protected Size size;
 
@@ -1963,47 +1982,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.ReadMemoryByte(address);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.ReadMemoryByteSigned(address);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 return address;
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.ReadMemoryLong(address);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 12 : 8);
+                return (size.Equals(Size.SizeLong) ? 12 : 8);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.ReadMemoryWord(address);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.ReadMemoryWordSigned(address);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 regNumber = param;
                 size = sz;
@@ -2021,17 +2040,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.WriteMemoryByte(address, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.WriteMemoryLong(address, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.WriteMemoryWord(address, value);
             }
@@ -2044,19 +2063,19 @@ namespace M68k.CPU
 
         private class AddressRegisterWithIndexOperand : IOperand
         {
-            protected readonly uint index = 6;
+            protected readonly int index = 6;
 
-            protected uint address;
+            protected int address;
 
-            protected uint displacement;
+            protected int displacement;
 
             protected bool idxIsAddressReg;
 
-            protected uint idxRegNumber;
+            protected int idxRegNumber;
 
             protected Size idxSize;
 
-            protected uint regNumber;
+            protected int regNumber;
 
             protected Size size;
 
@@ -2067,56 +2086,56 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.ReadMemoryByte(address);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.ReadMemoryByteSigned(address);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 return address;
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.ReadMemoryLong(address);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 14 : 10);
+                return (size.Equals(Size.SizeLong) ? 14 : 10);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.ReadMemoryWord(address);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.ReadMemoryWordSigned(address);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 regNumber = param;
                 size = sz;
-                uint ext = cpu.FetchPCWordSigned();
+                int ext = cpu.FetchPCWordSigned();
                 displacement = cpu.SignExtendByte(ext);
                 idxRegNumber = (ext >> 12) & 0x07;
                 idxSize = ((ext & 0x0800) == 0x0800 ? Size.SizeLong : Size.Word);
                 idxIsAddressReg = ((ext & 0x8000) == 0x8000);
-                uint idxVal;
+                int idxVal;
                 if (idxIsAddressReg)
                 {
                     if (idxSize.Equals(Size.Word))
@@ -2153,17 +2172,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.WriteMemoryByte(address, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.WriteMemoryLong(address, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.WriteMemoryWord(address, value);
             }
@@ -2186,9 +2205,9 @@ namespace M68k.CPU
 
         private class DataRegisterOperand : IOperand
         {
-            protected readonly uint index = 0;
+            protected readonly int index = 0;
 
-            protected uint regNumber;
+            protected int regNumber;
 
             protected Size size;
 
@@ -2199,47 +2218,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.GetDataRegisterByte(regNumber);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.GetDataRegisterByteSigned(regNumber);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 throw new Exception("Data Register has no computed address");
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.GetDataRegisterLong(regNumber);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
                 return 0;
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.GetDataRegisterWord(regNumber);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.GetDataRegisterWordSigned(regNumber);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 regNumber = param;
                 size = sz;
@@ -2255,17 +2274,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.SetDataRegisterByte(regNumber, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.SetDataRegisterLong(regNumber, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.SetDataRegisterWord(regNumber, value);
             }
@@ -2278,11 +2297,11 @@ namespace M68k.CPU
 
         private class ImmediateOperand : IOperand
         {
-            protected readonly uint index = 11;
+            protected readonly int index = 11;
 
             protected Size size;
 
-            protected uint value;
+            protected int value;
 
             private readonly CpuCore cpu;
 
@@ -2291,47 +2310,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return value & 0x00ff;
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.SignExtendByte(value);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 throw new Exception("Immediate addressing has no computed address");
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return value;
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 12 : 8);
+                return (size.Equals(Size.SizeLong) ? 12 : 8);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return value & 0x0000ffff;
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.SignExtendWord(value);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 size = sz;
                 if (size.Equals(Size.SizeLong))
@@ -2358,17 +2377,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 throw new Exception("Cannot setByte on source only operand");
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 throw new Exception("Cannot setLong on source only operand");
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 throw new Exception("Cannot setWord on source only operand");
             }
@@ -2381,11 +2400,11 @@ namespace M68k.CPU
 
         private class PCWithDisplacementOperand : IOperand
         {
-            protected readonly uint index = 9;
+            protected readonly int index = 9;
 
-            protected uint address;
+            protected int address;
 
-            protected uint displacement;
+            protected int displacement;
 
             protected Size size;
 
@@ -2396,47 +2415,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.ReadMemoryByte(address);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.ReadMemoryByteSigned(address);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 return address;
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.ReadMemoryLong(address);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 12 : 8);
+                return (size.Equals(Size.SizeLong) ? 12 : 8);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.ReadMemoryWord(address);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.ReadMemoryWordSigned(address);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 size = sz;
                 address = cpu.GetPC();
@@ -2454,17 +2473,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.WriteMemoryByte(address, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.WriteMemoryLong(address, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.WriteMemoryWord(address, value);
             }
@@ -2477,15 +2496,15 @@ namespace M68k.CPU
 
         private class PCWithIndexOperand : IOperand
         {
-            protected readonly uint index = 10;
+            protected readonly int index = 10;
 
-            protected uint address;
+            protected int address;
 
-            protected uint displacement;
+            protected int displacement;
 
             protected bool idxIsAddressReg;
 
-            protected uint idxRegNumber;
+            protected int idxRegNumber;
 
             protected Size idxSize;
 
@@ -2498,56 +2517,56 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return cpu.ReadMemoryByte(address);
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.ReadMemoryByteSigned(address);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 return address;
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 return cpu.ReadMemoryLong(address);
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
-                return (uint)(size.Equals(Size.SizeLong) ? 14 : 10);
+                return (size.Equals(Size.SizeLong) ? 14 : 10);
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return cpu.ReadMemoryWord(address);
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.ReadMemoryWordSigned(address);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 size = sz;
                 address = cpu.GetPC();
-                uint ext = cpu.FetchPCWordSigned();
+                int ext = cpu.FetchPCWordSigned();
                 displacement = cpu.SignExtendByte(ext);
                 idxRegNumber = (ext >> 12) & 0x07;
                 idxSize = ((ext & 0x0800) == 0x0800 ? Size.SizeLong : Size.Word);
                 idxIsAddressReg = ((ext & 0x8000) == 0x8000);
-                uint idxVal;
+                int idxVal;
                 if (idxIsAddressReg)
                 {
                     if (idxSize.Equals(Size.Word))
@@ -2584,17 +2603,17 @@ namespace M68k.CPU
                 return false;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.WriteMemoryByte(address, value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 cpu.WriteMemoryLong(address, value);
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.WriteMemoryWord(address, value);
             }
@@ -2616,13 +2635,13 @@ namespace M68k.CPU
 
         private class StatusRegisterOperand : IOperand
         {
-            protected readonly uint index = 12;
+            protected readonly int index = 12;
 
             protected string name;
 
             protected Size size;
 
-            protected uint value;
+            protected int value;
 
             private readonly CpuCore cpu;
 
@@ -2631,47 +2650,47 @@ namespace M68k.CPU
                 cpu = icpu;
             }
 
-            public virtual uint GetByte()
+            public virtual int GetByte()
             {
                 return value & 0x00ff;
             }
 
-            public virtual uint GetByteSigned()
+            public virtual int GetByteSigned()
             {
                 return cpu.SignExtendByte(value);
             }
 
-            public virtual uint GetComputedAddress()
+            public virtual int GetComputedAddress()
             {
                 throw new InvalidOperationException("Status Register has no computed address");
             }
 
-            public virtual uint GetLong()
+            public virtual int GetLong()
             {
                 throw new Exception("Cannot getLong on status register");
             }
 
-            public virtual uint GetTiming()
+            public virtual int GetTiming()
             {
                 return 0;
             }
 
-            public virtual uint GetWord()
+            public virtual int GetWord()
             {
                 return value & 0x0000ffff;
             }
 
-            public virtual uint GetWordSigned()
+            public virtual int GetWordSigned()
             {
                 return cpu.SignExtendWord(value);
             }
 
-            public virtual uint Index()
+            public virtual int Index()
             {
                 return index;
             }
 
-            public virtual void Init(uint param, Size sz)
+            public virtual void Init(int param, Size sz)
             {
                 size = sz;
                 switch (size.Ext)
@@ -2707,17 +2726,17 @@ namespace M68k.CPU
                 return true;
             }
 
-            public virtual void SetByte(uint value)
+            public virtual void SetByte(int value)
             {
                 cpu.SetCCRegister(value);
             }
 
-            public virtual void SetLong(uint value)
+            public virtual void SetLong(int value)
             {
                 throw new InvalidOperationException("Cannot setLong on status register");
             }
 
-            public virtual void SetWord(uint value)
+            public virtual void SetWord(int value)
             {
                 cpu.SetSR(value);
             }

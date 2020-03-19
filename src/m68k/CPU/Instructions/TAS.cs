@@ -15,13 +15,13 @@ namespace M68k.CPU.Instructions
 
         public void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress = 0x4ac0;
+            int baseAddress = 0x4ac0;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 0; ea_mode < 8; ea_mode++)
             {
                 if (ea_mode == 1)
                     continue;
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 1)
                         break;
@@ -30,20 +30,20 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand op = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
             return new DisassembledInstruction(address, opcode, "tas", op);
         }
 
-        protected uint Tas(uint opcode)
+        protected int Tas(int opcode)
         {
             lock (lockObject)
             {
-                uint mode = (opcode >> 3) & 0x07;
-                uint reg = (opcode & 0x07);
+                int mode = (opcode >> 3) & 0x07;
+                int reg = (opcode & 0x07);
                 IOperand op = cpu.ResolveSrcEA(mode, reg, Size.Byte);
-                uint v = op.GetByte();
+                int v = op.GetByte();
                 if (v == 0)
                 {
                     cpu.SetFlags(cpu.ZFlag);
@@ -81,12 +81,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Byte);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.Tas(opcode);
             }

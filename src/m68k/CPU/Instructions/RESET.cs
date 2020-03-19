@@ -3,6 +3,7 @@ namespace M68k.CPU.Instructions
     public class RESET : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public RESET(ICPU cpu)
         {
             this.cpu = cpu;
@@ -15,13 +16,19 @@ namespace M68k.CPU.Instructions
 
         private sealed class AnonymousInstruction : IInstruction
         {
+            private readonly RESET parent;
+
             public AnonymousInstruction(RESET parent)
             {
                 this.parent = parent;
             }
 
-            private readonly RESET parent;
-            public uint Execute(uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return new DisassembledInstruction(address, opcode, "reset");
+            }
+
+            public int Execute(int opcode)
             {
                 if (parent.cpu.IsSupervisorMode())
                 {
@@ -33,11 +40,6 @@ namespace M68k.CPU.Instructions
                     parent.cpu.RaiseException(8);
                     return 34;
                 }
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return new DisassembledInstruction(address, opcode, "reset");
             }
         }
     }

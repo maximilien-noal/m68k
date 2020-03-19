@@ -23,16 +23,16 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return new DisassembledInstruction(address, opcode, "rte");
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 if (parent.cpu.IsSupervisorMode())
                 {
-                    uint newsr = parent.cpu.PopWord();
+                    int newsr = parent.cpu.PopWord();
                     parent.cpu.SetPC(parent.cpu.PopLong());
                     parent.cpu.SetSR2(newsr);
                     return 20;

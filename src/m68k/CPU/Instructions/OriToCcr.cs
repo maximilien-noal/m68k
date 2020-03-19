@@ -18,17 +18,17 @@ namespace M68k.CPU.Instructions
                 throw new System.ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
             baseAddress = 0x003c;
             i = new AnonymousInstruction(this);
             instructionSet.AddInstruction(baseAddress, i);
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
-            uint imm_bytes;
-            uint imm;
+            int imm_bytes;
+            int imm;
             string instructionSet;
             imm = cpu.ReadMemoryWord(address + 2);
             instructionSet = $"#${imm.ToString("x8", CultureInfo.InvariantCulture)}";
@@ -38,9 +38,9 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "ori" + sz.Ext, src, dst);
         }
 
-        protected virtual uint OriWord(uint opcode)
+        protected virtual int OriWord(int opcode)
         {
-            uint s = cpu.FetchPCWordSigned() & 31;
+            int s = cpu.FetchPCWordSigned() & 31;
             cpu.SetSR(cpu.GetSR() | s);
             return 8;
         }
@@ -54,12 +54,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Byte);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.OriWord(opcode);
             }

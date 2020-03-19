@@ -5,6 +5,7 @@ namespace M68k.CPU.Instructions
     public class BSET : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public BSET(ICPU cpu)
         {
             this.cpu = cpu;
@@ -12,9 +13,9 @@ namespace M68k.CPU.Instructions
 
         public virtual void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress = 0x01c0;
+            int baseAddress = 0x01c0;
             IInstruction i;
-            for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 0; ea_mode < 8; ea_mode++)
             {
                 if (ea_mode == 1)
                     continue;
@@ -27,11 +28,11 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction1(this);
                 }
 
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 1)
                         break;
-                    for (uint r = 0; r < 8; r++)
+                    for (int r = 0; r < 8; r++)
                     {
                         instructionSet.AddInstruction(baseAddress + (r << 9) + (ea_mode << 3) + ea_reg, i);
                     }
@@ -39,7 +40,7 @@ namespace M68k.CPU.Instructions
             }
 
             baseAddress = 0x08c0;
-            for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 0; ea_mode < 8; ea_mode++)
             {
                 if (ea_mode == 1)
                     continue;
@@ -52,7 +53,7 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction3(this);
                 }
 
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 1)
                         break;
@@ -61,88 +62,12 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
+        protected int BsetDynByte(int opcode)
         {
-            public AnonymousInstruction(BSET parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly BSET parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.BsetDynLong(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
-        }
-
-        private sealed class AnonymousInstruction1 : IInstruction
-        {
-            public AnonymousInstruction1(BSET parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly BSET parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.BsetDynByte(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Byte);
-            }
-        }
-
-        private sealed class AnonymousInstruction2 : IInstruction
-        {
-            public AnonymousInstruction2(BSET parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly BSET parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.BsetStaticLong(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
-        }
-
-        private sealed class AnonymousInstruction3 : IInstruction
-        {
-            public AnonymousInstruction3(BSET parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly BSET parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.BsetStaticByte(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Byte);
-            }
-        }
-
-        protected uint BsetDynByte(uint opcode)
-        {
-            var bit = (int)cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 7;
+            var bit = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 7;
             bit = 1 << bit;
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Byte);
-            uint val = op.GetByte();
+            int val = op.GetByte();
             if ((val & bit) != 0)
             {
                 cpu.ClrFlags(cpu.ZFlag);
@@ -152,17 +77,17 @@ namespace M68k.CPU.Instructions
                 cpu.SetFlags(cpu.ZFlag);
             }
 
-            val |= (uint)(bit);
+            val |= (bit);
             op.SetByte(val);
             return 8 + op.GetTiming();
         }
 
-        protected uint BsetDynLong(uint opcode)
+        protected int BsetDynLong(int opcode)
         {
-            var bit = (int)cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 31;
+            var bit = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 31;
             bit = 1 << bit;
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
-            uint val = op.GetLong();
+            int val = op.GetLong();
             if ((val & bit) != 0)
             {
                 cpu.ClrFlags(cpu.ZFlag);
@@ -172,17 +97,17 @@ namespace M68k.CPU.Instructions
                 cpu.SetFlags(cpu.ZFlag);
             }
 
-            val |= (uint)(bit);
+            val |= (bit);
             op.SetLong(val);
             return 10;
         }
 
-        protected uint BsetStaticByte(uint opcode)
+        protected int BsetStaticByte(int opcode)
         {
-            var bit = (int)cpu.FetchPCWord() & 7;
+            var bit = cpu.FetchPCWord() & 7;
             bit = 1 << bit;
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Byte);
-            uint val = op.GetByte();
+            int val = op.GetByte();
             if ((val & bit) != 0)
             {
                 cpu.ClrFlags(cpu.ZFlag);
@@ -192,17 +117,17 @@ namespace M68k.CPU.Instructions
                 cpu.SetFlags(cpu.ZFlag);
             }
 
-            val |= (uint)(bit);
+            val |= (bit);
             op.SetByte(val);
             return 12 + op.GetTiming();
         }
 
-        protected uint BsetStaticLong(uint opcode)
+        protected int BsetStaticLong(int opcode)
         {
-            var bit = (int)cpu.FetchPCWord() & 31;
+            var bit = cpu.FetchPCWord() & 31;
             bit = 1 << bit;
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
-            uint val = op.GetLong();
+            int val = op.GetLong();
             if ((val & bit) != 0)
             {
                 cpu.ClrFlags(cpu.ZFlag);
@@ -212,23 +137,23 @@ namespace M68k.CPU.Instructions
                 cpu.SetFlags(cpu.ZFlag);
             }
 
-            val |= (uint)(bit);
+            val |= (bit);
             op.SetLong(val);
             return 14;
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand src;
-            uint bytes = 2;
+            int bytes = 2;
             if ((opcode & 0x0100) != 0)
             {
                 src = new DisassembledOperand("d" + ((opcode >> 9) & 0x07));
             }
             else
             {
-                uint ext = cpu.ReadMemoryWord(address + 2);
-                uint val;
+                int ext = cpu.ReadMemoryWord(address + 2);
+                int val;
                 if (((opcode >> 3) & 0x07) == 0)
                 {
                     val = ext & 0x1f;
@@ -244,6 +169,86 @@ namespace M68k.CPU.Instructions
 
             DisassembledOperand dst = cpu.DisassembleDstEA(address + bytes, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
             return new DisassembledInstruction(address, opcode, "bset", src, dst);
+        }
+
+        private sealed class AnonymousInstruction : IInstruction
+        {
+            private readonly BSET parent;
+
+            public AnonymousInstruction(BSET parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.BsetDynLong(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction1 : IInstruction
+        {
+            private readonly BSET parent;
+
+            public AnonymousInstruction1(BSET parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Byte);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.BsetDynByte(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction2 : IInstruction
+        {
+            private readonly BSET parent;
+
+            public AnonymousInstruction2(BSET parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.BsetStaticLong(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction3 : IInstruction
+        {
+            private readonly BSET parent;
+
+            public AnonymousInstruction3(BSET parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Byte);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.BsetStaticByte(opcode);
+            }
         }
     }
 }

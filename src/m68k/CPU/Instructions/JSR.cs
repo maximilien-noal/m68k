@@ -2,8 +2,10 @@ namespace M68k.CPU.Instructions
 {
     public class JSR : IInstructionHandler
     {
+        protected static readonly int[] TIMING = new int[] { 0, 0, 16, 0, 0, 18, 22, 18, 20, 18, 22 };
+
         private readonly ICPU cpu;
-        protected static readonly uint[] TIMING = new uint[]{0, 0, 16, 0, 0, 18, 22, 18, 20, 18, 22};
+
         public JSR(ICPU cpu)
         {
             this.cpu = cpu;
@@ -11,13 +13,13 @@ namespace M68k.CPU.Instructions
 
         public void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress = 0x4e80;
+            int baseAddress = 0x4e80;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint ea_mode = 2; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 2; ea_mode < 8; ea_mode++)
             {
                 if (ea_mode == 3 || ea_mode == 4)
                     continue;
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 3)
                         break;
@@ -26,33 +28,20 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
-            public AnonymousInstruction(JSR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly JSR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.Jsr(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
+            DisassembledOperand op = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
+            return new DisassembledInstruction(address, opcode, "jsr", op);
         }
 
-        protected uint Jsr(uint opcode)
+        protected int Jsr(int opcode)
         {
-            uint mode = (opcode >> 3) & 0x07;
-            uint reg = (opcode & 0x07);
+            int mode = (opcode >> 3) & 0x07;
+            int reg = (opcode & 0x07);
             IOperand op = cpu.ResolveSrcEA(mode, reg, Size.SizeLong);
             cpu.PushLong(cpu.GetPC());
             cpu.SetPC(op.GetComputedAddress());
-            uint idx;
+            int idx;
             if (mode == 7)
                 idx = mode + reg;
             else
@@ -60,10 +49,24 @@ namespace M68k.CPU.Instructions
             return TIMING[idx];
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        private sealed class AnonymousInstruction : IInstruction
         {
-            DisassembledOperand op = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-            return new DisassembledInstruction(address, opcode, "jsr", op);
+            private readonly JSR parent;
+
+            public AnonymousInstruction(JSR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.Jsr(opcode);
+            }
         }
     }
 }

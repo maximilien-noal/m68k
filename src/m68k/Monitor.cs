@@ -12,7 +12,7 @@ namespace M68k
 
     public class Monitor
     {
-        private readonly List<uint> breakpoints;
+        private readonly List<int> breakpoints;
 
         private StringBuilder buffer;
 
@@ -35,7 +35,7 @@ namespace M68k
             buffer = new StringBuilder(128);
             showBytes = false;
             autoRegs = false;
-            breakpoints = new List<uint>();
+            breakpoints = new List<int>();
         }
 
         public static void Main(string[] args)
@@ -45,12 +45,12 @@ namespace M68k
                 throw new ArgumentNullException(nameof(args));
             }
 
-            uint memSize = 512;
+            int memSize = 512;
             if (args.Length == 1)
             {
                 try
                 {
-                    memSize = uint.Parse(args[0], CultureInfo.InvariantCulture);
+                    memSize = int.Parse(args[0], CultureInfo.InvariantCulture);
                 }
                 catch (FormatException)
                 {
@@ -124,14 +124,14 @@ namespace M68k
                 cpu.GetAddrRegisterLong(7).ToString("x8", CultureInfo.InvariantCulture),
                 cpu.GetSSP().ToString("x8", CultureInfo.InvariantCulture));
             buffer.Clear();
-            uint addr = cpu.GetPC();
+            int addr = cpu.GetPC();
             if (addr < 0 || addr >= memory.Size())
             {
                 buffer.Append($"{addr.ToString("x8", CultureInfo.InvariantCulture)}   ????");
             }
             else
             {
-                uint opcode = cpu.ReadMemoryWord(addr);
+                int opcode = cpu.ReadMemoryWord(addr);
                 IInstruction i = cpu.GetInstructionFor(opcode);
                 DisassembledInstruction di = i.Disassemble(addr, opcode);
                 if (showBytes)
@@ -147,7 +147,7 @@ namespace M68k
             writer.WriteLine($"==> {buffer}{Environment.NewLine}");
         }
 
-        protected char GetPrintable(uint val)
+        protected char GetPrintable(int val)
         {
             if (val < ' ' || val > '~')
             {
@@ -180,7 +180,7 @@ namespace M68k
 
             if (tokens.Length == 2)
             {
-                uint value;
+                int value;
                 try
                 {
                     value = ParseInt(tokens[1]);
@@ -191,11 +191,11 @@ namespace M68k
                     return;
                 }
 
-                cpu.SetAddrRegisterLong((uint)r, value);
+                cpu.SetAddrRegisterLong(r, value);
             }
             else
             {
-                writer.WriteLine("A{0}: {1}", r, cpu.GetAddrRegisterLong((uint)r).ToString("x8", CultureInfo.InvariantCulture));
+                writer.WriteLine("A{0}: {1}", r, cpu.GetAddrRegisterLong(r).ToString("x8", CultureInfo.InvariantCulture));
             }
         }
 
@@ -232,7 +232,7 @@ namespace M68k
             {
                 try
                 {
-                    uint addr = ParseInt(tokens[1]);
+                    int addr = ParseInt(tokens[1]);
                     if (breakpoints.Contains(addr))
                     {
                         breakpoints.Remove(addr);
@@ -249,7 +249,7 @@ namespace M68k
             }
 
             writer.WriteLine("Breakpoints:");
-            foreach (uint bp in breakpoints)
+            foreach (int bp in breakpoints)
             {
                 writer.WriteLine(bp.ToString("x", CultureInfo.InvariantCulture));
             }
@@ -268,7 +268,7 @@ namespace M68k
             }
             else if (tokens.Length == 2)
             {
-                uint value;
+                int value;
                 try
                 {
                     value = ParseInt(tokens[1]);
@@ -412,7 +412,7 @@ namespace M68k
 
             if (tokens.Length == 2)
             {
-                uint value;
+                int value;
                 try
                 {
                     value = ParseInt(tokens[1]);
@@ -423,11 +423,11 @@ namespace M68k
                     return;
                 }
 
-                cpu.SetDataRegisterLong((uint)r, value);
+                cpu.SetDataRegisterLong(r, value);
             }
             else
             {
-                writer.WriteLine("D{0}: {1}", r.ToString("d", CultureInfo.InvariantCulture), cpu.GetDataRegisterLong((uint)r).ToString("x", CultureInfo.InvariantCulture));
+                writer.WriteLine("D{0}: {1}", r.ToString("d", CultureInfo.InvariantCulture), cpu.GetDataRegisterLong(r).ToString("x", CultureInfo.InvariantCulture));
             }
         }
 
@@ -438,8 +438,8 @@ namespace M68k
                 throw new ArgumentNullException(nameof(tokens));
             }
 
-            uint start;
-            uint num_instructions = 8;
+            int start;
+            int num_instructions = 8;
             if (tokens.Length > 2)
             {
                 try
@@ -471,12 +471,12 @@ namespace M68k
                 start = cpu.GetPC();
             }
 
-            uint count = 0;
+            int count = 0;
             buffer = new StringBuilder(80);
             while (start < memory.Size() && count < num_instructions)
             {
                 buffer.Clear();
-                uint opcode = cpu.ReadMemoryWord(start);
+                int opcode = cpu.ReadMemoryWord(start);
                 IInstruction i = cpu.GetInstructionFor(opcode);
                 DisassembledInstruction di = i.Disassemble(start, opcode);
                 if (showBytes)
@@ -496,15 +496,15 @@ namespace M68k
 
         protected void HandleGo()
         {
-            uint count = 0;
+            int count = 0;
             bool going = true;
             while (running && going)
             {
                 try
                 {
-                    uint time = cpu.Execute();
+                    int time = cpu.Execute();
                     count += time;
-                    uint addr = cpu.GetPC();
+                    int addr = cpu.GetPC();
                     if (breakpoints.Contains(addr))
                     {
                         writer.WriteLine("BREAKPOINT");
@@ -536,7 +536,7 @@ namespace M68k
                 return;
             }
 
-            uint address;
+            int address;
             try
             {
                 address = ParseInt(tokens[1]);
@@ -554,7 +554,7 @@ namespace M68k
                 return;
             }
 
-            if (address + (uint)filePath.Length >= memory.Size())
+            if (address + filePath.Length >= memory.Size())
             {
                 writer.WriteLine($"Need larger memory to load this file at {tokens[1]}");
                 return;
@@ -593,7 +593,7 @@ namespace M68k
                 {
                     try
                     {
-                        uint addr = ParseInt(address);
+                        int addr = ParseInt(address);
                         if (addr < 0 || addr >= memory.Size())
                         {
                             writer.WriteLine("Address out of range");
@@ -613,14 +613,14 @@ namespace M68k
                     string value = tokens[2];
                     try
                     {
-                        uint addr = ParseInt(address);
+                        int addr = ParseInt(address);
                         if (addr < 0 || addr >= memory.Size())
                         {
                             writer.WriteLine("Address out of range");
                             return;
                         }
 
-                        uint v = ParseInt(value);
+                        int v = ParseInt(value);
                         cpu.WriteMemoryByte(addr, v);
                     }
                     catch (FormatException e)
@@ -645,10 +645,10 @@ namespace M68k
             }
 
             string address = tokens[1];
-            uint size = memory.Size();
+            int size = memory.Size();
             try
             {
-                uint addr = ParseInt(address);
+                int addr = ParseInt(address);
                 if (addr < 0 || addr >= size)
                 {
                     writer.WriteLine("Address out of range");
@@ -657,12 +657,12 @@ namespace M68k
 
                 StringBuilder sb = new StringBuilder(80);
                 StringBuilder asc = new StringBuilder(16);
-                for (uint y = 0; y < 8 && addr < size; y++)
+                for (int y = 0; y < 8 && addr < size; y++)
                 {
                     sb.Append($"{addr.ToString("x8", CultureInfo.InvariantCulture)}").Append("  ");
-                    for (uint x = 0; x < 16 && addr < size; x++)
+                    for (int x = 0; x < 16 && addr < size; x++)
                     {
-                        uint b = cpu.ReadMemoryByte(addr);
+                        int b = cpu.ReadMemoryByte(addr);
                         sb.Append($"{b.ToString("x2", CultureInfo.InvariantCulture)}");
                         asc.Append(GetPrintable(b));
                         addr++;
@@ -706,7 +706,7 @@ namespace M68k
                 {
                     try
                     {
-                        uint addr = ParseInt(address);
+                        int addr = ParseInt(address);
                         if (addr < 0 || addr >= memory.Size())
                         {
                             writer.WriteLine("Address out of range");
@@ -725,14 +725,14 @@ namespace M68k
                     string value = tokens[2];
                     try
                     {
-                        uint addr = ParseInt(address);
+                        int addr = ParseInt(address);
                         if (addr < 0 || addr >= memory.Size())
                         {
                             writer.WriteLine("Address out of range");
                             return;
                         }
 
-                        uint v = ParseInt(value);
+                        int v = ParseInt(value);
                         cpu.WriteMemoryLong(addr, v);
                     }
                     catch (FormatException e)
@@ -761,7 +761,7 @@ namespace M68k
                 {
                     try
                     {
-                        uint addr = ParseInt(address);
+                        int addr = ParseInt(address);
                         if (addr < 0 || addr >= memory.Size())
                         {
                             writer.WriteLine("Address out of range");
@@ -780,14 +780,14 @@ namespace M68k
                     string value = tokens[2];
                     try
                     {
-                        uint addr = ParseInt(address);
+                        int addr = ParseInt(address);
                         if (addr < 0 || addr >= memory.Size())
                         {
                             writer.WriteLine("Address out of range");
                             return;
                         }
 
-                        uint v = ParseInt(value);
+                        int v = ParseInt(value);
                         cpu.WriteMemoryWord(addr, v);
                     }
                     catch (FormatException e)
@@ -811,7 +811,7 @@ namespace M68k
             }
             else if (tokens.Length == 2)
             {
-                uint value;
+                int value;
                 try
                 {
                     value = ParseInt(tokens[1]);
@@ -865,7 +865,7 @@ namespace M68k
             }
             else if (tokens.Length == 2)
             {
-                uint value;
+                int value;
                 try
                 {
                     value = ParseInt(tokens[1]);
@@ -897,7 +897,7 @@ namespace M68k
             }
             else if (tokens.Length == 2)
             {
-                uint value;
+                int value;
                 try
                 {
                     value = ParseInt(tokens[1]);
@@ -918,7 +918,7 @@ namespace M68k
 
         protected void HandleStep()
         {
-            uint time = cpu.Execute();
+            int time = cpu.Execute();
             writer.WriteLine("[Execute took {0} ticks]", time);
         }
 
@@ -935,7 +935,7 @@ namespace M68k
             }
             else if (tokens.Length == 2)
             {
-                uint value;
+                int value;
                 try
                 {
                     value = ParseInt(tokens[1]);
@@ -965,19 +965,19 @@ namespace M68k
             return sb.ToString();
         }
 
-        protected uint ParseInt(string value)
+        protected int ParseInt(string valueString)
         {
-            if (value is null)
+            if (valueString is null)
             {
-                throw new ArgumentNullException(nameof(value));
+                throw new ArgumentNullException(nameof(valueString));
             }
 
-            uint v;
-            if (value.StartsWith("$", StringComparison.InvariantCulture))
+            var value = 0L;
+            if (valueString.StartsWith("$", StringComparison.InvariantCulture))
             {
                 try
                 {
-                    v = (uint)(long.Parse(value.Substring(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture) & 4294967295L);
+                    value = (long.Parse(valueString.Substring(1), NumberStyles.HexNumber, CultureInfo.InvariantCulture) & 4294967295L);
                 }
                 catch (FormatException)
                 {
@@ -989,7 +989,7 @@ namespace M68k
             {
                 try
                 {
-                    v = (uint)(long.Parse(value, CultureInfo.InvariantCulture) & 4294967295L);
+                    value = (long.Parse(valueString, CultureInfo.InvariantCulture) & 4294967295L);
                 }
                 catch (FormatException)
                 {
@@ -998,7 +998,7 @@ namespace M68k
                 }
             }
 
-            return v;
+            return (int)value;
         }
 
         protected void ShowHelp()

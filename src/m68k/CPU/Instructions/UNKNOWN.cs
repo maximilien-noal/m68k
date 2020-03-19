@@ -3,14 +3,20 @@ namespace M68k.CPU.Instructions
     public class UNKNOWN : IInstruction
     {
         private readonly ICPU cpu;
+
         public UNKNOWN(ICPU cpu)
         {
             this.cpu = cpu;
         }
 
-        public virtual uint Execute(uint opcode)
+        public virtual DisassembledInstruction Disassemble(int address, int opcode)
         {
-            uint vector;
+            return new DisassembledInstruction(address, opcode, "????");
+        }
+
+        public virtual int Execute(int opcode)
+        {
+            int vector;
             if ((opcode & 0xf000) == 0xa000)
             {
                 vector = 10;
@@ -26,11 +32,6 @@ namespace M68k.CPU.Instructions
 
             cpu.RaiseException(vector);
             return 34;
-        }
-
-        public virtual DisassembledInstruction Disassemble(uint address, uint opcode)
-        {
-            return new DisassembledInstruction(address, opcode, "????");
         }
     }
 }

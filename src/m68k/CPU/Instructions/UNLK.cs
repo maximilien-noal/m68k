@@ -11,7 +11,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public DisassembledInstruction DisassembleOp(uint address, uint opcode)
+        public DisassembledInstruction DisassembleOp(int address, int opcode)
         {
             DisassembledOperand src = new DisassembledOperand($"a{opcode & 0x07}");
             return new DisassembledInstruction(address, opcode, "unlk", src);
@@ -24,17 +24,17 @@ namespace M68k.CPU.Instructions
                 throw new ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress = 0x4e58;
+            int baseAddress = 0x4e58;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint reg = 0; reg < 8; reg++)
+            for (int reg = 0; reg < 8; reg++)
             {
                 instructionSet.AddInstruction(baseAddress + reg, i);
             }
         }
 
-        protected virtual uint Unlk(uint opcode)
+        protected virtual int Unlk(int opcode)
         {
-            uint reg = (opcode & 0x007);
+            int reg = (opcode & 0x007);
             cpu.SetAddrRegisterLong(7, cpu.GetAddrRegisterLong(reg));
             cpu.SetAddrRegisterLong(reg, cpu.PopLong());
             return 12;
@@ -49,12 +49,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.Unlk(opcode);
             }

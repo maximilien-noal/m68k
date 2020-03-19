@@ -3,6 +3,7 @@ namespace M68k.CPU.Instructions
     public class ASR : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public ASR(ICPU cpu)
         {
             this.cpu = cpu;
@@ -10,9 +11,9 @@ namespace M68k.CPU.Instructions
 
         public virtual void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -30,16 +31,16 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction2(this);
                 }
 
-                for (uint imm = 0; imm < 8; imm++)
+                for (int imm = 0; imm < 8; imm++)
                 {
-                    for (uint reg = 0; reg < 8; reg++)
+                    for (int reg = 0; reg < 8; reg++)
                     {
                         instructionSet.AddInstruction(baseAddress + (imm << 9) + reg, i);
                     }
                 }
             }
 
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -57,9 +58,9 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction5(this);
                 }
 
-                for (uint imm = 0; imm < 8; imm++)
+                for (int imm = 0; imm < 8; imm++)
                 {
-                    for (uint reg = 0; reg < 8; reg++)
+                    for (int reg = 0; reg < 8; reg++)
                     {
                         instructionSet.AddInstruction(baseAddress + (imm << 9) + reg, i);
                     }
@@ -68,9 +69,9 @@ namespace M68k.CPU.Instructions
 
             baseAddress = 0xe0c0;
             i = new AnonymousInstruction6(this);
-            for (uint ea_mode = 2; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 2; ea_mode < 8; ea_mode++)
             {
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 1)
                         break;
@@ -79,149 +80,16 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
+        protected virtual int AsrByteImm(int opcode)
         {
-            public AnonymousInstruction(ASR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AsrByteImm(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Byte);
-            }
-        }
-
-        private sealed class AnonymousInstruction1 : IInstruction
-        {
-            public AnonymousInstruction1(ASR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AsrWordImm(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
-        }
-
-        private sealed class AnonymousInstruction2 : IInstruction
-        {
-            public AnonymousInstruction2(ASR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AsrLongImm(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
-        }
-
-        private sealed class AnonymousInstruction3 : IInstruction
-        {
-            public AnonymousInstruction3(ASR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AsrByteReg(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Byte);
-            }
-        }
-
-        private sealed class AnonymousInstruction4 : IInstruction
-        {
-            public AnonymousInstruction4(ASR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AsrWordReg(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
-        }
-
-        private sealed class AnonymousInstruction5 : IInstruction
-        {
-            public AnonymousInstruction5(ASR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AsrLongReg(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.SizeLong);
-            }
-        }
-
-        private sealed class AnonymousInstruction6 : IInstruction
-        {
-            public AnonymousInstruction6(ASR parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly ASR parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.AsrWordMem(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
-        }
-
-        protected virtual uint AsrByteImm(uint opcode)
-        {
-            uint shift = (opcode >> 9) & 0x07;
+            int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
                 shift = 8;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterByte(reg);
-            uint msb = d & 0x80;
-            uint last_out = 0;
-            for (uint s = 0; s < shift; s++)
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterByte(reg);
+            int msb = d & 0x80;
+            int last_out = 0;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
                 d >>= 1;
@@ -234,57 +102,14 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint AsrWordImm(uint opcode)
+        protected virtual int AsrByteReg(int opcode)
         {
-            uint shift = (opcode >> 9) & 0x07;
-            if (shift == 0)
-                shift = 8;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterWord(reg);
-            uint msb = d & 0x8000;
-            uint last_out = 0;
-            for (uint s = 0; s < shift; s++)
-            {
-                last_out = d & 0x01;
-                d >>= 1;
-                d |= msb;
-            }
-
-            d &= 0x0000ffff;
-            cpu.SetDataRegisterWord(reg, d);
-            cpu.CalcFlags(InstructionType.ASR, shift, last_out, d, Size.Word);
-            return 6 + shift + shift;
-        }
-
-        protected virtual uint AsrLongImm(uint opcode)
-        {
-            uint shift = (opcode >> 9) & 0x07;
-            if (shift == 0)
-                shift = 8;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterLong(reg);
-            uint msb = d & 0x80000000;
-            uint last_out = 0;
-            for (uint s = 0; s < shift; s++)
-            {
-                last_out = d & 0x01;
-                d >>= 1;
-                d |= msb;
-            }
-
-            cpu.SetDataRegisterLong(reg, d);
-            cpu.CalcFlags(InstructionType.ASR, shift, last_out, d, Size.SizeLong);
-            return 8 + shift + shift;
-        }
-
-        protected virtual uint AsrByteReg(uint opcode)
-        {
-            uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterByte(reg);
-            uint msb = d & 0x80;
-            uint last_out = 0;
-            for (uint s = 0; s < shift; s++)
+            int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterByte(reg);
+            int msb = d & 0x80;
+            int last_out = 0;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
                 d >>= 1;
@@ -297,14 +122,56 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint AsrWordReg(uint opcode)
+        protected virtual int AsrLongImm(int opcode)
         {
-            uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterWord(reg);
-            uint msb = d & 0x8000;
-            uint last_out = 0;
-            for (uint s = 0; s < shift; s++)
+            int shift = (opcode >> 9) & 0x07;
+            if (shift == 0)
+                shift = 8;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterLong(reg);
+            int msb = (int)(d & 0x80000000);
+            int last_out = 0;
+            for (int s = 0; s < shift; s++)
+            {
+                last_out = d & 0x01;
+                d >>= 1;
+                d |= msb;
+            }
+
+            cpu.SetDataRegisterLong(reg, d);
+            cpu.CalcFlags(InstructionType.ASR, shift, last_out, d, Size.SizeLong);
+            return 8 + shift + shift;
+        }
+
+        protected virtual int AsrLongReg(int opcode)
+        {
+            int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterLong(reg);
+            int msb = (int)(d & 0x80000000);
+            int last_out = 0;
+            for (int s = 0; s < shift; s++)
+            {
+                last_out = d & 0x01;
+                d >>= 1;
+                d |= msb;
+            }
+
+            cpu.SetDataRegisterLong(reg, d);
+            cpu.CalcFlags(InstructionType.ASR, shift, last_out, d, Size.SizeLong);
+            return 8 + shift + shift;
+        }
+
+        protected virtual int AsrWordImm(int opcode)
+        {
+            int shift = (opcode >> 9) & 0x07;
+            if (shift == 0)
+                shift = 8;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterWord(reg);
+            int msb = d & 0x8000;
+            int last_out = 0;
+            for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
                 d >>= 1;
@@ -317,31 +184,12 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual uint AsrLongReg(uint opcode)
-        {
-            uint shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
-            uint reg = (opcode & 0x07);
-            uint d = cpu.GetDataRegisterLong(reg);
-            uint msb = d & 0x80000000;
-            uint last_out = 0;
-            for (uint s = 0; s < shift; s++)
-            {
-                last_out = d & 0x01;
-                d >>= 1;
-                d |= msb;
-            }
-
-            cpu.SetDataRegisterLong(reg, d);
-            cpu.CalcFlags(InstructionType.ASR, shift, last_out, d, Size.SizeLong);
-            return 8 + shift + shift;
-        }
-
-        protected virtual uint AsrWordMem(uint opcode)
+        protected virtual int AsrWordMem(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
-            uint v = op.GetWord();
-            uint last_out = v & 0x01;
-            uint msb = v & 0x8000;
+            int v = op.GetWord();
+            int last_out = v & 0x01;
+            int msb = v & 0x8000;
             v >>= 1;
             v |= msb;
             op.SetWord(v);
@@ -349,7 +197,27 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected virtual int AsrWordReg(int opcode)
+        {
+            int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
+            int reg = (opcode & 0x07);
+            int d = cpu.GetDataRegisterWord(reg);
+            int msb = d & 0x8000;
+            int last_out = 0;
+            for (int s = 0; s < shift; s++)
+            {
+                last_out = d & 0x01;
+                d >>= 1;
+                d |= msb;
+            }
+
+            d &= 0x0000ffff;
+            cpu.SetDataRegisterWord(reg, d);
+            cpu.CalcFlags(InstructionType.ASR, shift, last_out, d, Size.Word);
+            return 6 + shift + shift;
+        }
+
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand src;
             DisassembledOperand dst;
@@ -365,7 +233,7 @@ namespace M68k.CPU.Instructions
             }
             else
             {
-                uint count = (opcode >> 9) & 0x07;
+                int count = (opcode >> 9) & 0x07;
                 if (count == 0)
                     count = 8;
                 src = new DisassembledOperand("#" + count);
@@ -373,6 +241,146 @@ namespace M68k.CPU.Instructions
             }
 
             return new DisassembledInstruction(address, opcode, "asr" + sz.Ext, src, dst);
+        }
+
+        private sealed class AnonymousInstruction : IInstruction
+        {
+            private readonly ASR parent;
+
+            public AnonymousInstruction(ASR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Byte);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AsrByteImm(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction1 : IInstruction
+        {
+            private readonly ASR parent;
+
+            public AnonymousInstruction1(ASR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AsrWordImm(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction2 : IInstruction
+        {
+            private readonly ASR parent;
+
+            public AnonymousInstruction2(ASR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AsrLongImm(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction3 : IInstruction
+        {
+            private readonly ASR parent;
+
+            public AnonymousInstruction3(ASR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Byte);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AsrByteReg(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction4 : IInstruction
+        {
+            private readonly ASR parent;
+
+            public AnonymousInstruction4(ASR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AsrWordReg(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction5 : IInstruction
+        {
+            private readonly ASR parent;
+
+            public AnonymousInstruction5(ASR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.SizeLong);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AsrLongReg(opcode);
+            }
+        }
+
+        private sealed class AnonymousInstruction6 : IInstruction
+        {
+            private readonly ASR parent;
+
+            public AnonymousInstruction6(ASR parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.AsrWordMem(opcode);
+            }
         }
     }
 }

@@ -25,16 +25,16 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
-                uint data = parent.cpu.ReadMemoryWord(address + 2);
+                int data = parent.cpu.ReadMemoryWord(address + 2);
                 DisassembledOperand op = new DisassembledOperand($"#${data.ToString("x4", CultureInfo.InvariantCulture)}", 2, data);
                 return new DisassembledInstruction(address, opcode, "stop", op);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
-                uint data = parent.cpu.FetchPCWord();
+                int data = parent.cpu.FetchPCWord();
                 if (!parent.cpu.IsSupervisorMode() || (data & parent.cpu.SupervisorFlag) == 0)
                 {
                     parent.cpu.RaiseException(8);

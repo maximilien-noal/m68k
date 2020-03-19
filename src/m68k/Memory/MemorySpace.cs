@@ -1,21 +1,21 @@
 using System;
 using System.IO;
+using System.Buffers.Binary;
 
 namespace M68k.Memory
 {
-    public sealed class MemorySpace : IAddressSpace
+    public sealed class MemorySpace : IAddressSpace, IDisposable
     {
-        private readonly MemoryStream memStream;
+        private readonly int size;
 
-        private readonly uint size;
+        private bool disposedValue;
 
-        // To detect redundant calls
-        private bool disposedValue = false;
+        private MemoryStream memStream;
 
-        public MemorySpace(uint sizeKb)
+        public MemorySpace(int sizeKb)
         {
             size = sizeKb * 1024;
-            memStream = new MemoryStream((int)size);
+            memStream = new MemoryStream(new byte[size], 0, size, true, false);
         }
 
         // This code added to correctly implement the disposable pattern.
@@ -24,104 +24,106 @@ namespace M68k.Memory
             Dispose(true);
         }
 
-        public uint GetEndAddress()
+        public int GetEndAddress()
         {
             return size;
         }
 
-        public uint GetStartAddress()
+        public int GetStartAddress()
         {
             return 0;
         }
 
-        public uint InternalReadByte(uint addr)
+        public byte InternalReadByte(int addr)
         {
             return ReadByte(addr);
         }
 
-        public uint InternalReadLong(uint addr)
+        public uint InternalReadLong(int addr)
         {
             return ReadLong(addr);
         }
 
-        public uint InternalReadWord(uint addr)
+        public int InternalReadWord(int addr)
         {
             return ReadWord(addr);
         }
 
-        public void InternalWriteByte(uint addr, uint value)
+        public void InternalWriteByte(int addr, int value)
         {
             WriteByte(addr, value);
         }
 
-        public void InternalWriteLong(uint addr, uint value)
+        public void InternalWriteLong(int addr, uint value)
         {
             WriteLong(addr, value);
         }
 
-        public void InternalWriteWord(uint addr, uint value)
+        public void InternalWriteWord(int addr, int value)
         {
             WriteWord(addr, value);
         }
 
-        public uint ReadByte(uint addr)
+        public byte ReadByte(int addr)
         {
-            var oldPosition = memStream.Position;
             memStream.Position = addr;
-            uint v = (uint)memStream.ReadByte();
-            memStream.Position = oldPosition;
-            return v & 0x00ff;
+            var value = memStream.ReadByte();
+            return (byte)(value & 0x00ff);
         }
 
-        public uint ReadLong(uint addr)
+        public uint ReadLong(int addr)
         {
             var buffer = new byte[4];
-            memStream.Read(buffer, (int)addr, buffer.Length);
-            return (uint)BitConverter.ToInt32(buffer, (int)addr);
+            memStream.Position = addr;
+            memStream.Read(buffer, 0, buffer.Length);
+            var value = BinaryPrimitives.ReadUInt32BigEndian(buffer);
+            return value;
         }
 
-        public uint ReadWord(uint addr)
+        public int ReadWord(int addr)
         {
             var buffer = new byte[2];
-            memStream.Read(buffer, (int)addr, buffer.Length);
-            var v = (uint)BitConverter.ToInt16(buffer, (int)addr);
-            return v & 0x0000ffff;
+            memStream.Position = addr;
+            memStream.Read(buffer, 0, buffer.Length);
+            var value = BinaryPrimitives.ReadInt16BigEndian(buffer);
+            var fullValue = (value & 0x0000ffff);
+            return (short)fullValue;
         }
 
         public void Reset()
         {
-            // Method intentionally left empty.
+            memStream.Close();
+            memStream.Dispose();
+            memStream = new MemoryStream(new byte[size], 0, size, true, false);
         }
 
-        public uint Size()
+        public int Size()
         {
             return size;
         }
 
-        public void WriteByte(uint addr, uint value)
+        public void WriteByte(int addr, int value)
         {
-            var oldPosition = memStream.Position;
             memStream.Position = addr;
-            memStream.WriteByte((byte)(value & 0x00ff));
-            memStream.Position = oldPosition;
+            var fullValue = (byte)(value & 0x00ff);
+            memStream.WriteByte(fullValue);
         }
 
-        public void WriteLong(uint addr, uint value)
+        public void WriteLong(int addr, uint value)
         {
-            using (var writer = new BinaryWriter(memStream))
-            {
-                writer.Seek((int)addr, SeekOrigin.Begin);
-                writer.Write(value);
-            }
+            memStream.Position = addr;
+            Span<byte> destination = stackalloc byte[4];
+            BinaryPrimitives.WriteUInt32BigEndian(destination, value);
+            memStream.Write(destination.ToArray(), 0, destination.Length);
         }
 
-        public void WriteWord(uint addr, uint value)
+        public void WriteWord(int addr, int value)
         {
-            using (var writer = new BinaryWriter(memStream))
-            {
-                writer.Seek((int)addr, SeekOrigin.Begin);
-                writer.Write((short)(value & 0x0000ffff));
-            }
+            memStream.Position = addr;
+            short fullValue = (short)(value & 0x0000ffff);
+            Span<byte> destination = stackalloc byte[2];
+            BinaryPrimitives.WriteInt16BigEndian(destination, fullValue);
+            memStream.Write(destination.ToArray(), 0, destination.Length);
         }
 
         private void Dispose(bool disposing)

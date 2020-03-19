@@ -20,25 +20,25 @@ namespace M68k.CPU.Instructions
                 throw new System.ArgumentNullException(nameof(instructionSet));
             }
 
-            uint baseAddress = 0x6000;
+            int baseAddress = 0x6000;
             IInstruction ib = new AnonymousInstruction(this);
             IInstruction iw = new AnonymousInstruction1(this);
-            for (uint cc = 0; cc < 16; cc++)
+            for (int cc = 0; cc < 16; cc++)
             {
                 instructionSet.AddInstruction(baseAddress + (cc << 8), iw);
-                for (uint dis = 1; dis < 256; dis++)
+                for (int dis = 1; dis < 256; dis++)
                 {
                     instructionSet.AddInstruction(baseAddress + (cc << 8) + dis, ib);
                 }
             }
         }
 
-        protected uint BxxByte(uint opcode)
+        protected int BxxByte(int opcode)
         {
-            uint dis = CpuUtils.SignExtendByte(opcode & 0xff);
-            uint cc = (opcode >> 8) & 0x0f;
-            uint pc = cpu.GetPC();
-            uint time;
+            int dis = CpuUtils.SignExtendByte(opcode & 0xff);
+            int cc = (opcode >> 8) & 0x0f;
+            int pc = cpu.GetPC();
+            int time;
             if (cc == 1)
             {
                 cpu.PushLong(pc);
@@ -61,12 +61,12 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected uint BxxWord(uint opcode)
+        protected int BxxWord(int opcode)
         {
-            uint pc = cpu.GetPC();
-            uint dis = cpu.ReadMemoryWordSigned(pc);
-            uint cc = (opcode >> 8) & 0x0f;
-            uint time;
+            int pc = cpu.GetPC();
+            int dis = cpu.ReadMemoryWordSigned(pc);
+            int cc = (opcode >> 8) & 0x0f;
+            int time;
             if (cc == 1)
             {
                 cpu.PushLong(pc + 2);
@@ -90,11 +90,11 @@ namespace M68k.CPU.Instructions
             return time;
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode)
         {
             DisassembledOperand op;
-            uint cc = (opcode >> 8) & 0x0f;
-            uint dis = CpuUtils.SignExtendByte(opcode & 0xff);
+            int cc = (opcode >> 8) & 0x0f;
+            int dis = CpuUtils.SignExtendByte(opcode & 0xff);
             string name;
             if (dis != 0)
             {
@@ -120,12 +120,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.BxxByte(opcode);
             }
@@ -140,12 +140,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.BxxWord(opcode);
             }

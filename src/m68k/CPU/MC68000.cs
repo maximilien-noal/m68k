@@ -12,7 +12,7 @@ namespace M68k.CPU
 
         private readonly IInstruction unknown;
 
-        private uint loadedOperations;
+        private int loadedOperations;
 
         static MC68000()
         {
@@ -27,14 +27,14 @@ namespace M68k.CPU
             DisasmBuffer = new StringBuilder(64);
             InitEAHandlers();
             instructionsTable = new IInstruction[65536];
-            for (uint i = 0; i < 65536; i++)
+            for (int i = 0; i < 65536; i++)
                 instructionsTable[i] = null;
             unknown = new UNKNOWN(this);
             loadedOperations = 0;
             LoadInstructionSet();
         }
 
-        public virtual void AddInstruction(uint opcode, IInstruction instruction)
+        public virtual void AddInstruction(int opcode, IInstruction instruction)
         {
             if (instruction is null)
             {
@@ -53,10 +53,10 @@ namespace M68k.CPU
             }
         }
 
-        public override uint Execute()
+        public override int Execute()
         {
             CurrentInstructionAddress = RegPc;
-            uint opcode = FetchPCWord();
+            int opcode = FetchPCWord();
             IInstruction i = instructionsTable[opcode];
             if (i != null)
             {
@@ -69,13 +69,13 @@ namespace M68k.CPU
             }
         }
 
-        public override IInstruction GetInstructionAt(uint address)
+        public override IInstruction GetInstructionAt(int address)
         {
-            uint opcode = ReadMemoryWord(address);
+            int opcode = ReadMemoryWord(address);
             return GetInstructionFor(opcode);
         }
 
-        public override IInstruction GetInstructionFor(uint opcode)
+        public override IInstruction GetInstructionFor(int opcode)
         {
             IInstruction i = instructionsTable[opcode];
             if (i == null)

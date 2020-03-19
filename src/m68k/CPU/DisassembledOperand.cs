@@ -4,9 +4,9 @@ namespace M68k.CPU
 {
     public class DisassembledOperand
     {
-        private readonly uint bytes;
+        private readonly int bytes;
 
-        private readonly uint memRead;
+        private readonly int memRead;
 
         private readonly string operand;
 
@@ -17,7 +17,7 @@ namespace M68k.CPU
             memRead = 0;
         }
 
-        public DisassembledOperand(string operand, uint bytes, uint memRead)
+        public DisassembledOperand(string operand, int bytes, int memRead)
         {
             this.operand = operand;
             this.bytes = bytes;
@@ -26,9 +26,9 @@ namespace M68k.CPU
                 throw new ArgumentException("Are these the wrong way around ?");
         }
 
-        public uint Bytes => bytes;
+        public int Bytes => bytes;
 
-        public uint MemoryRead => memRead;
+        public int MemoryRead => memRead;
 
         public string Operand => operand;
     }

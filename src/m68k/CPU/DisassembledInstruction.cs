@@ -5,19 +5,19 @@ namespace M68k.CPU
 {
     public class DisassembledInstruction
     {
-        private readonly uint address;
+        private readonly int address;
 
         private readonly string instruction;
 
-        private readonly uint num_operands;
+        private readonly int num_operands;
 
         private readonly DisassembledOperand op1;
 
         private readonly DisassembledOperand op2;
 
-        private readonly uint opcode;
+        private readonly int opcode;
 
-        public DisassembledInstruction(uint address, uint opcode, string instruction)
+        public DisassembledInstruction(int address, int opcode, string instruction)
         {
             this.address = address;
             this.opcode = opcode;
@@ -27,7 +27,7 @@ namespace M68k.CPU
             op2 = null;
         }
 
-        public DisassembledInstruction(uint address, uint opcode, string instruction, DisassembledOperand dop)
+        public DisassembledInstruction(int address, int opcode, string instruction, DisassembledOperand dop)
         {
             this.address = address;
             this.opcode = opcode;
@@ -37,7 +37,7 @@ namespace M68k.CPU
             op2 = null;
         }
 
-        public DisassembledInstruction(uint address, uint opcode, string instruction, DisassembledOperand dop1, DisassembledOperand dop2)
+        public DisassembledInstruction(int address, int opcode, string instruction, DisassembledOperand dop1, DisassembledOperand dop2)
         {
             this.address = address;
             this.opcode = opcode;
@@ -92,7 +92,7 @@ namespace M68k.CPU
 
                 case 2:
                     {
-                        uint len = 0;
+                        int len = 0;
                         if (op1.Bytes == 2)
                         {
                             buffer.Append($" {op1.MemoryRead.ToString("x4", CultureInfo.InvariantCulture)}");
@@ -181,9 +181,9 @@ namespace M68k.CPU
             }
         }
 
-        public virtual uint Size()
+        public virtual int Size()
         {
-            uint size = 2;
+            int size = 2;
             if (num_operands == 2)
             {
                 size += op1.Bytes + op2.Bytes;

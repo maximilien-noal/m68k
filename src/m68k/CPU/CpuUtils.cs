@@ -2,12 +2,15 @@ namespace M68k.CPU
 {
     public static class CpuUtils
     {
-        public static uint SignExtendByte(uint value)
+        public static int SignExtendByte(int value)
         {
-            uint newValue = value;
+            int newValue = value;
             if ((value & 0x80) == 0x80)
             {
-                newValue |= 0xffffff00;
+                unchecked
+                {
+                    newValue |= (int)0xffffff00;
+                }
             }
             else
             {
@@ -17,12 +20,15 @@ namespace M68k.CPU
             return newValue;
         }
 
-        public static uint SignExtendWord(uint value)
+        public static int SignExtendWord(int value)
         {
-            uint newValue = value;
+            int newValue = value;
             if ((value & 0x8000) == 0x8000)
             {
-                newValue |= 0xffff0000;
+                unchecked
+                {
+                    newValue |= (int)0xffff0000;
+                }
             }
             else
             {

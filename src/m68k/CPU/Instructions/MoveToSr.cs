@@ -3,6 +3,7 @@ namespace M68k.CPU.Instructions
     public class MoveToSr : IInstructionHandler
     {
         private readonly ICPU cpu;
+
         public MoveToSr(ICPU cpu)
         {
             this.cpu = cpu;
@@ -10,13 +11,13 @@ namespace M68k.CPU.Instructions
 
         public void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress = 0x46c0;
+            int baseAddress = 0x46c0;
             IInstruction i = new AnonymousInstruction(this);
-            for (uint ea_mode = 0; ea_mode < 8; ea_mode++)
+            for (int ea_mode = 0; ea_mode < 8; ea_mode++)
             {
                 if (ea_mode == 1)
                     continue;
-                for (uint ea_reg = 0; ea_reg < 8; ea_reg++)
+                for (int ea_reg = 0; ea_reg < 8; ea_reg++)
                 {
                     if (ea_mode == 7 && ea_reg > 4)
                         break;
@@ -25,29 +26,17 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        private sealed class AnonymousInstruction : IInstruction
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
-            public AnonymousInstruction(MoveToSr parent)
-            {
-                this.parent = parent;
-            }
-
-            private readonly MoveToSr parent;
-            public uint Execute(uint opcode)
-            {
-                return parent.DoMoveToSr(opcode);
-            }
-
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
-            {
-                return parent.DisassembleOp(address, opcode, Size.Word);
-            }
+            DisassembledOperand src = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
+            DisassembledOperand dst = new DisassembledOperand("sr");
+            return new DisassembledInstruction(address, opcode, "move", src, dst);
         }
 
-        protected uint DoMoveToSr(uint opcode)
+        protected int DoMoveToSr(int opcode)
         {
             IOperand src = cpu.ResolveSrcEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);
-            uint s = src.GetWord() & 0xf71f;
+            int s = src.GetWord() & 0xf71f;
             if (!cpu.IsSupervisorMode())
             {
                 cpu.RaiseSRException();
@@ -58,11 +47,24 @@ namespace M68k.CPU.Instructions
             return 12 + src.GetTiming();
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        private sealed class AnonymousInstruction : IInstruction
         {
-            DisassembledOperand src = cpu.DisassembleSrcEA(address + 2, (opcode >> 3) & 0x07, (opcode & 0x07), sz);
-            DisassembledOperand dst = new DisassembledOperand("sr");
-            return new DisassembledInstruction(address, opcode, "move", src, dst);
+            private readonly MoveToSr parent;
+
+            public AnonymousInstruction(MoveToSr parent)
+            {
+                this.parent = parent;
+            }
+
+            public DisassembledInstruction Disassemble(int address, int opcode)
+            {
+                return parent.DisassembleOp(address, opcode, Size.Word);
+            }
+
+            public int Execute(int opcode)
+            {
+                return parent.DoMoveToSr(opcode);
+            }
         }
     }
 }

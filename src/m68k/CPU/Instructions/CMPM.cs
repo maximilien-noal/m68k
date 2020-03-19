@@ -11,9 +11,9 @@ namespace M68k.CPU.Instructions
 
         public virtual void Register(IInstructionSet instructionSet)
         {
-            uint baseAddress;
+            int baseAddress;
             IInstruction i;
-            for (uint sz = 0; sz < 3; sz++)
+            for (int sz = 0; sz < 3; sz++)
             {
                 if (sz == 0)
                 {
@@ -31,9 +31,9 @@ namespace M68k.CPU.Instructions
                     i = new AnonymousInstruction2(this);
                 }
 
-                for (uint ax = 0; ax < 8; ax++)
+                for (int ax = 0; ax < 8; ax++)
                 {
-                    for (uint ay = 0; ay < 8; ay++)
+                    for (int ay = 0; ay < 8; ay++)
                     {
                         instructionSet.AddInstruction(baseAddress + (ax << 9) + ay, i);
                     }
@@ -41,46 +41,46 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected uint CmpmByte(uint opcode)
+        protected int CmpmByte(int opcode)
         {
-            uint ax = (opcode >> 9) & 0x07;
-            uint ay = (opcode & 0x07);
-            uint s = cpu.ReadMemoryByteSigned(cpu.GetAddrRegisterLong(ay));
+            int ax = (opcode >> 9) & 0x07;
+            int ay = (opcode & 0x07);
+            int s = cpu.ReadMemoryByteSigned(cpu.GetAddrRegisterLong(ay));
             cpu.IncrementAddrRegister(ay, 1);
-            uint d = cpu.ReadMemoryByteSigned(cpu.GetAddrRegisterLong(ax));
+            int d = cpu.ReadMemoryByteSigned(cpu.GetAddrRegisterLong(ax));
             cpu.IncrementAddrRegister(ax, 1);
-            uint r = d - s;
+            int r = d - s;
             cpu.CalcFlags(InstructionType.CMP, s, d, r, Size.Byte);
             return 12;
         }
 
-        protected uint CmpmLong(uint opcode)
+        protected int CmpmLong(int opcode)
         {
-            uint ax = (opcode >> 9) & 0x07;
-            uint ay = (opcode & 0x07);
-            uint s = cpu.ReadMemoryLong(cpu.GetAddrRegisterLong(ay));
+            int ax = (opcode >> 9) & 0x07;
+            int ay = (opcode & 0x07);
+            int s = cpu.ReadMemoryLong(cpu.GetAddrRegisterLong(ay));
             cpu.IncrementAddrRegister(ay, 4);
-            uint d = cpu.ReadMemoryLong(cpu.GetAddrRegisterLong(ax));
+            int d = cpu.ReadMemoryLong(cpu.GetAddrRegisterLong(ax));
             cpu.IncrementAddrRegister(ax, 4);
-            uint r = d - s;
+            int r = d - s;
             cpu.CalcFlags(InstructionType.CMP, s, d, r, Size.SizeLong);
             return 20;
         }
 
-        protected uint CmpmWord(uint opcode)
+        protected int CmpmWord(int opcode)
         {
-            uint ax = (opcode >> 9) & 0x07;
-            uint ay = (opcode & 0x07);
-            uint s = cpu.ReadMemoryWordSigned(cpu.GetAddrRegisterLong(ay));
+            int ax = (opcode >> 9) & 0x07;
+            int ay = (opcode & 0x07);
+            int s = cpu.ReadMemoryWordSigned(cpu.GetAddrRegisterLong(ay));
             cpu.IncrementAddrRegister(ay, 2);
-            uint d = cpu.ReadMemoryWordSigned(cpu.GetAddrRegisterLong(ax));
+            int d = cpu.ReadMemoryWordSigned(cpu.GetAddrRegisterLong(ax));
             cpu.IncrementAddrRegister(ax, 2);
-            uint r = d - s;
+            int r = d - s;
             cpu.CalcFlags(InstructionType.CMP, s, d, r, Size.Word);
             return 12;
         }
 
-        protected DisassembledInstruction DisassembleOp(uint address, uint opcode, Size sz)
+        protected DisassembledInstruction DisassembleOp(int address, int opcode, Size sz)
         {
             DisassembledOperand src = new DisassembledOperand($"(a{(opcode & 0x07)})+");
             DisassembledOperand dst = new DisassembledOperand($"(a{((opcode >> 9) & 0x07)})+");
@@ -96,12 +96,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Byte);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.CmpmByte(opcode);
             }
@@ -116,12 +116,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.Word);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.CmpmWord(opcode);
             }
@@ -136,12 +136,12 @@ namespace M68k.CPU.Instructions
                 this.parent = parent;
             }
 
-            public DisassembledInstruction Disassemble(uint address, uint opcode)
+            public DisassembledInstruction Disassemble(int address, int opcode)
             {
                 return parent.DisassembleOp(address, opcode, Size.SizeLong);
             }
 
-            public uint Execute(uint opcode)
+            public int Execute(int opcode)
             {
                 return parent.CmpmLong(opcode);
             }
