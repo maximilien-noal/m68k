@@ -87,7 +87,7 @@ namespace M68k.Memory
             memStream.Read(buffer, 0, buffer.Length);
             var value = BinaryPrimitives.ReadInt16BigEndian(buffer);
             var fullValue = (value & 0x0000ffff);
-            return (short)fullValue;
+            return fullValue;
         }
 
         public void Reset()
