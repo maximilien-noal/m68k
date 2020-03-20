@@ -1,13 +1,13 @@
-using M68k.Memory;
-
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-
 namespace M68k.CPU
 {
+    using M68k.Memory;
+
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
+
     public abstract class CpuCore : ICPU
     {
         private const int C_FLAG = 1;
@@ -54,7 +54,7 @@ namespace M68k.CPU
 
         public int InterruptFlagMask => INTERRUPT_FLAGS_MASK;
 
-        public IAddressSpace Memory { get; set; }
+        public IAddressSpace AddressSpace { get; set; }
 
         public int NFlag => N_FLAG;
 
@@ -833,35 +833,35 @@ namespace M68k.CPU
 
         public virtual int ReadMemoryByte(int addr)
         {
-            return Memory.ReadByte(addr);
+            return AddressSpace.ReadByte(addr);
         }
 
         public virtual int ReadMemoryByteSigned(int addr)
         {
-            return SignExtendByte(Memory.ReadByte(addr));
+            return SignExtendByte(AddressSpace.ReadByte(addr));
         }
 
         public virtual int ReadMemoryLong(int addr)
         {
-            return (int)Memory.ReadLong(addr);
+            return (int)AddressSpace.ReadLong(addr);
         }
 
         public virtual int ReadMemoryWord(int addr)
         {
-            return Memory.ReadWord(addr);
+            return AddressSpace.ReadWord(addr);
         }
 
         public virtual int ReadMemoryWordSigned(int addr)
         {
-            return SignExtendWord(Memory.ReadWord(addr));
+            return SignExtendWord(AddressSpace.ReadWord(addr));
         }
 
         public virtual void Reset()
         {
-            reg_ssp = (int)Memory.ReadLong(0);
+            reg_ssp = (int)AddressSpace.ReadLong(0);
             AdressRegisters[7] = reg_ssp;
 
-            RegPc = (int)Memory.ReadLong(4);
+            RegPc = (int)AddressSpace.ReadLong(4);
             reg_sr = 0x2700;
         }
 
@@ -902,7 +902,7 @@ namespace M68k.CPU
 
         public virtual void SetAddressSpace(IAddressSpace memory)
         {
-            this.Memory = memory;
+            this.AddressSpace = memory;
         }
 
         public virtual void SetAddrRegisterByte(int reg, int value)
@@ -1154,17 +1154,17 @@ namespace M68k.CPU
 
         public virtual void WriteMemoryByte(int addr, int value)
         {
-            Memory.WriteByte(addr, value);
+            AddressSpace.WriteByte(addr, value);
         }
 
         public virtual void WriteMemoryLong(int addr, int value)
         {
-            Memory.WriteLong(addr, (uint)value);
+            AddressSpace.WriteLong(addr, (uint)value);
         }
 
         public virtual void WriteMemoryWord(int addr, int value)
         {
-            Memory.WriteWord(addr, value);
+            AddressSpace.WriteWord(addr, value);
         }
 
         protected virtual DisassembledOperand DisassembleEA(int address, int mode, int reg, Size sz, bool isSrc)

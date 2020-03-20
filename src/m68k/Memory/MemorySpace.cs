@@ -1,10 +1,11 @@
-using System;
-using System.IO;
-using System.Buffers.Binary;
+
 
 namespace M68k.Memory
 {
-    public sealed class MemorySpace : IAddressSpace, IDisposable
+    using System;
+    using System.IO;
+    using System.Buffers.Binary;
+    public class MemorySpace : IAddressSpace, IDisposable
     {
         private readonly int size;
 
@@ -22,6 +23,7 @@ namespace M68k.Memory
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public int GetEndAddress()
@@ -109,7 +111,7 @@ namespace M68k.Memory
             memStream.WriteByte(fullValue);
         }
 
-        public void WriteLong(int addr, uint value)
+        public virtual void WriteLong(int addr, uint value)
         {
             memStream.Position = addr;
             Span<byte> destination = stackalloc byte[4];
@@ -117,7 +119,7 @@ namespace M68k.Memory
             memStream.Write(destination.ToArray(), 0, destination.Length);
         }
 
-        public void WriteWord(int addr, int value)
+        public virtual void WriteWord(int addr, int value)
         {
             memStream.Position = addr;
             short fullValue = (short)(value & 0x0000ffff);
@@ -126,7 +128,7 @@ namespace M68k.Memory
             memStream.Write(destination.ToArray(), 0, destination.Length);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {

@@ -1,7 +1,8 @@
-using System;
 
 namespace M68k.CPU
 {
+    using System;
+
     public class CpuException : Exception
     {
         public CpuException() : base()

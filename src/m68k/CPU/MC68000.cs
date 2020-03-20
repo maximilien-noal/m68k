@@ -1,11 +1,13 @@
-using M68k.CPU.Instructions;
 
-using System;
-using System.Globalization;
-using System.Text;
 
 namespace M68k.CPU
 {
+    using M68k.CPU.Instructions;
+
+    using System;
+    using System.Globalization;
+    using System.Text;
+
     public class MC68000 : CpuCore, IInstructionSet
     {
         private readonly IInstruction[] instructionsTable;
@@ -16,19 +18,22 @@ namespace M68k.CPU
 
         static MC68000()
         {
-            InitProperties();
+            InitTASConfiguration();
         }
 
         public MC68000()
         {
+            AddressSpace = null;
             SrcEAHandler = null;
             DstEAHandler = null;
-            Memory = null;
             DisasmBuffer = new StringBuilder(64);
             InitEAHandlers();
             instructionsTable = new IInstruction[65536];
             for (int i = 0; i < 65536; i++)
+            {
                 instructionsTable[i] = null;
+            }
+
             unknown = new UNKNOWN(this);
             loadedOperations = 0;
             LoadInstructionSet();
@@ -88,7 +93,7 @@ namespace M68k.CPU
             return loadedOperations.ToString(CultureInfo.CurrentCulture);
         }
 
-        private static void InitProperties()
+        private static void InitTASConfiguration()
         {
             if (System.Configuration.ConfigurationManager.AppSettings == null)
             {
@@ -98,7 +103,10 @@ namespace M68k.CPU
             if (config != null && bool.TryParse(config, out var mustEmulateBrokenTAS) && mustEmulateBrokenTAS)
             {
                 TAS.EmulateBrokenTAS = true;
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine("Emulating broken TAS instruction");
                 Console.WriteLine("Emulating broken TAS instruction");
+#endif
             }
         }
 

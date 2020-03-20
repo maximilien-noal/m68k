@@ -17,6 +17,11 @@ namespace M68k.CPU.Instructions
 
         public void Register(IInstructionSet instructionSet)
         {
+            if (instructionSet is null)
+            {
+                throw new System.ArgumentNullException(nameof(instructionSet));
+            }
+
             int baseAddress = 0x4840;
             IInstruction i = new AnonymousInstruction(this);
             for (int reg = 0; reg < 8; reg++)

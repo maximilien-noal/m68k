@@ -11,10 +11,15 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public static bool EmulateBrokenTAS { get; internal set; }
+        public static bool EmulateBrokenTAS { get; set; }
 
         public void Register(IInstructionSet instructionSet)
         {
+            if (instructionSet is null)
+            {
+                throw new System.ArgumentNullException(nameof(instructionSet));
+            }
+
             int baseAddress = 0x4ac0;
             IInstruction i = new AnonymousInstruction(this);
             for (int ea_mode = 0; ea_mode < 8; ea_mode++)
