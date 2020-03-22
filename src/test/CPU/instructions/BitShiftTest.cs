@@ -1,166 +1,173 @@
-﻿using M68k.CPU;
-using Xunit;
+﻿//namespace m68k.cpu.instructions
+//{
+//    using M68k.CPU;
+//    using Xunit;
 
-namespace m68k.cpu.instructions
-{
-	//public class BitShiftTest
-	//{
+//    public class BitShiftTest
+//    {
+//        private int destReg = 0;
 
-	//	private int destReg = 0;
-	//	private int srcReg = 1;
-	//	private int shiftOrRotateValue = 0;
+//        private int shiftOrRotateValue = 0;
 
-	//	public BitShiftTest(string test)
-	//	{
-	//	}
+//        private int srcReg = 1;
 
-	//	/// <summary>
-	//	/// Shift count of zero:
-	//	/// <para>
-	//	/// X - unaffected
-	//	/// V - cleared
-	//	/// C - cleared
-	//	/// </para>
-	//	/// </summary>
-	//	public virtual void testLsl()
-	//	{
-	//		int opcode = 0xE328; //lsl.b d1,d0
-	//		int d0 = 0x07654321;
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
-	//	}
+//        public BitShiftTest()
+//        {
+//            SystemModel.MEM = TestMem.create(2048);
+//            SystemModel.CPU = new TestCpu(SystemModel.MEM);
 
-	//	public virtual void testLsr()
-	//	{
-	//		int opcode = 0xE228; //lsr.b d1,d0
-	//		int d0 = 0x07654321;
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
-	//	}
+//            //test vectors just containing the vector number
+//            for (int v = 0; v < 256; v++)
+//            {
+//                int addr = v << 2;
 
-	//	/// <summary>
-	//	/// Shift count of zero:
-	//	/// <para>
-	//	/// X - unaffected
-	//	/// V - cleared
-	//	/// C - cleared
-	//	/// </para>
-	//	/// </summary>
-	//	public virtual void testAsl()
-	//	{
-	//		int opcode = 0xE320; //asl.b d1,d0
-	//		int d0 = 0x4321;
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
-	//	}
+//                //test: changed to poke
+//                SystemModel.MEM.poke(addr, v, Size.Long);
+//            }
 
-	//	public virtual void testAsr()
-	//	{
-	//		int opcode = 0xE220; //asr.b d1,d0
-	//		int d0 = 0x4321;
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
-	//	}
+//            SystemModel.CPU.setAddrRegisterWord(7, 2048);    //set up the stack
+//            SystemModel.CPU.setUSP(0x0800);
+//            SystemModel.CPU.setSSP(0x0780);
+//            codebase = 0x0400;
+//            SystemModel.CPU.setPC(codebase);
+//        }
 
-	//	/// <summary>
-	//	/// Shift count of zero:
-	//	/// <para>
-	//	/// X - unaffected
-	//	/// V - cleared
-	//	/// C - cleared
-	//	/// </para>
-	//	/// </summary>
-	//	public virtual void testRol()
-	//	{
-	//		int opcode = 0xE338; //rol.b d1,d0
-	//		int d0 = 0x4321;
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
-	//	}
+//        public BitShiftTest(string test)
+//        {
+//        }
 
-	//	public virtual void testRor()
-	//	{
-	//		int opcode = 0xE238; //ror.b d1,d0
-	//		int d0 = 0x4321;
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
-	//	}
+//        /// <summary>
+//        /// Shift count of zero:
+//        /// <para> X - unaffected V - cleared C - cleared </para>
+//        /// </summary>
+//        public virtual void TestAsl()
+//        {
+//            int opcode = 0xE320; //asl.b d1,d0
+//            int d0 = 0x4321;
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
+//        }
 
-	//	/// <summary>
-	//	/// Shift count of zero:
-	//	/// <para>
-	//	/// X - unaffected
-	//	/// V - cleared
-	//	/// C - set to the value of the extend bit
-	//	/// </para>
-	//	/// </summary>
-	//	public virtual void testRoxl()
-	//	{
-	//		int opcode = 0xE330; //roxl.b d1,d0
-	//		int d0 = 0x4321;
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0, true);
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0, true);
-	//	}
+//        public virtual void TestAsr()
+//        {
+//            int opcode = 0xE220; //asr.b d1,d0
+//            int d0 = 0x4321;
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
+//        }
 
-	//	public virtual void testRoxr()
-	//	{
-	//		int opcode = 0xE230; //roxr.b d1,d0
-	//		int d0 = 0x4321;
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0, true);
-	//		testInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0, true);
-	//	}
+//        /// <summary>
+//        /// Shift count of zero:
+//        /// <para> X - unaffected V - cleared C - cleared </para>
+//        /// </summary>
+//        public virtual void TestLsl()
+//        {
+//            int opcode = 0xE328; //lsl.b d1,d0
+//            int d0 = 0x07654321;
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
+//        }
 
-	//	private void testInstInternal(int opcode, int flagState, int d0)
-	//	{
-	//		testInstInternal(opcode, flagState, d0, false);
-	//	}
+//        public virtual void testLsr()
+//        {
+//            int opcode = 0xE228; //lsr.b d1,d0
+//            int d0 = 0x07654321;
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
+//        }
 
-	//	private void testInstInternal(int opcode, int flagState, int d0, bool isRox)
-	//	{
-	//		testOpcodeInternal(opcode, flagState, d0, isRox); //byte
-	//		testOpcodeInternal(opcode + 0x40, flagState, d0, isRox); //word
-	//		testOpcodeInternal(opcode + 0x80, flagState, d0, isRox); //long
-	//	}
+//        /// <summary>
+//        /// Shift count of zero:
+//        /// <para> X - unaffected V - cleared C - cleared </para>
+//        /// </summary>
+//        public virtual void TestRol()
+//        {
+//            int opcode = 0xE338; //rol.b d1,d0
+//            int d0 = 0x4321;
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
+//        }
 
-	//	private void testOpcodeInternal(int opcode, int flagState, int d0, bool isRox)
-	//	{
-	//		SetUp();
-	//		IInstruction = opcode;
-	//		CPU.setDataRegister(destReg, d0);
-	//		CPU.setDataRegister(srcReg, shiftOrRotateValue);
-	//		CPU.CCR = 0;
-	//		CPU.Flags = flagState;
+//        public virtual void TestRor()
+//        {
+//            int opcode = 0xE238; //ror.b d1,d0
+//            int d0 = 0x4321;
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0);
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0);
+//        }
 
-	//		CPU.execute();
-	//		Assert.Equal("Check result", d0, CPU.getDataRegister(destReg));
-	//		assertFlagStates(flagState, isRox);
-	//	}
+//        /// <summary>
+//        /// Shift count of zero:
+//        /// <para> X - unaffected V - cleared C - set to the value of the extend bit </para>
+//        /// </summary>
+//        public virtual void TestRoxl()
+//        {
+//            int opcode = 0xE330; //roxl.b d1,d0
+//            int d0 = 0x4321;
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0, true);
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0, true);
+//        }
 
-	//	private static void assertFlagStates(int beforeState, bool isRox)
-	//	{
-	//		switch (beforeState)
-	//		{
-	//			case CpuFlag.C | CpuFlag.X | CpuFlag.V:
-	//				Assert.True("Check X", CPU.isSet(CpuFlag.X));
-	//				break;
-	//			case CpuFlag.C | CpuFlag.V:
-	//				Assert.False("Check X", CPU.isSet(CpuFlag.X));
-	//				break;
-	//			default:
-	//				Assert.fail("Unknown flag combination: " + beforeState);
-	//				break;
-	//		}
-	//		Assert.False("Check V", CPU.isSet(CpuFlag.V));
-	//		if (isRox)
-	//		{
-	//			Assert.Equal("Check C", CPU.isSet(CpuFlag.X), CPU.isSet(CpuFlag.C));
-	//		}
-	//		else
-	//		{
-	//			Assert.False("Check C", CPU.isSet(CpuFlag.C));
-	//		}
-	//		Assert.False("Check Z", CPU.isSet(CpuFlag.Z));
-	//		Assert.False("Check N", CPU.isSet(CpuFlag.N));
-	//	}
-	//}
-}
+//        public virtual void TestRoxr()
+//        {
+//            int opcode = 0xE230; //roxr.b d1,d0
+//            int d0 = 0x4321;
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.X | CpuFlag.V, d0, true);
+//            TestInstInternal(opcode, CpuFlag.C | CpuFlag.V, d0, true);
+//        }
+
+//        private static void AssertFlagStates(int beforeState, bool isRox)
+//        {
+//            switch (beforeState)
+//            {
+//                case CpuFlag.C | CpuFlag.X | CpuFlag.V:
+//                    Assert.True("Check X", CPU.isSet(CpuFlag.X));
+//                    break;
+
+//                case CpuFlag.C | CpuFlag.V:
+//                    Assert.False("Check X", CPU.isSet(CpuFlag.X));
+//                    break;
+
+//                default:
+//                    Assert.False(true); //"Unknown flag combination: " + beforeState
+//                    break;
+//            }
+//            Assert.False("Check V", CPU.isSet(CpuFlag.V));
+//            if (isRox)
+//            {
+//                Assert.Equal("Check C", CPU.isSet(CpuFlag.X), CPU.isSet(CpuFlag.C));
+//            }
+//            else
+//            {
+//                Assert.False("Check C", CPU.isSet(CpuFlag.C));
+//            }
+//            Assert.False("Check Z", CPU.isSet(CpuFlag.Z));
+//            Assert.False("Check N", CPU.isSet(CpuFlag.N));
+//        }
+
+//        private void TestInstInternal(int opcode, int flagState, int d0)
+//        {
+//            TestInstInternal(opcode, flagState, d0, false);
+//        }
+
+//        private void TestInstInternal(int opcode, int flagState, int d0, bool isRox)
+//        {
+//            TestOpcodeInternal(opcode, flagState, d0, isRox); //byte
+//            TestOpcodeInternal(opcode + 0x40, flagState, d0, isRox); //word
+//            TestOpcodeInternal(opcode + 0x80, flagState, d0, isRox); //long
+//        }
+
+//        private void TestOpcodeInternal(int opcode, int flagState, int d0, bool isRox)
+//        {
+//            IInstruction = opcode;
+//            CPU.setDataRegister(destReg, d0);
+//            CPU.setDataRegister(srcReg, shiftOrRotateValue);
+//            CPU.CCR = 0;
+//            CPU.Flags = flagState;
+
+//            CPU.execute();
+//            Assert.Equal("Check result", d0, CPU.getDataRegister(destReg));
+//            AssertFlagStates(flagState, isRox);
+//        }
+//    }
+//}

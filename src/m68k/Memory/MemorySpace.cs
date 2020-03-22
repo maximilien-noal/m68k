@@ -1,10 +1,9 @@
-
-
 namespace M68k.Memory
 {
     using System;
     using System.IO;
     using System.Buffers.Binary;
+
     public class MemorySpace : IAddressSpace, IDisposable
     {
         private readonly int size;
@@ -88,7 +87,7 @@ namespace M68k.Memory
             memStream.Position = addr;
             memStream.Read(buffer, 0, buffer.Length);
             var value = BinaryPrimitives.ReadInt16BigEndian(buffer);
-            var fullValue = (value & 0x0000ffff);
+            var fullValue = value & 0x0000ffff;
             return fullValue;
         }
 

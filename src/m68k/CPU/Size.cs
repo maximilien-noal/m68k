@@ -12,7 +12,7 @@ namespace M68k.CPU
 
         public static readonly Size Byte = new Size(1, BYTESIZE, 0x80);
 
-        public static readonly Size SizeLong = new Size(4, LONGSIZE, 0x7FFFFFFF);
+        public static readonly Size SizeLong = new Size(4, LONGSIZE, -2147483648);
 
         public static readonly Size Unsized = new Size(0, "", 0);
 

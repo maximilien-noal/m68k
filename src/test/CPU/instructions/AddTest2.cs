@@ -31,30 +31,30 @@ namespace m68k.cpu.instructions
 		}
 
 		[Fact]
-		public virtual void TestADD_byte_zeroFlag()
+		public virtual void TestAddByteZeroFlag()
 		{
 			bus.WriteWord(4, 0xd402); // add.b d2,d2
 									  //this should be true as 0xFFFFFF00_byte -> 00
-			TestADDByteZeroFlag(cpu, true, 0xFFFF_FF80, 0xFFFF_FF00);
+			TestADDByteZeroFlag(cpu, true, -128, -256);
 		}
 
 		[Fact]
-		public virtual void TestADDQ_byte_zeroFlag()
+		public virtual void TestAddqByteZeroFlag()
 		{
 			bus.WriteWord(4, 0x5402); // addq.b #2,d2 or addi.b #2, d2
-			TestADDByteZeroFlag(cpu, true, 0xFFFF_FFFE, 0xFFFF_FF00);
+			TestADDByteZeroFlag(cpu, true, -2, -256);
 		}
 		[Fact]
 
-		public virtual void TestADD_word_zeroFlag()
+		public virtual void TestAddWordZeroFlag()
 		{
 			bus.WriteWord(4, 0xd442); // add.w d2,d2
 									  //this should be true as 0xFFFFF0000_word -> 0000
-			TestADDWordZeroFlag(cpu, true, 0xFFFF_8000, 0xFFFF_0000);
+			TestADDWordZeroFlag(cpu, true, -32768, -65536);
 		}
 		[Fact]
 
-		public virtual void TestADDQ_word_zeroFlag()
+		public virtual void TestAddqWordZeroFlag()
 		{
 			bus.WriteWord(4, 0x5442); // addq.w #2,d2 or addi.w #2, d2
 			TestADDByteZeroFlag(cpu, true, 0x0001_FFFE, 0x0001_0000);

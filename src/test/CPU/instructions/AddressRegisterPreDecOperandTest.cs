@@ -52,7 +52,7 @@ namespace m68k.cpu.instructions
 		}
 
 		[Fact]
-		public virtual void TestLswWrittenFirst_MOVE()
+		public virtual void TestLswWrittenFirstMOVE()
 		{
 			int lsw = 0x2222;
 			int msw = 0x1111;
@@ -86,7 +86,7 @@ namespace m68k.cpu.instructions
 		}
 
 		[Fact]
-		public virtual void TestLswWrittenFirst_MOVEM()
+		public virtual void TestLswWrittenFirstMOVEM()
 		{
 			int lsw = 0x2222;
 			int msw = 0x1111;

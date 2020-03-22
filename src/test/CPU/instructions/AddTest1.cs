@@ -55,10 +55,7 @@ namespace m68k.cpu.instructions
 
 
 			cpu.SetPC(4);
-			unchecked
-			{
-				cpu.SetDataRegisterLong(0, (int)0xfffffffc);
-			}
+			cpu.SetDataRegisterLong(0, -4);
 			cpu.SetDataRegisterLong(1, 0x04);
 			bus.WriteWord(4, 0xd081); // add.l d1,d0
 			ticks = cpu.Execute();
