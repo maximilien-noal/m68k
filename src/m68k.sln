@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "m68k", "m68k.csproj", "{34D74CA6-C2E7-4BEA-B42F-3C9D29E118F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "m68k", "m68k\m68k.csproj", "{34D74CA6-C2E7-4BEA-B42F-3C9D29E118F3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "..\test\test.csproj", "{B468F6D1-F3E7-485E-951C-27CE0AB30D56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "test\test.csproj", "{B468F6D1-F3E7-485E-951C-27CE0AB30D56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bin", "..\bin\bin.csproj", "{85CC2418-9278-4572-BCE4-A4FC491F6DFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bin", "bin\bin.csproj", "{85CC2418-9278-4572-BCE4-A4FC491F6DFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
