@@ -9,7 +9,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             int baseAddress;
             IInstruction i;
@@ -106,7 +106,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "roxl" + sz.Ext, src, dst);
         }
 
-        protected virtual int RoxlByteImm(int opcode)
+        protected int RoxlByteImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -142,7 +142,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int RoxlByteReg(int opcode)
+        protected int RoxlByteReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);
@@ -185,7 +185,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int RoxlLongImm(int opcode)
+        protected int RoxlLongImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -220,7 +220,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual int RoxlLongReg(int opcode)
+        protected int RoxlLongReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);
@@ -262,7 +262,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual int RoxlWordImm(int opcode)
+        protected int RoxlWordImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -298,7 +298,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int RoxlWordMem(int opcode)
+        protected int RoxlWordMem(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             int v = op.GetWord();
@@ -320,7 +320,7 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected virtual int RoxlWordReg(int opcode)
+        protected int RoxlWordReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);

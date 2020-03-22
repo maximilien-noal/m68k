@@ -29,7 +29,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual int Link(int opcode)
+        protected int Link(int opcode)
         {
             int sreg = (opcode & 0x007);
             int displacement = cpu.FetchPCWordSigned();

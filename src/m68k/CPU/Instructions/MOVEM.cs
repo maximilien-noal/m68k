@@ -94,7 +94,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual int GetMultipleLong(int reglist, int address)
+        protected int GetMultipleLong(int reglist, int address)
         {
             int bit = 1;
             int regcount = 0;
@@ -159,7 +159,7 @@ namespace M68k.CPU.Instructions
             return regcount;
         }
 
-        protected virtual int GetMultipleWord(int reglist, int address)
+        protected int GetMultipleWord(int reglist, int address)
         {
             int bit = 1;
             int regcount = 0;

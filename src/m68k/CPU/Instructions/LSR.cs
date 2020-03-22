@@ -9,7 +9,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             int baseAddress;
             IInstruction i;
@@ -106,7 +106,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "lsr" + sz.Ext, src, dst);
         }
 
-        protected virtual int LsrByteImm(int opcode)
+        protected int LsrByteImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -126,7 +126,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int LsrByteReg(int opcode)
+        protected int LsrByteReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);
@@ -144,7 +144,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int LsrLongImm(int opcode)
+        protected int LsrLongImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -163,7 +163,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual int LsrLongReg(int opcode)
+        protected int LsrLongReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);
@@ -180,7 +180,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual int LsrWordImm(int opcode)
+        protected int LsrWordImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -200,7 +200,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int LsrWordMem(int opcode)
+        protected int LsrWordMem(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             int v = op.GetWord();
@@ -211,7 +211,7 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected virtual int LsrWordReg(int opcode)
+        protected int LsrWordReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);

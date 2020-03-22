@@ -12,7 +12,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             if (instructionSet is null)
             {
@@ -26,7 +26,7 @@ namespace M68k.CPU.Instructions
             instructionSet.AddInstruction(baseAddress, i);
         }
 
-        protected virtual int AndiWord(int opcode)
+        protected int AndiWord(int opcode)
         {
             int s = cpu.FetchPCWord() & 0x0031;
             cpu.SetSR(cpu.GetSR() & (s | 0xff00));

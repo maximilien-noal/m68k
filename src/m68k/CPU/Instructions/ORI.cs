@@ -12,7 +12,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             int baseAddress;
             IInstruction i;
@@ -90,7 +90,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "ori" + sz.Ext, src, dst);
         }
 
-        protected virtual int OriByte(int opcode)
+        protected int OriByte(int opcode)
         {
             int s = CpuUtils.SignExtendByte(cpu.FetchPCWord());
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
@@ -102,7 +102,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 8 : 12 + dst.GetTiming());
         }
 
-        protected virtual int OriLong(int opcode)
+        protected int OriLong(int opcode)
         {
             int s = cpu.FetchPCLong();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
@@ -113,7 +113,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 16 : 20 + dst.GetTiming());
         }
 
-        protected virtual int OriWord(int opcode)
+        protected int OriWord(int opcode)
         {
             int s = cpu.FetchPCWordSigned();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);

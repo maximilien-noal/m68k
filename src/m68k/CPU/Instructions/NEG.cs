@@ -9,7 +9,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             int baseAddress;
             IInstruction i;
@@ -51,7 +51,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "neg" + sz.Ext, src);
         }
 
-        protected virtual int NegByte(int opcode)
+        protected int NegByte(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Byte);
             int s = op.GetByte();
@@ -61,7 +61,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 4 : 8 + op.GetTiming());
         }
 
-        protected virtual int NegLong(int opcode)
+        protected int NegLong(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.SizeLong);
             int s = op.GetLong();
@@ -71,7 +71,7 @@ namespace M68k.CPU.Instructions
             return (op.IsRegisterMode() ? 6 : 12 + op.GetTiming());
         }
 
-        protected virtual int NegWord(int opcode)
+        protected int NegWord(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             int s = op.GetWord();

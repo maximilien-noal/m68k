@@ -1,4 +1,3 @@
-
 namespace M68k.CPU
 {
     using System;

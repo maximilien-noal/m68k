@@ -30,7 +30,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual int Swap(int opcode)
+        protected int Swap(int opcode)
         {
             int reg = (opcode & 0x007);
             int v = cpu.GetDataRegisterLong(reg);

@@ -47,7 +47,7 @@ namespace M68k.CPU
             op2 = dop2;
         }
 
-        public virtual void FormatInstruction(StringBuilder buffer)
+        public void FormatInstruction(StringBuilder buffer)
         {
             if (buffer is null)
             {
@@ -135,7 +135,7 @@ namespace M68k.CPU
             }
         }
 
-        public virtual void ShortFormat(StringBuilder buffer)
+        public void ShortFormat(StringBuilder buffer)
         {
             if (buffer is null)
             {
@@ -181,7 +181,7 @@ namespace M68k.CPU
             }
         }
 
-        public virtual int Size()
+        public int Size()
         {
             int size = 2;
             if (num_operands == 2)

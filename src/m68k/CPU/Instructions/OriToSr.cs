@@ -11,7 +11,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             int baseAddress;
             IInstruction i;
@@ -33,7 +33,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "ori" + sz.Ext, src, dst);
         }
 
-        protected virtual int OriWord(int opcode)
+        protected int OriWord(int opcode)
         {
             int s = cpu.FetchPCWordSigned() & 0xf71f;
             if (cpu.IsSupervisorMode())

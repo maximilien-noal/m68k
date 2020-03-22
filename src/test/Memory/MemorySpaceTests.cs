@@ -1,12 +1,13 @@
 ﻿namespace m68k.memory
 {
     using M68k.Memory;
+
     using Xunit;
 
     public class MemorySpaceTests
     {
         [Fact]
-        public virtual void TestCreate()
+        public void TestCreate()
         {
             var bus = new MemorySpace(4);
             Assert.Equal(4096, bus.Size());
@@ -16,7 +17,7 @@
         }
 
         [Fact]
-        public virtual void TestMemory()
+        public void TestMemory()
         {
             using var bus = new MemorySpace(1);
             bus.WriteByte(4, 0x55);

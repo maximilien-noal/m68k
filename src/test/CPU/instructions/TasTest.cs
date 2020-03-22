@@ -3,6 +3,7 @@
     using M68k.CPU;
     using M68k.CPU.Instructions;
     using M68k.Memory;
+
     using Xunit;
 
     public class TasTest
@@ -23,7 +24,7 @@
         }
 
         [Fact]
-        public virtual void TestTasBroken()
+        public void TestTasBroken()
         {
             TAS.EmulateBrokenTAS = true;
             bus.WriteWord(4, 0x4AC0); //TAS D0
@@ -37,7 +38,7 @@
 
         // 0100 1010 1100 0000
         [Fact]
-        public virtual void TestTasOk()
+        public void TestTasOk()
         {
             TAS.EmulateBrokenTAS = false;
             bus.WriteWord(4, 0x4AC0); //TAS D0

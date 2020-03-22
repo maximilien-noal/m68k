@@ -32,7 +32,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual int Unlk(int opcode)
+        protected int Unlk(int opcode)
         {
             int reg = (opcode & 0x007);
             cpu.SetAddrRegisterLong(7, cpu.GetAddrRegisterLong(reg));

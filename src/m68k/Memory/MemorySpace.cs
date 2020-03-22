@@ -1,8 +1,8 @@
 namespace M68k.Memory
 {
     using System;
-    using System.IO;
     using System.Buffers.Binary;
+    using System.IO;
 
     public class MemorySpace : IAddressSpace, IDisposable
     {
@@ -127,7 +127,7 @@ namespace M68k.Memory
             memStream.Write(destination.ToArray(), 0, destination.Length);
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             if (!disposedValue)
             {

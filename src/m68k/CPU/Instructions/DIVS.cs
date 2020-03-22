@@ -9,7 +9,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             int baseAddress = 0x81c0;
             IInstruction i = new AnonymousInstruction(this);

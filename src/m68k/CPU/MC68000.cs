@@ -1,5 +1,3 @@
-
-
 namespace M68k.CPU
 {
     using M68k.CPU.Instructions;
@@ -39,7 +37,7 @@ namespace M68k.CPU
             LoadInstructionSet();
         }
 
-        public virtual void AddInstruction(int opcode, IInstruction instruction)
+        public void AddInstruction(int opcode, IInstruction instruction)
         {
             if (instruction is null)
             {

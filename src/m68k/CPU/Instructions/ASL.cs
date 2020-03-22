@@ -9,7 +9,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             int baseAddress;
             IInstruction i;
@@ -80,7 +80,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual int AslByteImm(int opcode)
+        protected int AslByteImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -105,7 +105,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int AslByteReg(int opcode)
+        protected int AslByteReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);
@@ -128,7 +128,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int AslLongImm(int opcode)
+        protected int AslLongImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -154,7 +154,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual int AslLongReg(int opcode)
+        protected int AslLongReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);
@@ -178,7 +178,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual int AslWordImm(int opcode)
+        protected int AslWordImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -203,7 +203,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int AslWordMem(int opcode)
+        protected int AslWordMem(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             int v = op.GetWord();
@@ -220,7 +220,7 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected virtual int AslWordReg(int opcode)
+        protected int AslWordReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);

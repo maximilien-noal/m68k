@@ -9,7 +9,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             int baseAddress;
             IInstruction i;
@@ -106,7 +106,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "ror" + sz.Ext, src, dst);
         }
 
-        protected virtual int RorByteImm(int opcode)
+        protected int RorByteImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -128,7 +128,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int RorByteReg(int opcode)
+        protected int RorByteReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);
@@ -148,7 +148,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int RorLongImm(int opcode)
+        protected int RorLongImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -174,7 +174,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual int RorLongReg(int opcode)
+        protected int RorLongReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);
@@ -198,7 +198,7 @@ namespace M68k.CPU.Instructions
             return 8 + shift + shift;
         }
 
-        protected virtual int RorWordImm(int opcode)
+        protected int RorWordImm(int opcode)
         {
             int shift = (opcode >> 9) & 0x07;
             if (shift == 0)
@@ -220,7 +220,7 @@ namespace M68k.CPU.Instructions
             return 6 + shift + shift;
         }
 
-        protected virtual int RorWordMem(int opcode)
+        protected int RorWordMem(int opcode)
         {
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             int v = op.GetWord();
@@ -233,7 +233,7 @@ namespace M68k.CPU.Instructions
             return 8 + op.GetTiming();
         }
 
-        protected virtual int RorWordReg(int opcode)
+        protected int RorWordReg(int opcode)
         {
             int shift = cpu.GetDataRegisterLong((opcode >> 9) & 0x07) & 63;
             int reg = (opcode & 0x07);

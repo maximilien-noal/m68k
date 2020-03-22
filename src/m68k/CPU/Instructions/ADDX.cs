@@ -73,7 +73,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual int AddxByteMem(int opcode)
+        protected int AddxByteMem(int opcode)
         {
             int rx = (opcode >> 9) & 0x07;
             int ry = (opcode & 0x07);
@@ -87,7 +87,7 @@ namespace M68k.CPU.Instructions
             return 18;
         }
 
-        protected virtual int AddxByteReg(int opcode)
+        protected int AddxByteReg(int opcode)
         {
             int s = cpu.GetDataRegisterByteSigned((opcode & 0x07));
             int d = cpu.GetDataRegisterByteSigned((opcode >> 9) & 0x07);
@@ -97,7 +97,7 @@ namespace M68k.CPU.Instructions
             return 4;
         }
 
-        protected virtual int AddxLongMem(int opcode)
+        protected int AddxLongMem(int opcode)
         {
             int rx = (opcode >> 9) & 0x07;
             int ry = (opcode & 0x07);
@@ -111,7 +111,7 @@ namespace M68k.CPU.Instructions
             return 30;
         }
 
-        protected virtual int AddxLongReg(int opcode)
+        protected int AddxLongReg(int opcode)
         {
             int s = cpu.GetDataRegisterLong((opcode & 0x07));
             int d = cpu.GetDataRegisterLong((opcode >> 9) & 0x07);
@@ -121,7 +121,7 @@ namespace M68k.CPU.Instructions
             return 8;
         }
 
-        protected virtual int AddxWordMem(int opcode)
+        protected int AddxWordMem(int opcode)
         {
             int rx = (opcode >> 9) & 0x07;
             int ry = (opcode & 0x07);
@@ -135,7 +135,7 @@ namespace M68k.CPU.Instructions
             return 18;
         }
 
-        protected virtual int AddxWordReg(int opcode)
+        protected int AddxWordReg(int opcode)
         {
             int s = cpu.GetDataRegisterWordSigned((opcode & 0x07));
             int d = cpu.GetDataRegisterWordSigned((opcode >> 9) & 0x07);

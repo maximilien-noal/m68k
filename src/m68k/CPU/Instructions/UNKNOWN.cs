@@ -9,12 +9,12 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual DisassembledInstruction Disassemble(int address, int opcode)
+        public DisassembledInstruction Disassemble(int address, int opcode)
         {
             return new DisassembledInstruction(address, opcode, "????");
         }
 
-        public virtual int Execute(int opcode)
+        public int Execute(int opcode)
         {
             int vector;
             if ((opcode & 0xf000) == 0xa000)

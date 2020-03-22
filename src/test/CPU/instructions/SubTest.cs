@@ -1,5 +1,6 @@
 ﻿using M68k.CPU;
 using M68k.Memory;
+
 using Xunit;
 
 namespace m68k.cpu.instructions
@@ -20,14 +21,14 @@ namespace m68k.cpu.instructions
         }
 
         [Fact]
-        public virtual void TestSubByteZeroFlag()
+        public void TestSubByteZeroFlag()
         {
             bus.WriteWord(4, 0x9402); // sub.b d2,d2
             TestSUBByteZeroFlag(cpu, true, -128, -256);
         }
 
         [Fact]
-        public virtual void TestSubiByteZeroFlag()
+        public void TestSubiByteZeroFlag()
         {
             bus.WriteWord(4, 0x0402); // subi.b #2,d2
             bus.WriteWord(6, 2);
@@ -35,7 +36,7 @@ namespace m68k.cpu.instructions
         }
 
         [Fact]
-        public virtual void TestSubqByteZeroFlag()
+        public void TestSubqByteZeroFlag()
         {
             bus.WriteWord(4, 0x5502); // subi.b #2,d2
             TestSUBByteZeroFlag(cpu, true, 0x0001_0102, 0x0001_0100);

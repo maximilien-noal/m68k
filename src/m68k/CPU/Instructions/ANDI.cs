@@ -12,7 +12,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             if (instructionSet is null)
             {
@@ -53,7 +53,7 @@ namespace M68k.CPU.Instructions
             }
         }
 
-        protected virtual int AndiByte(int opcode)
+        protected int AndiByte(int opcode)
         {
             int s = CpuUtils.SignExtendByte(cpu.FetchPCWord());
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
@@ -65,7 +65,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 8 : 12 + dst.GetTiming());
         }
 
-        protected virtual int AndiLong(int opcode)
+        protected int AndiLong(int opcode)
         {
             int s = cpu.FetchPCLong();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
@@ -76,7 +76,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 14 : 20 + dst.GetTiming());
         }
 
-        protected virtual int AndiWord(int opcode)
+        protected int AndiWord(int opcode)
         {
             int s = cpu.FetchPCWordSigned();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);

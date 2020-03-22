@@ -12,7 +12,7 @@ namespace M68k.CPU.Instructions
             this.cpu = cpu;
         }
 
-        public virtual void Register(IInstructionSet instructionSet)
+        public void Register(IInstructionSet instructionSet)
         {
             int baseAddress;
             IInstruction i;
@@ -90,7 +90,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "subi" + sz.Ext, src, dst);
         }
 
-        protected virtual int SubiByte(int opcode)
+        protected int SubiByte(int opcode)
         {
             int s = CpuUtils.SignExtendByte(cpu.FetchPCWord());
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Byte);
@@ -101,7 +101,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 8 : 12 + dst.GetTiming());
         }
 
-        protected virtual int SubiLong(int opcode)
+        protected int SubiLong(int opcode)
         {
             int s = cpu.FetchPCLong();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.SizeLong);
@@ -112,7 +112,7 @@ namespace M68k.CPU.Instructions
             return (dst.IsRegisterMode() ? 16 : 20 + dst.GetTiming());
         }
 
-        protected virtual int SubiWord(int opcode)
+        protected int SubiWord(int opcode)
         {
             int s = cpu.FetchPCWordSigned();
             IOperand dst = cpu.ResolveDstEA((opcode >> 3) & 0x07, opcode & 0x07, Size.Word);

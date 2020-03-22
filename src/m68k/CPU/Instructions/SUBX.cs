@@ -86,7 +86,7 @@ namespace M68k.CPU.Instructions
             return new DisassembledInstruction(address, opcode, "subx" + sz.Ext, src, dst);
         }
 
-        protected virtual int SubxByteMem(int opcode)
+        protected int SubxByteMem(int opcode)
         {
             int rx = (opcode >> 9) & 0x07;
             int ry = (opcode & 0x07);
@@ -100,7 +100,7 @@ namespace M68k.CPU.Instructions
             return 18;
         }
 
-        protected virtual int SubxByteReg(int opcode)
+        protected int SubxByteReg(int opcode)
         {
             int s = cpu.GetDataRegisterByteSigned((opcode & 0x07));
             int d = cpu.GetDataRegisterByteSigned((opcode >> 9) & 0x07);
@@ -110,7 +110,7 @@ namespace M68k.CPU.Instructions
             return 4;
         }
 
-        protected virtual int SubxLongMem(int opcode)
+        protected int SubxLongMem(int opcode)
         {
             int rx = (opcode >> 9) & 0x07;
             int ry = (opcode & 0x07);
@@ -124,7 +124,7 @@ namespace M68k.CPU.Instructions
             return 30;
         }
 
-        protected virtual int SubxLongReg(int opcode)
+        protected int SubxLongReg(int opcode)
         {
             int s = cpu.GetDataRegisterLong((opcode & 0x07));
             int d = cpu.GetDataRegisterLong((opcode >> 9) & 0x07);
@@ -134,7 +134,7 @@ namespace M68k.CPU.Instructions
             return 8;
         }
 
-        protected virtual int SubxWordMem(int opcode)
+        protected int SubxWordMem(int opcode)
         {
             int rx = (opcode >> 9) & 0x07;
             int ry = (opcode & 0x07);
@@ -148,7 +148,7 @@ namespace M68k.CPU.Instructions
             return 18;
         }
 
-        protected virtual int SubxWordReg(int opcode)
+        protected int SubxWordReg(int opcode)
         {
             int s = cpu.GetDataRegisterWordSigned((opcode & 0x07));
             int d = cpu.GetDataRegisterWordSigned((opcode >> 9) & 0x07);
