@@ -1,3 +1,5 @@
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("test")]
+
 namespace M68k.CPU
 {
     using M68k.Memory;
@@ -1167,6 +1169,40 @@ namespace M68k.CPU
             AddressSpace.WriteWord(addr, value);
         }
 
+        internal int SignExtendByte(int value)
+        {
+            if ((value & 0x80) == 0x80)
+            {
+                unchecked
+                {
+                    value |= (int)0xffffff00;
+                }
+            }
+            else
+            {
+                value &= 0x000000ff;
+            }
+
+            return value;
+        }
+
+        internal int SignExtendWord(int value)
+        {
+            if ((value & 0x8000) == 0x8000)
+            {
+                unchecked
+                {
+                    value |= (int)0xffff0000;
+                }
+            }
+            else
+            {
+                value &= 0x0000ffff;
+            }
+
+            return value;
+        }
+
         protected DisassembledOperand DisassembleEA(int address, int mode, int reg, Size sz, bool isSrc)
         {
             int bytes_read = 0;
@@ -1348,40 +1384,6 @@ namespace M68k.CPU
         {
             reg_sr &= ~(INTERRUPT_FLAGS_MASK);
             reg_sr |= (level & 0x07) << 8;
-        }
-
-        protected int SignExtendByte(int value)
-        {
-            if ((value & 0x80) == 0x80)
-            {
-                unchecked
-                {
-                    value |= (int)0xffffff00;
-                }
-            }
-            else
-            {
-                value &= 0x000000ff;
-            }
-
-            return value;
-        }
-
-        protected int SignExtendWord(int value)
-        {
-            if ((value & 0x8000) == 0x8000)
-            {
-                unchecked
-                {
-                    value |= (int)0xffff0000;
-                }
-            }
-            else
-            {
-                value &= 0x0000ffff;
-            }
-
-            return value;
         }
 
         private class AbsoluteLongOperand : IOperand

@@ -3,7 +3,7 @@ using M68k.Memory;
 
 using Xunit;
 
-namespace m68k.cpu.instructions
+namespace M68k.Cpu.Instructions
 {
     public class SubTest
     {

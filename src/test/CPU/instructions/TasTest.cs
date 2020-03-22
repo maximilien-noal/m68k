@@ -1,4 +1,4 @@
-﻿namespace m68k.cpu.instructions
+﻿namespace M68k.Cpu.Instructions
 {
     using M68k.CPU;
     using M68k.CPU.Instructions;

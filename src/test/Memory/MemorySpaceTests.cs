@@ -1,7 +1,5 @@
-﻿namespace m68k.memory
+﻿namespace M68k.Memory
 {
-    using M68k.Memory;
-
     using Xunit;
 
     public class MemorySpaceTests
