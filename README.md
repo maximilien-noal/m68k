@@ -2,7 +2,7 @@
 m68k
 ====
 
-This is "my" Motorola 680x0 emulator written in C#. This is the designed to be a modular cpu component for my C# based Megadrive emulator project [https://github.com/maximilien-noal/YAME](YAME).  This project is forked from https://github.com/fedex81/m68k.
+This is "my" Motorola 680x0 emulator written in C#. This is the designed to be a modular cpu component for my C# based Megadrive emulator project [*YAME*](https://github.com/maximilien-noal/YAME).  This project is forked from [fedex81/m68k](https://github.com/fedex81/m68k).
 
 Emulation
 ---------
