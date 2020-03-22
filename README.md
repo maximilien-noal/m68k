@@ -12,19 +12,31 @@ Currently m68k emulates the 68000 cpu found in the Amiga and other 16-bit era ma
 Building
 --------
 
+Inside src/m68k:
+
 ```
 dotnet build
 ```
 
 You need a .NET Standard 2.0 compliant implementation in order to use this library.
 
+Testing
+--------
+
+Inside src/test:
+
+```
+dotnet test
+```
+
 Running
 -------
 
-As with the original Java code, there is a simple cpu monitor shell to enable testing/debugging. This can be invoked by running the following at the command prompt:
+As with the original Java code, there is a simple cpu monitor shell to enable testing/debugging. This can be invoked by running the following at the command prompt, inside the src/bin folder:
 
-	$ dotnet run m68k.Monitor
-
+```
+dotnet run
+```
 
 Feedback, Comments, Bugs etc.
 -----------------------------
