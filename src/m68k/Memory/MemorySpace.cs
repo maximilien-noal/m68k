@@ -127,7 +127,7 @@ namespace M68k.Memory
             memStream.Write(destination.ToArray(), 0, destination.Length);
         }
 
-        protected void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
