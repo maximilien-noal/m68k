@@ -2,10 +2,10 @@
 {
     using Miggy.Memory;
 
-    public static class SystemModel
+    public class SystemModel
     {
-        public static TestCpu CPU;
+        public TestCpu CPU;
 
-        public static TestMem MEM;
+        public TestMem MEM;
     }
 }

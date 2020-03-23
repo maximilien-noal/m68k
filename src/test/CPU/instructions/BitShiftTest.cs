@@ -24,8 +24,8 @@
         {
             int opcode = 0xE320;
             int d0 = 0x4321;
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.XFlag | SystemModel.CPU.VFlag, d0);
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.XFlag | model.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.VFlag, d0);
         }
 
         [Fact]
@@ -33,8 +33,8 @@
         {
             int opcode = 0xE220;
             int d0 = 0x4321;
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.XFlag | SystemModel.CPU.VFlag, d0);
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.XFlag | model.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.VFlag, d0);
         }
 
         [Fact]
@@ -42,8 +42,8 @@
         {
             int opcode = 0xE328;
             int d0 = 0x07654321;
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.XFlag | SystemModel.CPU.VFlag, d0);
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.XFlag | model.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.VFlag, d0);
         }
 
         [Fact]
@@ -51,8 +51,8 @@
         {
             int opcode = 0xE228;
             int d0 = 0x07654321;
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.XFlag | SystemModel.CPU.VFlag, d0);
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.XFlag | model.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.VFlag, d0);
         }
 
         [Fact]
@@ -60,8 +60,8 @@
         {
             int opcode = 0xE338;
             int d0 = 0x4321;
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.XFlag | SystemModel.CPU.VFlag, d0);
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.XFlag | model.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.VFlag, d0);
         }
 
         [Fact]
@@ -69,8 +69,8 @@
         {
             int opcode = 0xE238;
             int d0 = 0x4321;
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.XFlag | SystemModel.CPU.VFlag, d0);
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.XFlag | model.CPU.VFlag, d0);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.VFlag, d0);
         }
 
         [Fact]
@@ -78,8 +78,8 @@
         {
             int opcode = 0xE330;
             int d0 = 0x4321;
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.XFlag | SystemModel.CPU.VFlag, d0, true);
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.VFlag, d0, true);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.XFlag | model.CPU.VFlag, d0, true);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.VFlag, d0, true);
         }
 
         [Fact]
@@ -87,38 +87,38 @@
         {
             int opcode = 0xE230;
             int d0 = 0x4321;
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.XFlag | SystemModel.CPU.VFlag, d0, true);
-            TestInstInternal(opcode, SystemModel.CPU.CFlag | SystemModel.CPU.VFlag, d0, true);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.XFlag | model.CPU.VFlag, d0, true);
+            TestInstInternal(opcode, model.CPU.CFlag | model.CPU.VFlag, d0, true);
         }
 
-        private static void AssertFlagStates(int beforeState, bool isRox)
+        private void AssertFlagStates(int beforeState, bool isRox)
         {
             switch (beforeState)
             {
                 case CpuCore.C_FLAG | CpuCore.X_FLAG | CpuCore.V_FLAG:
-                    Assert.True(SystemModel.CPU.IsSet(SystemModel.CPU.XFlag));
+                    Assert.True(model.CPU.IsSet(model.CPU.XFlag));
                     break;
 
                 case CpuCore.C_FLAG | CpuCore.V_FLAG:
-                    Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.XFlag));
+                    Assert.False(model.CPU.IsSet(model.CPU.XFlag));
                     break;
 
                 default:
                     throw new InvalidOperationException($"Unknown flag combination: {beforeState}");
             }
 
-            Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.VFlag));
+            Assert.False(model.CPU.IsSet(model.CPU.VFlag));
             if (isRox)
             {
-                Assert.Equal(SystemModel.CPU.IsSet(SystemModel.CPU.XFlag), SystemModel.CPU.IsSet(SystemModel.CPU.CFlag));
+                Assert.Equal(model.CPU.IsSet(model.CPU.XFlag), model.CPU.IsSet(model.CPU.CFlag));
             }
             else
             {
-                Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.CFlag));
+                Assert.False(model.CPU.IsSet(model.CPU.CFlag));
             }
 
-            Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.ZFlag));
-            Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.NFlag));
+            Assert.False(model.CPU.IsSet(model.CPU.ZFlag));
+            Assert.False(model.CPU.IsSet(model.CPU.NFlag));
         }
 
         private void TestInstInternal(int opcode, int flagState, int d0)
@@ -137,12 +137,12 @@
         {
             Setup();
             SetInstruction(opcode);
-            SystemModel.CPU.SetDataRegister(destReg, d0);
-            SystemModel.CPU.SetDataRegister(srcReg, shiftOrRotateValue);
-            SystemModel.CPU.SetCCR(0);
-            SystemModel.CPU.SetFlags(flagState);
-            SystemModel.CPU.Execute();
-            Assert.Equal(d0, SystemModel.CPU.GetDataRegister(destReg));
+            model.CPU.SetDataRegister(destReg, d0);
+            model.CPU.SetDataRegister(srcReg, shiftOrRotateValue);
+            model.CPU.SetCCR(0);
+            model.CPU.SetFlags(flagState);
+            model.CPU.Execute();
+            Assert.Equal(d0, model.CPU.GetDataRegister(destReg));
             AssertFlagStates(flagState, isRox);
         }
     }

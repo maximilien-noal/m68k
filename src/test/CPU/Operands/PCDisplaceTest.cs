@@ -15,18 +15,18 @@
         [Fact]
         public virtual void TestInstruction()
         {
-            SystemModel.MEM.Poke(codebase + 0x00e4, 0x41faff1c, Size.SizeLong);
-            SystemModel.MEM.Poke(codebase, 0x00c00000, Size.SizeLong);
-            SystemModel.CPU.SetAddrRegister(0, -2023406815);
-            SystemModel.CPU.SetPC(codebase + 0x00e4);
-            SystemModel.CPU.SetCCR((byte)0);
-            _ = SystemModel.CPU.Execute();
-            Assert.Equal(codebase + 2, SystemModel.CPU.GetAddrRegister(0));
-            Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.XFlag));
-            Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.NFlag));
-            Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.ZFlag));
-            Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.VFlag));
-            Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.CFlag));
+            model.MEM.Poke(codebase + 0x00e4, 0x41faff1c, Size.SizeLong);
+            model.MEM.Poke(codebase, 0x00c00000, Size.SizeLong);
+            model.CPU.SetAddrRegister(0, -2023406815);
+            model.CPU.SetPC(codebase + 0x00e4);
+            model.CPU.SetCCR((byte)0);
+            _ = model.CPU.Execute();
+            Assert.Equal(codebase + 2, model.CPU.GetAddrRegister(0));
+            Assert.False(model.CPU.IsSet(model.CPU.XFlag));
+            Assert.False(model.CPU.IsSet(model.CPU.NFlag));
+            Assert.False(model.CPU.IsSet(model.CPU.ZFlag));
+            Assert.False(model.CPU.IsSet(model.CPU.VFlag));
+            Assert.False(model.CPU.IsSet(model.CPU.CFlag));
         }
     }
 }

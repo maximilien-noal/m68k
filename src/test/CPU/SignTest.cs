@@ -13,10 +13,10 @@
         [Fact]
         public virtual void TestSignExtendByte()
         {
-            SystemModel.MEM.Poke(codebase, 0x80, Size.Byte);
-            int val = SystemModel.MEM.Peek(codebase, Size.Byte);
+            model.MEM.Poke(codebase, 0x80, Size.Byte);
+            int val = model.MEM.Peek(codebase, Size.Byte);
             Assert.True(val >= 0);
-            var valNoCast = SystemModel.MEM.Peek(codebase, Size.Byte);
+            var valNoCast = model.MEM.Peek(codebase, Size.Byte);
             val = (sbyte)valNoCast;
             Assert.True(val < 0);
         }
@@ -24,34 +24,34 @@
         [Fact]
         public virtual void TestSignExtendFetchByte()
         {
-            SystemModel.MEM.Poke(codebase, 0x0080, Size.Word);
-            int val = SystemModel.CPU.Fetch(Size.Byte);
+            model.MEM.Poke(codebase, 0x0080, Size.Word);
+            int val = model.CPU.Fetch(Size.Byte);
             Assert.True(val >= 0);
             Assert.Equal(0x0080, val);
-            SystemModel.CPU.SetPC(codebase);
-            val = (sbyte)SystemModel.CPU.Fetch(Size.Byte);
+            model.CPU.SetPC(codebase);
+            val = (sbyte)model.CPU.Fetch(Size.Byte);
             Assert.True(val < 0);
         }
 
         [Fact]
         public virtual void TestSignExtendFetchWord()
         {
-            SystemModel.MEM.Poke(codebase, 0x8000, Size.Word);
-            int val = SystemModel.CPU.Fetch(Size.Word);
+            model.MEM.Poke(codebase, 0x8000, Size.Word);
+            int val = model.CPU.Fetch(Size.Word);
             Assert.True(val >= 0);
             Assert.Equal(0x8000, val);
-            SystemModel.CPU.SetPC(codebase);
-            val = (short)SystemModel.CPU.Fetch(Size.Word);
+            model.CPU.SetPC(codebase);
+            val = (short)model.CPU.Fetch(Size.Word);
             Assert.True(val < 0);
         }
 
         [Fact]
         public virtual void TestSignExtendWord()
         {
-            SystemModel.MEM.Poke(codebase, 0x8000, Size.Word);
-            int val = SystemModel.MEM.Peek(codebase, Size.Word);
+            model.MEM.Poke(codebase, 0x8000, Size.Word);
+            int val = model.MEM.Peek(codebase, Size.Word);
             Assert.True(val >= 0);
-            val = (short)SystemModel.MEM.Peek(codebase, Size.Word);
+            val = (short)model.MEM.Peek(codebase, Size.Word);
             Assert.True(val < 0);
         }
 
@@ -59,10 +59,10 @@
         public virtual void TestSizeSignExtend()
         {
             int val = 0x0080;
-            int result = SystemModel.CPU.SignExtendByte(val);
+            int result = model.CPU.SignExtendByte(val);
             Assert.True(result < 0);
             val = 0x8000;
-            result = SystemModel.CPU.SignExtendWord(val);
+            result = model.CPU.SignExtendWord(val);
             Assert.True(result < 0);
         }
     }
