@@ -111,9 +111,9 @@ namespace M68k.CPU.Instructions
             int dis = cpu.FetchPCWordSigned();
             int address = cpu.GetAddrRegisterLong(opcode & 0x07) + dis;
             int val = cpu.GetDataRegisterLong((opcode >> 9) & 0x07);
-            cpu.WriteMemoryByte(address, (val >> 24) & 0xff);
-            cpu.WriteMemoryByte(address + 2, (val >> 16) & 0xff);
-            cpu.WriteMemoryByte(address + 4, (val >> 8) & 0xff);
+            cpu.WriteMemoryByte(address, ((int)((uint)val >> 24)) & 0xff);
+            cpu.WriteMemoryByte(address + 2, ((int)((uint)val >> 16)) & 0xff);
+            cpu.WriteMemoryByte(address + 4, ((int)((uint)val >> 8)) & 0xff);
             cpu.WriteMemoryByte(address + 6, val & 0xff);
             return 24;
         }
@@ -123,7 +123,7 @@ namespace M68k.CPU.Instructions
             int dis = cpu.FetchPCWordSigned();
             int address = cpu.GetAddrRegisterLong(opcode & 0x07) + dis;
             int val = cpu.GetDataRegisterWord((opcode >> 9) & 0x07);
-            cpu.WriteMemoryByte(address, (val >> 8) & 0xff);
+            cpu.WriteMemoryByte(address, ((int)((uint)val >> 8)) & 0xff);
             cpu.WriteMemoryByte(address + 2, val & 0xff);
             return 16;
         }

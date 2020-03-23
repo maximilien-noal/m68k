@@ -92,7 +92,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 d |= msb;
             }
 
@@ -112,7 +112,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 d |= msb;
             }
 
@@ -134,7 +134,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 d |= msb;
             }
 
@@ -153,7 +153,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 d |= msb;
             }
 
@@ -174,7 +174,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 d |= msb;
             }
 
@@ -190,7 +190,7 @@ namespace M68k.CPU.Instructions
             int v = op.GetWord();
             int last_out = v & 0x01;
             int msb = v & 0x8000;
-            v >>= 1;
+            v = (int)((uint)v >> 1);
             v |= msb;
             op.SetWord(v);
             cpu.CalcFlags(InstructionType.ASR, 1, last_out, v, Size.Word);
@@ -207,7 +207,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 d |= msb;
             }
 

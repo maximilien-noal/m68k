@@ -117,7 +117,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
             }
 
             d &= 0x00ff;
@@ -135,7 +135,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
             }
 
             d &= 0x00ff;
@@ -155,7 +155,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
             }
 
             cpu.SetDataRegisterLong(reg, d);
@@ -172,7 +172,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
             }
 
             cpu.SetDataRegisterLong(reg, d);
@@ -191,7 +191,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
             }
 
             d &= 0x0000ffff;
@@ -205,7 +205,7 @@ namespace M68k.CPU.Instructions
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             int v = op.GetWord();
             int last_out = v & 0x01;
-            v >>= 1;
+            v = (int)((uint)v >> 1);
             op.SetWord(v);
             cpu.CalcFlags(InstructionType.LSR, 1, last_out, v, Size.Word);
             return 8 + op.GetTiming();
@@ -220,7 +220,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
             }
 
             d &= 0x0000ffff;
