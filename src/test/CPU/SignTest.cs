@@ -16,7 +16,8 @@
             SystemModel.MEM.Poke(codebase, 0x80, Size.Byte);
             int val = SystemModel.MEM.Peek(codebase, Size.Byte);
             Assert.True(val >= 0);
-            val = (byte)SystemModel.MEM.Peek(codebase, Size.Byte);
+            var valNoCast = SystemModel.MEM.Peek(codebase, Size.Byte);
+            val = (sbyte)valNoCast;
             Assert.True(val < 0);
         }
 
@@ -28,7 +29,7 @@
             Assert.True(val >= 0);
             Assert.Equal(0x0080, val);
             SystemModel.CPU.SetPC(codebase);
-            val = (byte)SystemModel.CPU.Fetch(Size.Byte);
+            val = (sbyte)SystemModel.CPU.Fetch(Size.Byte);
             Assert.True(val < 0);
         }
 
