@@ -1,5 +1,6 @@
 ﻿namespace M68k.Cpu.Instructions
 {
+    using M68k.CPU;
     using Miggy;
 
     using System;
@@ -92,17 +93,18 @@
 
         private static void AssertFlagStates(int beforeState, bool isRox)
         {
-            if (beforeState == SystemModel.CPU.CFlag | beforeState == SystemModel.CPU.XFlag | beforeState == SystemModel.CPU.VFlag)
+            switch (beforeState)
             {
-                Assert.True(SystemModel.CPU.IsSet(SystemModel.CPU.XFlag));
-            }
-            else if (beforeState == SystemModel.CPU.CFlag | beforeState == SystemModel.CPU.VFlag)
-            {
-                Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.XFlag));
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unknown flag combination: {beforeState}");
+                case CpuCore.C_FLAG | CpuCore.X_FLAG | CpuCore.V_FLAG:
+                    Assert.True(SystemModel.CPU.IsSet(SystemModel.CPU.XFlag));
+                    break;
+
+                case CpuCore.C_FLAG | CpuCore.V_FLAG:
+                    Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.XFlag));
+                    break;
+
+                default:
+                    throw new InvalidOperationException($"Unknown flag combination: {beforeState}");
             }
 
             Assert.False(SystemModel.CPU.IsSet(SystemModel.CPU.VFlag));
@@ -133,6 +135,7 @@
 
         private void TestOpcodeInternal(int opcode, int flagState, int d0, bool isRox)
         {
+            Setup();
             SetInstruction(opcode);
             SystemModel.CPU.SetDataRegister(destReg, d0);
             SystemModel.CPU.SetDataRegister(srcReg, shiftOrRotateValue);

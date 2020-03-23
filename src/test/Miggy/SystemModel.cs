@@ -2,7 +2,7 @@
 {
     using Miggy.Memory;
 
-    public class SystemModel
+    public static class SystemModel
     {
         public static TestCpu CPU;
 

@@ -9,19 +9,7 @@
 
         public BasicSetup()
         {
-            SystemModel.MEM = TestMem.Create(2048);
-            SystemModel.CPU = new TestCpu(SystemModel.MEM);
-            for (int v = 0; v < 256; v++)
-            {
-                int addr = v << 2;
-                SystemModel.MEM.Poke(addr, v, Size.SizeLong);
-            }
-
-            SystemModel.CPU.SetAddrRegisterWord(7, 2048);
-            SystemModel.CPU.SetUSP(0x0800);
-            SystemModel.CPU.SetSSP(0x0780);
-            codebase = 0x0400;
-            SystemModel.CPU.SetPC(codebase);
+            Setup();
         }
 
         protected virtual void SetInstruction(int opcode)
@@ -39,6 +27,23 @@
         {
             SystemModel.MEM.Poke(codebase, opcode, Size.Word);
             SystemModel.MEM.Poke(codebase + 2, param, Size.Word);
+        }
+
+        protected void Setup()
+        {
+            SystemModel.MEM = TestMem.Create(2048);
+            SystemModel.CPU = new TestCpu(SystemModel.MEM);
+            for (int v = 0; v < 256; v++)
+            {
+                int addr = v << 2;
+                SystemModel.MEM.Poke(addr, v, Size.SizeLong);
+            }
+
+            SystemModel.CPU.SetAddrRegisterWord(7, 2048);
+            SystemModel.CPU.SetUSP(0x0800);
+            SystemModel.CPU.SetSSP(0x0780);
+            codebase = 0x0400;
+            SystemModel.CPU.SetPC(codebase);
         }
 
         protected virtual void TearDown()

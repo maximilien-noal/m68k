@@ -12,25 +12,21 @@ namespace M68k.CPU
 
     public abstract class CpuCore : ICPU
     {
-        private const int C_FLAG = 1;
+        internal const int C_FLAG = 1;
+
+        internal const int N_FLAG = 8;
+
+        internal const int V_FLAG = 2;
+
+        internal const int X_FLAG = 16;
+
+        internal const int Z_FLAG = 4;
 
         private const int INTERRUPT_FLAGS_MASK = 0x0700;
-
-        private const int N_FLAG = 8;
 
         private const int SUPERVISOR_FLAG = 0x2000;
 
         private const int TRACE_FLAG = 0x8000;
-
-        private const int V_FLAG = 2;
-
-        private const int X_FLAG = 16;
-
-        private const int Z_FLAG = 4;
-
-        private readonly List<int> addressRegisters = new int[8].ToList();
-
-        private readonly List<int> dataRegisters = new int[8].ToList();
 
         private IOperand[] dstHandlers;
 
@@ -44,13 +40,13 @@ namespace M68k.CPU
 
         public IAddressSpace AddressSpace { get; set; }
 
-        public List<int> AdressRegisters { get => addressRegisters; }
+        public List<int> AdressRegisters { get; } = new int[8].ToList();
 
         public int CFlag => C_FLAG;
 
         public int CurrentInstructionAddress { get; set; }
 
-        public List<int> DataRegisters { get => dataRegisters; }
+        public List<int> DataRegisters { get; } = new int[8].ToList();
 
         public StringBuilder DisasmBuffer { get; set; }
 
