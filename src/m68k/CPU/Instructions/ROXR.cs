@@ -119,7 +119,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 if (xflag)
                     d |= 0x80;
                 if (last_out != 0)
@@ -153,7 +153,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 if (xflag)
                     d |= 0x80;
                 if (last_out != 0)
@@ -200,7 +200,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 int last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 if (xflag)
                 {
                     d |= -2147483648;
@@ -250,7 +250,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 if (xflag)
                 {
                     d |= -2147483648;
@@ -301,7 +301,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 if (xflag)
                     d |= 0x8000;
                 if (last_out != 0)
@@ -329,7 +329,7 @@ namespace M68k.CPU.Instructions
             IOperand op = cpu.ResolveDstEA((opcode >> 3) & 0x07, (opcode & 0x07), Size.Word);
             int v = op.GetWord();
             int last_out = v & 0x01;
-            v >>= 1;
+            v = (int)((uint)v >> 1);
             if (cpu.IsFlagSet(cpu.XFlag))
                 v |= 0x8000;
             op.SetWord(v);
@@ -357,7 +357,7 @@ namespace M68k.CPU.Instructions
             for (int s = 0; s < shift; s++)
             {
                 last_out = d & 0x01;
-                d >>= 1;
+                d = (int)((uint)d >> 1);
                 if (xflag)
                     d |= 0x8000;
                 if (last_out != 0)
