@@ -1,7 +1,5 @@
-﻿namespace test.CPU.Operands
+﻿namespace M68k.CPU.Operands
 {
-    using M68k.CPU;
-
     using Miggy;
 
     using Xunit;
