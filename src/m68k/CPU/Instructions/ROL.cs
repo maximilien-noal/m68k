@@ -161,10 +161,7 @@ namespace M68k.CPU.Instructions
             int last_out = 0;
             for (int s = 0; s < shift; s++)
             {
-                unchecked
-                {
-                    last_out = d & (int)0x80000000;
-                }
+                last_out = d & -2147483648;
                 d <<= 1;
                 if (last_out != 0)
                     d |= 1;
@@ -183,10 +180,7 @@ namespace M68k.CPU.Instructions
             int last_out = 0;
             for (int s = 0; s < shift; s++)
             {
-                unchecked
-                {
-                    last_out = d & (int)0x80000000;
-                }
+                last_out = d & -2147483648;
                 d <<= 1;
                 if (last_out != 0)
                     d |= 1;

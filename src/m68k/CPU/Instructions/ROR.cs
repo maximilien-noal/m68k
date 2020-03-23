@@ -162,10 +162,7 @@ namespace M68k.CPU.Instructions
                 d >>= 1;
                 if (last_out != 0)
                 {
-                    unchecked
-                    {
-                        d |= (int)0x80000000;
-                    }
+                    d |= -2147483648;
                 }
             }
 
@@ -186,10 +183,7 @@ namespace M68k.CPU.Instructions
                 d >>= 1;
                 if (last_out != 0)
                 {
-                    unchecked
-                    {
-                        d |= (int)0x80000000;
-                    }
+                    d |= -2147483648;
                 }
             }
 

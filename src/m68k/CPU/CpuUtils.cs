@@ -7,10 +7,7 @@ namespace M68k.CPU
             int newValue = value;
             if ((value & 0x80) == 0x80)
             {
-                unchecked
-                {
-                    newValue |= (int)0xffffff00;
-                }
+                newValue |= -256;
             }
             else
             {
@@ -25,10 +22,7 @@ namespace M68k.CPU
             int newValue = value;
             if ((value & 0x8000) == 0x8000)
             {
-                unchecked
-                {
-                    newValue |= (int)0xffff0000;
-                }
+                newValue |= -65536;
             }
             else
             {

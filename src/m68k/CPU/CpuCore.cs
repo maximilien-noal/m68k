@@ -1169,10 +1169,7 @@ namespace M68k.CPU
         {
             if ((value & 0x80) == 0x80)
             {
-                unchecked
-                {
-                    value |= (int)0xffffff00;
-                }
+                value |= -256;
             }
             else
             {
@@ -1186,10 +1183,7 @@ namespace M68k.CPU
         {
             if ((value & 0x8000) == 0x8000)
             {
-                unchecked
-                {
-                    value |= (int)0xffff0000;
-                }
+                value |= -65536;
             }
             else
             {

@@ -71,10 +71,7 @@ namespace M68k.CPU.Instructions
             int s = cpu.GetDataRegisterWord(opcode & 0x07);
             if ((s & 0x8000) == 0x8000)
             {
-                unchecked
-                {
-                    s |= (int)0xffff0000;
-                }
+                 s |= -65536;
                 cpu.SetFlags(cpu.NFlag);
             }
             else

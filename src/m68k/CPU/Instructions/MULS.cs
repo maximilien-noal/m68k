@@ -49,10 +49,7 @@ namespace M68k.CPU.Instructions
             int d = cpu.GetDataRegisterWord(reg);
             if ((d & 0x8000) == 0x8000)
             {
-                unchecked
-                {
-                    d |= (int)0xffff0000;
-                }
+                d |= -65536;
             }
 
             int r = s * d;
