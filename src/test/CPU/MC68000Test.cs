@@ -35,12 +35,12 @@
                 Assert.Equal(0xa5a5, cpu.GetAddrRegisterLong(r));
                 Assert.Equal(-91, cpu.GetAddrRegisterByteSigned(r));
                 Assert.Equal(-23131, cpu.GetAddrRegisterWordSigned(r));
-                cpu.SetAddrRegisterLong(r, 0x8585858);
+                cpu.SetAddrRegisterLong(r, -2054847099);
                 Assert.Equal(0x85, cpu.GetAddrRegisterByte(r));
                 Assert.Equal(0x8585, cpu.GetAddrRegisterWord(r));
-                Assert.Equal(0x8585858, cpu.GetAddrRegisterLong(r));
-                Assert.Equal(0xffffff8, cpu.GetAddrRegisterByteSigned(r));
-                Assert.Equal(0xffff858, cpu.GetAddrRegisterWordSigned(r));
+                Assert.Equal(-2054847099, cpu.GetAddrRegisterLong(r));
+                Assert.Equal(-123, cpu.GetAddrRegisterByteSigned(r));
+                Assert.Equal(-31355, cpu.GetAddrRegisterWordSigned(r));
                 cpu.SetAddrRegisterLong(r, 0x12345678);
                 Assert.Equal(0x78, cpu.GetAddrRegisterByte(r));
                 Assert.Equal(0x5678, cpu.GetAddrRegisterWord(r));
@@ -59,20 +59,20 @@
                 Assert.Equal(0xaa, cpu.GetDataRegisterByte(r));
                 Assert.Equal(0xaa, cpu.GetDataRegisterWord(r));
                 Assert.Equal(0xaa, cpu.GetDataRegisterLong(r));
-                Assert.Equal(0xfffffaa, cpu.GetDataRegisterByteSigned(r));
-                Assert.Equal(0x000000aa, cpu.GetDataRegisterWordSigned(r));
+                Assert.Equal(-86, cpu.GetDataRegisterByteSigned(r));
+                Assert.Equal(170, cpu.GetDataRegisterWordSigned(r));
                 cpu.SetDataRegisterWord(r, 0xa5a5);
                 Assert.Equal(0xa5, cpu.GetDataRegisterByte(r));
                 Assert.Equal(0xa5a5, cpu.GetDataRegisterWord(r));
                 Assert.Equal(0xa5a5, cpu.GetDataRegisterLong(r));
-                Assert.Equal(0xfffffa5, cpu.GetDataRegisterByteSigned(r));
-                Assert.Equal(0xfffa5a5, cpu.GetDataRegisterWordSigned(r));
-                cpu.SetDataRegisterLong(r, 0x858585);
+                Assert.Equal(-91, cpu.GetDataRegisterByteSigned(r));
+                Assert.Equal(-23131, cpu.GetDataRegisterWordSigned(r));
+                cpu.SetDataRegisterLong(r, -2054847099);
                 Assert.Equal(0x85, cpu.GetDataRegisterByte(r));
                 Assert.Equal(0x8585, cpu.GetDataRegisterWord(r));
-                Assert.Equal(0x858585, cpu.GetDataRegisterLong(r));
-                Assert.Equal(0xffffff, cpu.GetDataRegisterByteSigned(r));
-                Assert.Equal(0xffff85, cpu.GetDataRegisterWordSigned(r));
+                Assert.Equal(-2054847099, cpu.GetDataRegisterLong(r));
+                Assert.Equal(-123, cpu.GetDataRegisterByteSigned(r));
+                Assert.Equal(-31355, cpu.GetDataRegisterWordSigned(r));
                 cpu.SetDataRegisterLong(r, 0x12345678);
                 Assert.Equal(0x78, cpu.GetDataRegisterByte(r));
                 Assert.Equal(0x5678, cpu.GetDataRegisterWord(r));
@@ -190,7 +190,7 @@
             Assert.Equal(0x1234, val);
             Assert.Equal(6, cpu.GetPC());
             val = cpu.FetchPCWordSigned();
-            Assert.Equal(0xffff876, val);
+            Assert.Equal(-30875, val);
             Assert.Equal(8, cpu.GetPC());
         }
     }
