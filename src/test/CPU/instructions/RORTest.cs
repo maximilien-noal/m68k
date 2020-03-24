@@ -34,7 +34,7 @@ namespace M68k.CPU.Instructions.BitShift
             model.CPU.SetDataRegister(1, 18);
             model.CPU.SetCCR((byte)0);
             _ = model.CPU.Execute();
-            Assert.Equal(0x50c861d9, model.CPU.GetDataRegister(0));
+            Assert.Equal(1355309529, model.CPU.GetDataRegister(0));
             Assert.False(model.CPU.IsSet(CpuCore.Z_FLAG));
             Assert.False(model.CPU.IsSet(CpuCore.V_FLAG));
             Assert.False(model.CPU.IsSet(CpuCore.C_FLAG));
@@ -50,7 +50,7 @@ namespace M68k.CPU.Instructions.BitShift
             model.MEM.Poke(32, -2023406815, Size.SizeLong);
             model.CPU.SetCCR((byte)0);
             _ = model.CPU.Execute();
-            Assert.Equal(-7719, model.MEM.Peek(32, Size.SizeLong));
+            Assert.Equal(-1011727583, model.MEM.Peek(32, Size.SizeLong));
             Assert.False(model.CPU.IsSet(CpuCore.Z_FLAG));
             Assert.False(model.CPU.IsSet(CpuCore.V_FLAG));
             Assert.True(model.CPU.IsSet(CpuCore.C_FLAG));
