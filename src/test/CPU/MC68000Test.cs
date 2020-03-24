@@ -41,10 +41,10 @@
                 Assert.Equal(-2054847099, cpu.GetAddrRegisterLong(r));
                 Assert.Equal(-123, cpu.GetAddrRegisterByteSigned(r));
                 Assert.Equal(-31355, cpu.GetAddrRegisterWordSigned(r));
-                cpu.SetAddrRegisterLong(r, 0x12345678);
+                cpu.SetAddrRegisterLong(r, 305419896);
                 Assert.Equal(0x78, cpu.GetAddrRegisterByte(r));
                 Assert.Equal(0x5678, cpu.GetAddrRegisterWord(r));
-                Assert.Equal(0x12345678, cpu.GetAddrRegisterLong(r));
+                Assert.Equal(305419896, cpu.GetAddrRegisterLong(r));
                 Assert.Equal(0x78, cpu.GetAddrRegisterByteSigned(r));
                 Assert.Equal(0x5678, cpu.GetAddrRegisterWordSigned(r));
             }
@@ -73,10 +73,10 @@
                 Assert.Equal(-2054847099, cpu.GetDataRegisterLong(r));
                 Assert.Equal(-123, cpu.GetDataRegisterByteSigned(r));
                 Assert.Equal(-31355, cpu.GetDataRegisterWordSigned(r));
-                cpu.SetDataRegisterLong(r, 0x12345678);
+                cpu.SetDataRegisterLong(r, 305419896);
                 Assert.Equal(0x78, cpu.GetDataRegisterByte(r));
                 Assert.Equal(0x5678, cpu.GetDataRegisterWord(r));
-                Assert.Equal(0x12345678, cpu.GetDataRegisterLong(r));
+                Assert.Equal(305419896, cpu.GetDataRegisterLong(r));
                 Assert.Equal(0x78, cpu.GetDataRegisterByteSigned(r));
                 Assert.Equal(0x5678, cpu.GetDataRegisterWordSigned(r));
             }
@@ -172,10 +172,10 @@
         [Fact]
         public virtual void TestPC()
         {
-            bus.WriteLong(4, 0x12345678);
+            bus.WriteLong(4, 305419896);
             cpu.SetPC(4);
             int val = cpu.FetchPCLong();
-            Assert.Equal(0x12345678, val);
+            Assert.Equal(305419896, val);
             Assert.Equal(8, cpu.GetPC());
             cpu.SetPC(4);
             val = cpu.FetchPCWord();

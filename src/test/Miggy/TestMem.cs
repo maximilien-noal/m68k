@@ -1,9 +1,7 @@
-﻿using M68k.CPU;
+﻿using System;
+
+using M68k.CPU;
 using M68k.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Miggy.Memory
 {

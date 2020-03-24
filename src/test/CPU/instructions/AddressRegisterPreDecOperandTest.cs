@@ -1,10 +1,10 @@
 ﻿namespace M68k.Cpu.Instructions
 {
-    using M68k.CPU;
-    using M68k.Memory;
-
     using System.Collections.Generic;
     using System.Linq;
+
+    using M68k.CPU;
+    using M68k.Memory;
 
     using Xunit;
 

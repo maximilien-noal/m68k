@@ -1,15 +1,9 @@
-﻿using M68k.CPU;
-using M68k.Memory;
-
-using Xunit;
-
-namespace M68k.Cpu.Instructions
+﻿namespace M68k.Cpu.Instructions.Add
 {
-    /// <summary>
-    /// ${FILE}
-    /// <para>Federico Berti</para>
-    /// <para>Copyright 2018</para>
-    /// </summary>
+    using M68k.CPU;
+    using M68k.Memory;
+
+    using Xunit;
 
     public class AddTest2
     {

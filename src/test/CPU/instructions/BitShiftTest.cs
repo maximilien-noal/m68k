@@ -1,9 +1,10 @@
 ﻿namespace M68k.Cpu.Instructions
 {
-    using M68k.CPU;
-    using Miggy;
-
     using System;
+
+    using M68k.CPU;
+
+    using Miggy;
 
     using Xunit;
 

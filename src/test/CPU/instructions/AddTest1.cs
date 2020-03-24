@@ -1,4 +1,4 @@
-﻿namespace M68k.Cpu.Instructions
+﻿namespace M68k.Cpu.Instructions.Add
 {
     using M68k.CPU;
     using M68k.Memory;

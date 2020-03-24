@@ -1,12 +1,14 @@
 ﻿namespace Miggy
 {
     using M68k.CPU;
+
     using Miggy.Memory;
 
     public class BasicSetup
     {
-        protected SystemModel model;
         protected int codebase;
+
+        protected SystemModel model;
 
         public BasicSetup()
         {
@@ -30,7 +32,7 @@
             model.MEM.Poke(codebase + 2, param, Size.Word);
         }
 
-        protected void Setup()
+        protected virtual void Setup()
         {
             model = new SystemModel();
             model.MEM = TestMem.Create(2048);

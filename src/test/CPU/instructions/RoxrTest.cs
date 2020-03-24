@@ -1,8 +1,7 @@
-﻿
-
-namespace M68k.CPU.Instructions.BitShift
+﻿namespace M68k.CPU.Instructions.BitShift
 {
     using Miggy;
+
     using Xunit;
 
     public class RoxrTest : BasicSetup
@@ -25,21 +24,6 @@ namespace M68k.CPU.Instructions.BitShift
             Assert.True(model.CPU.IsSet(CpuCore.C_FLAG));
             Assert.False(model.CPU.IsSet(CpuCore.N_FLAG));
             Assert.True(model.CPU.IsSet(CpuCore.X_FLAG));
-        }
-
-        [Fact]
-        public virtual void TestWord()
-        {
-            SetInstruction(0xe050);
-            model.CPU.SetDataRegister(0, -2023406815);
-            model.CPU.SetCCR((byte)0);
-            _ = model.CPU.Execute();
-            Assert.Equal(-2023407037, model.CPU.GetDataRegister(0));
-            Assert.False(model.CPU.IsSet(CpuCore.Z_FLAG));
-            Assert.False(model.CPU.IsSet(CpuCore.V_FLAG));
-            Assert.False(model.CPU.IsSet(CpuCore.C_FLAG));
-            Assert.False(model.CPU.IsSet(CpuCore.N_FLAG));
-            Assert.False(model.CPU.IsSet(CpuCore.X_FLAG));
         }
 
         [Fact]
@@ -72,6 +56,21 @@ namespace M68k.CPU.Instructions.BitShift
             Assert.True(model.CPU.IsSet(CpuCore.C_FLAG));
             Assert.False(model.CPU.IsSet(CpuCore.N_FLAG));
             Assert.True(model.CPU.IsSet(CpuCore.X_FLAG));
+        }
+
+        [Fact]
+        public virtual void TestWord()
+        {
+            SetInstruction(0xe050);
+            model.CPU.SetDataRegister(0, -2023406815);
+            model.CPU.SetCCR((byte)0);
+            _ = model.CPU.Execute();
+            Assert.Equal(-2023407037, model.CPU.GetDataRegister(0));
+            Assert.False(model.CPU.IsSet(CpuCore.Z_FLAG));
+            Assert.False(model.CPU.IsSet(CpuCore.V_FLAG));
+            Assert.False(model.CPU.IsSet(CpuCore.C_FLAG));
+            Assert.False(model.CPU.IsSet(CpuCore.N_FLAG));
+            Assert.False(model.CPU.IsSet(CpuCore.X_FLAG));
         }
     }
 }

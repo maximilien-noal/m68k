@@ -1,10 +1,10 @@
 ﻿namespace Miggy
 {
+    using System;
+
     using M68k.CPU;
 
     using Miggy.Memory;
-
-    using System;
 
     public class TestCpu : MC68000
     {
