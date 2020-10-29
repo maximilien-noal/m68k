@@ -120,7 +120,7 @@ namespace M68k.CPU.Instructions
             int d = cpu.ReadMemoryLong(cpu.GetAddrRegisterLong(rx));
             int r = (d - s - (cpu.IsFlagSet(cpu.XFlag) ? 1 : 0));
             cpu.WriteMemoryLong(cpu.GetAddrRegisterLong(rx), r);
-            cpu.CalcFlags(InstructionType.SUBX, s, d, r, Size.Byte);
+            cpu.CalcFlags(InstructionType.SUBX, s, d, r, Size.SizeLong);
             return 30;
         }
 
